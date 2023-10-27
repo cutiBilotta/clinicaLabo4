@@ -1,0 +1,57 @@
+<body>
+    <div class="container">
+
+        <br/><br/>
+        <h1 class="text-dark text-center">Sistema de Registros</h1>
+        <br/>
+
+
+        <div *ngIf="!altaPaciente && !altaEspecialista" class="d-flex justify-content-center align-items-center mt-5">
+            <div class="card text-center" style="width: 30rem;">
+              <div class="card-header">
+                Opciones de Registro
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">Qué desea registrar?</h5>
+                <br/>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="entidad" id="especialista" [(ngModel)]="opcionSeleccionada" value="especialista">
+                  <label class="form-check-label" for="especialista">
+                    Especialista
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="entidad" id="paciente" checked [(ngModel)]="opcionSeleccionada" value="paciente">
+                  <label class="form-check-label" for="paciente">
+                    Paciente
+                  </label>
+                </div>
+                <br/><br/>
+                <a  class="btn btn-primary" (click)="aceptar()">Aceptar</a>
+              </div>
+            </div>
+          </div>
+
+
+
+          <div *ngIf="altaEspecialista">
+
+            <app-registro-especialista></app-registro-especialista>
+
+          </div>
+
+          
+          <div *ngIf="altaPaciente">
+
+            <app-registro-paciente></app-registro-paciente>
+
+          </div>
+
+         
+
+
+         
+
+
+    </div>
+</body>

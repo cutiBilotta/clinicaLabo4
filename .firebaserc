@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "clinica-7cd94": {
+      "hosting": {
+        "clinica": [
+          "clinica-7cd94"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "clinica-7cd94"
+  }
+}
