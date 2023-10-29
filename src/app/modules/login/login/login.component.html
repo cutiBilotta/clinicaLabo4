@@ -1,1 +1,61 @@
-<p>login works!</p>
+<body>
+    <div class="container">
+      
+
+
+
+      <div class="container">
+        <div class="row ">
+          <div class="col">
+          </div>
+          <div class="col-6">
+            
+            <div class="card text-center mx-2 mt-5">
+              <div class="card-header bg-dark text-white">
+                <b>Ya tienes cuenta?</b>
+              </div>
+          
+              <div class="card-body p-4 bg-light">
+                <form >
+                  <label for="email" style="float: left">Usuario</label>
+                  <input type="email" class="form-control m-2" id="email" name="email" placeholder="Email" [(ngModel)]="email"  autocomplete="off">              
+                  <label for="password" style="float: left">Password</label>
+                  <input type="password" class="form-control m-2" id="password" name="password" placeholder="Password" [(ngModel)]="password" autocomplete="off">
+          
+                  <button *ngIf="usuarios.length>0" type="submit" class="btn btn-success m-2" (click)="ingresar()">Ingresar</button>
+                </form>
+          
+                <p>Ingresar como:</p>
+                <button type="button" class="btn btn-warning m-2" (click)="autocompletarEmpleado()">Especialista</button>
+                <button type="button" class="btn btn-warning m-2" (click)="autocompletarAdmin()">Paciente</button>
+    
+                
+                <p class="text-danger">{{mensajeError}}</p>
+               
+              </div>
+          </div>
+
+
+
+
+          </div>
+          <div class="col">
+          </div>
+        </div>
+
+ 
+
+        
+
+
+
+      </div>
+
+
+
+    </div>
+</body>
+
+
+
+  

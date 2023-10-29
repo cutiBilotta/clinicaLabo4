@@ -1,0 +1,45 @@
+<body>
+    <div class="container">
+
+       <button (click)="verificarPerfiles()">DIVIDIR PERFILES</button>
+
+        <!-- Tabla de Pacientes -->
+        <table class="table table-bordered table-dark">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th *ngFor="let field of pacienteFields" scope="col">{{ field }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let paciente of pacientes; let i = index">
+                <th scope="row">{{ i + 1 }}</th>
+                <td *ngFor="let field of pacienteFields">{{ paciente[field] }}</td>
+            </tr>
+            </tbody>
+        </table>
+        
+        <!-- Tabla de Especialistas -->
+        <table class="table table-bordered table-dark">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th *ngFor="let field of especialistaFields" scope="col">{{ field }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let especialista of especialistas; let i = index">
+                <th scope="row">{{ i + 1 }}</th>
+                <td *ngFor="let field of especialistaFields">{{ especialista[field] }}</td>
+            </tr>
+            </tbody>
+        </table>
+
+
+
+
+
+
+
+    </div>
+</body>

@@ -1,17 +1,23 @@
 <body>
     <div class="container text-center d-flex  justify-content-center alig-items-center" > <!-- Agrega la clase text-center al div container -->
-        <form class="needs-validation" *ngIf="form" [formGroup]="form">
+        <h1 class="text-dark">Registro Especialista</h1>
+        <form class="needs-validation" [formGroup]="form">
             <br /><br />
             <!-- Nombre y Apellido en la misma fila, en distintas columnas -->
             <div class="form-row">
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     <label for="nombre">Nombre</label>
                     <input type="text" class="form-control" id="nombre" placeholder="Nombre" autocomplete="off" style="width:18rem;" formControlName="nombre">
                 </div>
                 <br />
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     <label for="apellido">Apellido</label>
                     <input type="text" class="form-control" id="apellido" placeholder="Apellido" autocomplete="off" style="width:18rem;" formControlName="apellido"> 
+                </div>
+                <br />
+                <div class="form-group col-md-4">
+                    <label for="edad">Edad</label>
+                    <input type="number" class="form-control" id="edad" placeholder="Edad" autocomplete="off" style="width:10rem;" formControlName="edad"> 
                 </div>
             </div>
             <br />
@@ -49,7 +55,7 @@
             </div>
             <br /><br />
             <p class="text-danger" *ngFor="let msj of mensajeError">{{msj}}</p>
-            <p class="text-success" *ngif="mensajeExito!='' ">{{mensajeExito}}</p>
+            <p class="text-success" *ngIf="mensajeExito!='' ">{{mensajeExito}}</p>
 
             <a class="btn btn-dark" (click)="aceptar()">Aceptar</a>
             <br /><br />

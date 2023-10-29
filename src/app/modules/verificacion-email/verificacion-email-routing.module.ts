@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
+import { EnvioMailVerificacionComponent } from './envio-mail-verificacion/envio-mail-verificacion.component';
 const routes: Routes = [
   {
     path: '',
-    component: LoginComponent
-  }
-];
+    component: EnvioMailVerificacionComponent
+  },
 
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class LoginRoutingModule { }
+export class VerificacionEmailRoutingModule { }

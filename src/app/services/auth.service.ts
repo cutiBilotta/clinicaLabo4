@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { map } from 'rxjs/operators';
-
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -11,13 +11,35 @@ export class AuthService {
 
   constructor(private afauth: AngularFireAuth, private firestore: AngularFirestore) { }
 
-
+  async sendVerificationEmail(): Promise<void> {
+    const user = await this.afauth.currentUser;
+    if (user) {
+      try {
+        await sendEmailVerification(user);
+        // El correo de verificación ha sido enviado con éxito
+      } catch (error) {
+        // Manejar cualquier error que pueda ocurrir durante el envío del correo
+        console.error("Error al enviar el correo de verificación:", error);
+        
+      }
+    } else {
+      throw new Error("El usuario actual es nulo.");
+    }
+  }
 
   async register(email: string, password: string) {
     try {
-      return await this.afauth.createUserWithEmailAndPassword(email, password);
+      const userCredential = await this.afauth.createUserWithEmailAndPassword(email, password);
+      if (userCredential && userCredential.user) {
+        // Usuario registrado con éxito, enviar el correo de verificación
+        await this.sendVerificationEmail(); // Llamada a la función sendVerificationEmail
+        return userCredential; // Devuelve el userCredential
+      } else {
+        console.log("No se pudo obtener el usuario después del registro.");
+        return null;
+      }
     } catch (err) {
-      console.log("error en register: ", err);
+      console.log("Error en register: ", err);
       return null;
     }
   }
@@ -30,12 +52,9 @@ export class AuthService {
       if (!userCredential.user) {
         return null; 
       }
+      //const user = userCredential.user;
 
-      const user = userCredential.user;
-      const fechaIngreso = new Date();
-      await this.firestore.collection('users').doc(user.uid).set({ fechaIngreso }, { merge: true });
-  
-      return user;
+      return userCredential;
     } catch (err) {
       console.log("error en login: ", err);
       return null;

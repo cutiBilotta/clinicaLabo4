@@ -3,3 +3,20 @@ body{
     height: 100vh;
     background-color: rgb(121, 139, 250);
 }
+.adminIconContainer {
+    position: fixed;
+    right: 2rem;
+    bottom: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    border-radius: 100%;
+  }
+  
+  .adminIcon {
+    width: 40px;
+    height: 40px;
+  }

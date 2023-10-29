@@ -43,9 +43,11 @@
           
           <div *ngIf="altaPaciente">
 
-            <app-registro-paciente></app-registro-paciente>
+            <app-registro-paciente (verificacionEmail)="verificacionEmail()"></app-registro-paciente>
 
           </div>
+
+       
 
          
 

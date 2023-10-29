@@ -1,0 +1,78 @@
+<body>
+
+    <div class="container text-center">
+        <br/><br/><br/>
+        <h1 class="text-dark">Gestion de Sistema</h1>
+
+
+        <div class="row mt-5">
+            <div class="col-sm-6">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Ver Usuarios</h5>
+                  <p class="card-text">Entra aqui para ver los usuarios dados de alta y habilitar/inhabilitar a los Especialistas</p>
+                  <button class="btn btn-primary" (click)="usuarios()">Ver Usuarios</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Registrar Especialista</h5>
+                  <p class="card-text">Entra aqui para dar de alta a un nuevo Especialista</p>
+                  <button class="btn btn-primary" (click)="especialista()">Registrar Especialista</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row mt-5">
+            <div class="col-sm-6">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Registrar Paciente</h5>
+                  <p class="card-text">Entra aqui para dar de alta a un nuevo Paciente</p>
+                  <button class="btn btn-primary" (click)="paciente()">Registrar Paciente</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Registrar Administrador</h5>
+                  <p class="card-text">Entra aqui para dar de alta a un nuevo Administador</p>
+                  <button class="btn btn-primary" (click)="administrador()">Registrar Administador</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        <div *ngIf="registrarEspecialista">
+            <app-registro-especialista></app-registro-especialista>
+        </div>
+
+        <div *ngIf="registrarPaciente">
+            <app-registro-paciente></app-registro-paciente>
+        </div>
+
+        <div *ngIf="mostrarUsuarios">
+          <app-informacion-usuarios></app-informacion-usuarios>
+      </div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+</body>

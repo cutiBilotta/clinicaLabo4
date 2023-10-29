@@ -10,12 +10,14 @@ import { RegistroPacienteComponent } from './registro-paciente/registro-paciente
   declarations: [
     RegistroComponent,
     RegistroEspecialistaComponent,
-    RegistroPacienteComponent
+    RegistroPacienteComponent,
+    
   ],
   imports: [
     CommonModule,
     RegistroRoutingModule,
     FormsModule,ReactiveFormsModule
-  ]
+  ],
+  exports: [RegistroEspecialistaComponent, RegistroPacienteComponent],
 })
 export class RegistroModule { }

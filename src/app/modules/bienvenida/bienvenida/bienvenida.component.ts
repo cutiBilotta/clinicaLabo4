@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-bienvenida',
@@ -6,5 +7,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./bienvenida.component.scss']
 })
 export class BienvenidaComponent {
+
+  constructor(private router:Router){}
+
+  ruteoSeccionUsuarios(){
+
+    this.router.navigateByUrl('/seccion-usuarios');
+  }
 
 }

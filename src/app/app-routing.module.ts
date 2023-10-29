@@ -17,6 +17,22 @@ const routes: Routes = [
     loadChildren: () => import('./modules/registro/registro.module')
       .then(mod => mod.RegistroModule)
   },
+  {
+    path: 'login',
+    loadChildren: () => import('./modules/login/login.module')
+      .then(mod => mod.LoginModule)
+  },
+  {
+    path: 'verificacion',
+    loadChildren: () => import('./modules/verificacion-email/verificacion-email.module')
+    .then(mod => mod.VerificacionEmailModule)
+  },
+  {
+    path: 'seccion-usuarios',
+    loadChildren: () => import('./modules/seccion-usuarios/seccion-usuarios.module')
+    .then(mod => mod.SeccionUsuariosModule)
+  },
+
 
 ]
 

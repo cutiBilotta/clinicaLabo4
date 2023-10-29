@@ -2,6 +2,7 @@ import { Component,OnInit } from '@angular/core';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Especialista } from 'src/app/classes/especialista';
+import { AuthService } from 'src/app/services/auth.service';
 @Component({
   selector: 'app-registro-especialista',
   templateUrl: './registro-especialista.component.html',
@@ -13,14 +14,18 @@ export class RegistroEspecialistaComponent implements OnInit{
   form!: FormGroup;
   mensajeError:any[]=[];
   mensajeExito:string="";
+  usuarios:any[]=[];
+  nuevoEspecialista:any;
+  mostrarEmailComponent:boolean=false;
 
-  constructor(private database: DataBaseService, private formBuilder: FormBuilder){}
+  constructor(private authService: AuthService, private database: DataBaseService, private formBuilder: FormBuilder){}
 
   ngOnInit() {
     this.form = this.formBuilder.group({
       
       nombre : new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z ]*')]),
       apellido: new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z ]*')]),
+      edad: new FormControl('', [Validators.required, Validators.min(18),  Validators.max(65)]),
       dni: new FormControl("", [Validators.required, Validators.minLength(6), Validators.maxLength(8)]),
       especialidad: new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z ]*')]),
       email: new FormControl("", [Validators.email, Validators.required]),
@@ -38,6 +43,16 @@ export class RegistroEspecialistaComponent implements OnInit{
         };
       });
     });
+
+    this.database.obtenerTodos("usuarios").subscribe((usuariosRef) => {
+      // console.log("usuariosRef: ", usuariosRef);
+       this.usuarios = usuariosRef.map(userRef => {
+         let usuario: any = userRef.payload.doc.data();
+         usuario['id'] = userRef.payload.doc.id;
+         return usuario;
+       });
+       //console.log(this.usuarios)
+     })
   }
     
   aceptar() {
@@ -53,21 +68,48 @@ export class RegistroEspecialistaComponent implements OnInit{
     } else if(this.form.valid) {
     const nombre = this.form.get('nombre')?.value;
     const apellido = this.form.get('apellido')?.value;
+    const edad = this.form.get('edad')?.value;
     const email = this.form.get('email')?.value;
     const dni = this.form.get('dni')?.value;
     const especialidad = this.form.get('especialidad')?.value;
     const password = this.form.get('password')?.value;
 
-    let nuevoEspecialista = new Especialista(nombre, apellido, dni, email, password, especialidad);
-    const nuevoEspecialistaJSON = nuevoEspecialista.toJSON();
-
-    this.database.crear('especialistas', nuevoEspecialistaJSON);
-    this.mensajeExito= 'Se dio de alta un nuevo Especialista';
+    this.nuevoEspecialista = new Especialista(nombre, apellido, edad, dni, email, password, especialidad);
+    this.registrarse();
     this.form.reset();
   } else {
-    console.log('Form is invalid');
-    // You can also display error messages if needed
+    console.log('Formulario Inválido');
   }
 }
+
+
+registrarse() {
+  let email = this.form.get('email')?.value;
+  let password = this.form.get('password')?.value;
+
+  let lista = [...this.usuarios];
+  let existe = lista.find(user => user.email == email);
+
+  if (!existe) {
+    this.authService.register(email, password).then(user => {
+      if (user !== null) {
+        console.log("Se registró en Firebase Authentication: ", user);
+
+        const nuevoEspecialistaJSON = this.nuevoEspecialista.toJSON();
+
+        console.log(nuevoEspecialistaJSON);
+        this.database.crear('usuarios', nuevoEspecialistaJSON);
+
+      } else {
+        console.log("Error. Ingrese datos válidos");
+      }
+    }).catch(err => {
+      console.log(err);
+    });
+  } else {
+    this.mensajeError.push("El usuario ya se encuentra registrado");
+  }
+}
+
 }
 

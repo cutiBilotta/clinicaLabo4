@@ -5,11 +5,13 @@ export class Especialista {
     apellido:string;
     especialidad:string;
     dni:number;
-
+    edad:number;
+    perfil:string = "Especialista"
   
-    constructor(nombre:string, apellido: string, dni: number, email: string, contraseña: string, especialidad:string) {
+    constructor(nombre:string, apellido: string, edad:number, dni: number, email: string, contraseña: string, especialidad:string) {
       this.email = email;
       this.contraseña = contraseña;
+      this.edad =edad;
       this.nombre = nombre;
       this.apellido = apellido;
       this.especialidad = especialidad;
@@ -21,10 +23,13 @@ export class Especialista {
         return {
           nombre: this.nombre,
           apellido: this.apellido,
+          edad: this.edad,
           email: this.email,
           dni: this.dni,
           especialidad: this.especialidad,
-          password: this.contraseña
+          password: this.contraseña,
+          perfil: this.perfil
+
         };
       }
 }

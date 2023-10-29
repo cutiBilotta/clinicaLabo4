@@ -1,5 +1,6 @@
 <body >
     <div class="container text-center d-flex  justify-content-center alig-items-center" > <!-- Agrega la clase text-center al div container -->
+        <h1 class="text-dark">Registro Paciente</h1>
         <form class="needs-validation" *ngIf="form" [formGroup]="form">
             <br /><br />
             <!-- Nombre y Apellido en la misma fila, en distintas columnas -->
@@ -12,6 +13,11 @@
                 <div class="form-group col-md-6">
                     <label for="apellido">Apellido</label>
                     <input type="text" class="form-control" id="apellido" placeholder="Apellido" autocomplete="off" style="width:18rem;" formControlName="apellido"> 
+                </div>
+                <br />
+                <div class="form-group col-md-6">
+                    <label for="Edad">Edad</label>
+                    <input type="number" class="form-control" id="edad" placeholder="Edad" autocomplete="off" style="width:10rem;" formControlName="edad"> 
                 </div>
             </div>
             <br />
@@ -32,7 +38,7 @@
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="obrasSociales">Obra Social</label>
-                    <select *ngIf="listadoObrasSociales && listadoObrasSociales[0]?.prestadores" id="obrasSociales" class="form-control" style="width:18rem;" formControlName="obraSocial">
+                    <select *ngIf="listadoObrasSociales && listadoObrasSociales[0]?.prestadores" id="obraSocial" class="form-control" style="width:18rem;" formControlName="obraSocial">
                         <option [value]="" disabled selected>Selecciona su Obra Social</option>
                         <option *ngFor="let item of listadoObrasSociales[0].prestadores">{{ item }}</option>
                     </select>
