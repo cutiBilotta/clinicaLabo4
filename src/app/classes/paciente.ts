@@ -3,10 +3,11 @@ export class Paciente {
     contraseña: string;
     nombre:string;
     apellido:string;
-    obraSocial:string;
+    obra_social:string;
     dni:number;
     edad:number;
     perfil:string ="Paciente";
+    imgPerfil: string="";
 
   
     constructor(nombre:string, apellido: string,edad:number, dni: number, email: string, contraseña: string, obraSocial:string) {
@@ -14,7 +15,7 @@ export class Paciente {
       this.contraseña = contraseña;
       this.nombre = nombre;
       this.apellido = apellido;
-      this.obraSocial = obraSocial;
+      this.obra_social = obraSocial;
       this.dni = dni;
       this.edad = edad;
 
@@ -27,9 +28,10 @@ export class Paciente {
           edad: this.edad,
           email: this.email,
           dni: this.dni,
-          especialidad: this.obraSocial,
+          obra_social: this.obra_social,
           password: this.contraseña,
-          perfil: this.perfil
+          perfil: this.perfil,
+          imgPerfil: this.imgPerfil
         };
       }
 }

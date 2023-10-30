@@ -1,8 +1,9 @@
 <body >
     <div class="container text-center d-flex  justify-content-center alig-items-center" > <!-- Agrega la clase text-center al div container -->
-        <h1 class="text-dark">Registro Paciente</h1>
         <form class="needs-validation" *ngIf="form" [formGroup]="form">
-            <br /><br />
+            <br />
+            <h4 class="text-dark">Registro Paciente</h4>
+            <br />
             <!-- Nombre y Apellido en la misma fila, en distintas columnas -->
             <div class="form-row">
                 <div class="form-group col-md-6">
@@ -48,12 +49,27 @@
                     <label for="dni">DNI</label>
                     <input type="text" class="form-control" id="dni" placeholder="DNI" autocomplete="off" style="width:18rem;" formControlName="dni">
                 </div>
+
+    
             </div>
-            <br /><br />
+            <br />
+
             <p class="text-danger" *ngFor="let msj of mensajeError">{{msj}}</p>
+            
+            <hr class="my-4">
+
             <p class="text-success" *ngIf="mensajeExito!='' ">{{mensajeExito}}</p>
 
-            <a class="btn btn-dark" (click)="aceptar()">Aceptar</a>
+            <a class="btn btn-dark" (click)="aceptar()">Enviar Datos</a>
+
+            <hr class="my-4">
+
+
+            <div *ngIf="mostrarCargaImg"class="form-group col-md-6">
+                <label for="imagen">Imagen de perfil</label><br/>
+                <input type="file" accept=".png, .jpg,.jpeg" multiple (change)="cargarImagen($event)" id="inputFile">
+                <button [hidden]="imagenes.length>2">Cargar Imagen</button>
+            </div>
             <br /><br />
         </form>
     </div>

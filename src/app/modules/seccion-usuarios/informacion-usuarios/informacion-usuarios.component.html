@@ -1,8 +1,11 @@
 <body>
     <div class="container">
 
-       <button (click)="verificarPerfiles()">DIVIDIR PERFILES</button>
-
+        <br/><br/><br/>
+        <h2 class="text-center">Información de los Usuarios</h2>
+        <br/><br/>
+        <h3 class="text-center text-light">Pacientes</h3>
+        <br/>
         <!-- Tabla de Pacientes -->
         <table class="table table-bordered table-dark">
             <thead>
@@ -19,23 +22,42 @@
             </tbody>
         </table>
         
+        <hr class="my-4">
+        
         <!-- Tabla de Especialistas -->
+        <h3 class="text-center text-light">Especialista</h3>
+        <br/>
+
         <table class="table table-bordered table-dark">
             <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th *ngFor="let field of especialistaFields" scope="col">{{ field }}</th>
-            </tr>
+                <tr>
+                    <th scope="col">#</th>
+                    <th *ngFor="let field of especialistaFields" scope="col">{{ field }}</th>
+                </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let especialista of especialistas; let i = index">
-                <th scope="row">{{ i + 1 }}</th>
-                <td *ngFor="let field of especialistaFields">{{ especialista[field] }}</td>
-            </tr>
+                <tr *ngFor="let especialista of especialistas; let i = index" (click)="seleccionarEspecialista(especialista)">
+                    <th scope="row">{{ i + 1 }}</th>
+                    <td *ngFor="let field of especialistaFields">{{ especialista[field] }}</td>
+                </tr>
             </tbody>
         </table>
+        <br/>
+        
+        <h4 class="text-success text-start" *ngIf="especialistaSeleccionado!=null">Ustedes seleccionó: {{especialistaSeleccionado.nombre}} {{especialistaSeleccionado.apellido}} - {{especialistaSeleccionado.especialidad}}</h4>
+        
+        <div *ngIf="especialistaSeleccionado!=null && !especialistaSeleccionado.habilitacion">
+            <button class="btn btn-primary" (click)="habilitar()">Habilitar</button>
+        </div>
+        
+        <div *ngIf="especialistaSeleccionado!=null && especialistaSeleccionado.habilitacion">
+            <button class="btn btn-primary" (click)="deshabilitar()">Deshabilitar</button>
+
+        </div>
+        
 
 
+        <br/><br/>
 
 
 

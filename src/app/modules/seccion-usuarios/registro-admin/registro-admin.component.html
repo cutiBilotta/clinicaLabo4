@@ -1,1 +1,55 @@
-<p>registro-admin works!</p>
+<body>
+    <div class="container text-center d-flex  justify-content-center alig-items-center" > <!-- Agrega la clase text-center al div container -->
+        <form class="needs-validation" [formGroup]="form">
+            <br />
+            <h4 class="text-dark">Registro Especialista</h4>
+            <br />
+            <!-- Nombre y Apellido en la misma fila, en distintas columnas -->
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" class="form-control" id="nombre" placeholder="Nombre" autocomplete="off" style="width:18rem;" formControlName="nombre">
+                </div>
+                <br />
+                <div class="form-group col-md-4">
+                    <label for="apellido">Apellido</label>
+                    <input type="text" class="form-control" id="apellido" placeholder="Apellido" autocomplete="off" style="width:18rem;" formControlName="apellido"> 
+                </div>
+                <br />
+                <div class="form-group col-md-4">
+                    <label for="edad">Edad</label>
+                    <input type="number" class="form-control" id="edad" placeholder="Edad" autocomplete="off" style="width:10rem;" formControlName="edad"> 
+                </div>
+            </div>
+            <br />
+            <!-- Email y Password en la misma fila, en distintas columnas -->
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4">Email</label>
+                    <input type="email" class="form-control" id="email" placeholder="Email" autocomplete="off" style="width:18rem;" formControlName="email">
+                </div>
+                <br />
+                <div class="form-group col-md-6">
+                    <label for="inputPassword4">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Password" autocomplete="off" style="width:18rem;" formControlName="password">
+                </div>
+            </div>
+            <br />
+            <!-- Especialidad y DNI en la misma fila, en distintas columnas -->
+            <div class="form-row">
+                
+                <br />
+                <div class="form-group col-md-6">
+                    <label for="dni">DNI</label>
+                    <input type="text" class="form-control" id="dni" placeholder="DNI" autocomplete="off" style="width:18rem;" formControlName="dni">
+                </div>
+            </div>
+            <br /><br />
+            <p class="text-danger" *ngFor="let msj of mensajeError">{{msj}}</p>
+            <p class="text-success" *ngIf="mensajeExito!='' ">{{mensajeExito}}</p>
+
+            <a class="btn btn-dark" (click)="aceptar()">Aceptar</a>
+            <br /><br />
+        </form>
+    </div>
+</body>

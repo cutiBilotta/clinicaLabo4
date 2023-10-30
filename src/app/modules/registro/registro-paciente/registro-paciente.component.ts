@@ -3,7 +3,7 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Paciente } from 'src/app/classes/paciente';
 import { AuthService } from 'src/app/services/auth.service';
-
+import { StorageService } from 'src/app/services/storage.service';
 @Component({
   selector: 'app-registro-paciente',
   templateUrl: './registro-paciente.component.html',
@@ -18,10 +18,12 @@ export class RegistroPacienteComponent implements OnInit {
   usuarios:any[]=[];
   usuario:any;
   nuevoPaciente:any;
+  imagenes:any[]=[];
+  mostrarCargaImg:boolean=false;
 
   @Output() verificacionEmail = new EventEmitter<string>();
 
-  constructor(private authService: AuthService, private database: DataBaseService, private formBuilder: FormBuilder){}
+  constructor(private authService: AuthService, private database: DataBaseService, private formBuilder: FormBuilder, private storageService: StorageService){}
 
   ngOnInit() {
     this.form = this.formBuilder.group({
@@ -81,8 +83,7 @@ export class RegistroPacienteComponent implements OnInit {
 
     this.nuevoPaciente = new Paciente(nombre, apellido, edad, dni, email, password, obraSocial);
     this.registrarse();
-    this.form.reset();
-    this.redirigirVerificacionEmail();
+    this.mostrarCargaImg=true;
   } else {
     console.log('Formulario Inválido');
   }
@@ -105,7 +106,6 @@ registrarse() {
 
         console.log(nuevoPacienteJSON);
         this.database.crear('usuarios', nuevoPacienteJSON);
-        
 
       } else {
         console.log("Error. Ingrese datos válidos");
@@ -122,4 +122,62 @@ redirigirVerificacionEmail() {
   this.verificacionEmail.emit();
 }
 
+cargarImagen(event: any) {
+  const archivos = event.target.files;
+  
+  if (this.imagenes.length + archivos.length > 2) {
+    alert('Se ha excedido el límite de imágenes (2).');
+    return;
+  }
+
+  let id = this.buscarUsuarioPorDNI();
+
+  if (id) {
+    const nombresArchivos: string[] = []; // Array to store file names
+
+    for (let i = 0; i < archivos.length; i++) {
+      const reader = new FileReader();
+      const nombreArchivo = this.form.get('nombre')?.value + this.form.get('apellido')?.value + "_" + Date.now() + "_" + i;
+
+      reader.readAsDataURL(archivos[i]);
+      reader.onloadend = () => {
+        this.imagenes.push(reader.result);
+        
+        // Upload the image to Firebase Storage
+        this.storageService.subirImagen(nombreArchivo, reader.result).then(urlImagen => {
+          nombresArchivos.push(nombreArchivo); // Store the file name
+
+          if (nombresArchivos.length === archivos.length) {
+            // Update the 'imgPerfil' field in nuevoPaciente with the array of file names
+            this.nuevoPaciente.imgPerfil = nombresArchivos;
+
+            const nuevoPacienteJSON = this.nuevoPaciente.toJSON();
+            // Update the user's data in the Firestore database
+            this.database.actualizar("usuarios", nuevoPacienteJSON, id);
+
+            this.form.reset();
+            this.redirigirVerificacionEmail();
+          }
+        });
+      }
+    }
+  } else {
+    // Handle the case where the user is not found
+  }
+}
+
+buscarUsuarioPorDNI() {
+  const dniToFind = this.nuevoPaciente.dni; // DNI to search for
+
+  const matchingUser = this.usuarios.find(user => user.dni === dniToFind);
+
+  if (matchingUser) {
+    const userId = matchingUser.id;
+    // userId is the ID of the user with the matching DNI
+    return userId;
+  } else {
+    // User not found
+    return null;
+  }
+}
 }

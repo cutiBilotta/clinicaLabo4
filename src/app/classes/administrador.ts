@@ -1,21 +1,18 @@
-export class Especialista {
+export class Administrador {
     email: string;
     contraseña: string;
     nombre:string;
     apellido:string;
-    especialidad:string;
     dni:number;
     edad:number;
-    perfil:string = "Especialista"
-    habilitacion:boolean=false;
+    perfil:string = "Administrador"
   
-    constructor(nombre:string, apellido: string, edad:number, dni: number, email: string, contraseña: string, especialidad:string) {
+    constructor(nombre:string, apellido: string, edad:number, dni: number, email: string, contraseña: string) {
       this.email = email;
       this.contraseña = contraseña;
       this.edad =edad;
       this.nombre = nombre;
       this.apellido = apellido;
-      this.especialidad = especialidad;
       this.dni = dni;
 
     }
@@ -27,7 +24,6 @@ export class Especialista {
           edad: this.edad,
           email: this.email,
           dni: this.dni,
-          especialidad: this.especialidad,
           password: this.contraseña,
           perfil: this.perfil,
           habilitacion:false
@@ -36,5 +32,3 @@ export class Especialista {
         };
       }
 }
-
-   

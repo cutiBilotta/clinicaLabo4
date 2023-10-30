@@ -13,12 +13,14 @@ export class SeccionUsuariosComponent {
   registrarEspecialista:boolean=false;
   registrarAdministrador:boolean=false;
   mostrarUsuarios:boolean=false;
+  mostrarCuerpo:boolean=true;
 
   paciente(){
     this.registrarPaciente=true;
     this.registrarEspecialista=false;
     this.registrarAdministrador=false;
     this.mostrarUsuarios=false;
+    this.mostrarCuerpo=false;
   }
 
   especialista(){
@@ -26,6 +28,8 @@ export class SeccionUsuariosComponent {
     this.registrarPaciente=false;
     this.registrarAdministrador=false;
     this.mostrarUsuarios=false;
+    this.mostrarCuerpo=false;
+
   }
 
   administrador(){
@@ -33,6 +37,8 @@ export class SeccionUsuariosComponent {
     this.registrarPaciente=false;
     this.registrarEspecialista=false;
     this.mostrarUsuarios=false;
+    this.mostrarCuerpo=false;
+
   }
 
   usuarios(){
@@ -40,6 +46,8 @@ export class SeccionUsuariosComponent {
     this.registrarPaciente=false;
     this.registrarEspecialista=false;
     this.registrarAdministrador=false;
+    this.mostrarCuerpo=false;
+
   }
 
 }

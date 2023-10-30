@@ -19,8 +19,9 @@ export class InformacionUsuariosComponent {
   mensajeError:string="";
   pacientes:any[]=[];
   especialistas:any[]=[];
-  pacienteFields: string[] = ['nombre', 'apellido', 'edad', 'email' , 'obra social'];
+  pacienteFields: string[] = ['nombre', 'apellido', 'edad', 'email' , 'obra_social'];
   especialistaFields: string[] = ['nombre', 'apellido' , 'edad', 'email', 'especialidad'];
+  especialistaSeleccionado: any | null = null;
 
   ngOnInit() {
     this.database.obtenerTodos("usuarios").subscribe((usuariosRef) => {
@@ -30,6 +31,7 @@ export class InformacionUsuariosComponent {
         usuario['id'] = userRef.payload.doc.id;
         return usuario;
       });
+      this.verificarPerfiles();
       console.log(this.usuarios)
     })
   }
@@ -51,7 +53,29 @@ export class InformacionUsuariosComponent {
     console.log(this.especialistas);
   }
 
+  seleccionarEspecialista(especialista: any) {
+    this.especialistaSeleccionado = especialista;
+  }
 
+  habilitar(){
+
+    this.especialistaSeleccionado.habilitacion = true;
+   
+    this.database.actualizar("usuarios", this.especialistaSeleccionado, this.especialistaSeleccionado.id );
+    console.log("Especialista Habilitado");
+
+  }
+  
+  deshabilitar(){
+
+
+    this.especialistaSeleccionado.habilitacion = false;
+   
+    this.database.actualizar("usuarios", this.especialistaSeleccionado, this.especialistaSeleccionado.id );
+    console.log("Especialista Inhabilitado");
+
+
+  }
 
 }
 

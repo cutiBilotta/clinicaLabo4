@@ -5,6 +5,7 @@
         <h1 class="text-dark">Gestion de Sistema</h1>
 
 
+        <div *ngIf="mostrarCuerpo">
         <div class="row mt-5">
             <div class="col-sm-6">
               <div class="card">
@@ -47,7 +48,7 @@
               </div>
             </div>
           </div>
-
+        </div>
 
         <div *ngIf="registrarEspecialista">
             <app-registro-especialista></app-registro-especialista>
@@ -60,6 +61,10 @@
         <div *ngIf="mostrarUsuarios">
           <app-informacion-usuarios></app-informacion-usuarios>
       </div>
+
+      <div *ngIf="registrarAdministrador">
+        <app-registro-admin></app-registro-admin>
+    </div>
 
         
 

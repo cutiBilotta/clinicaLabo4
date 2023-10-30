@@ -7,7 +7,7 @@ import { SeccionUsuariosComponent } from './seccion-usuarios/seccion-usuarios.co
 import { RegistroModule } from '../registro/registro.module';
 import { InformacionUsuariosComponent } from './informacion-usuarios/informacion-usuarios.component';
 import { RegistroAdminComponent } from './registro-admin/registro-admin.component';
-
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -19,7 +19,7 @@ import { RegistroAdminComponent } from './registro-admin/registro-admin.componen
   imports: [
     CommonModule,
     SeccionUsuariosRoutingModule,
-    RegistroModule
+    RegistroModule,ReactiveFormsModule
   ]
 })
 export class SeccionUsuariosModule { }
