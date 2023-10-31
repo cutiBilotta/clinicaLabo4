@@ -9,19 +9,19 @@
 
         <div class="d-flex justify-content-center align-items-center mt-5" >
             <div class="card text-center" style="width: 30rem;">
-              <div class="card-header">
+              <div class="card-header" style="background-color: #49708a;">
                 Opciones de Ingreso
               </div>
               <div class="card-body">
                 <h5 class="card-title">A dónde desea redirigirse?</h5>
-                <a routerLink="/login" class="btn btn-primary mx-3">Login</a>
-                <a routerLink="/registro" class="btn btn-primary">Registro</a>
+                <button routerLink="/login" class="btn  mx-3" style=" background-color: #caff42;">Login</button>
+                <button routerLink="/registro" class="btn" style=" background-color: #caff42;">Registro</button>
               </div>
             </div>
         </div>
 
 
-        <div class="adminIconContainer" (click)="ruteoSeccionUsuarios()" style="background-color: rgb(159, 241, 242);">
+        <div class="adminIconContainer" (click)="ruteoSeccionUsuarios()" style="background-color: #d0e0eb;">
           <img src="../../../assets/img/admin.png" alt="" class="adminIcon" >
         </div>
 

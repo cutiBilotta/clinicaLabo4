@@ -54,10 +54,35 @@ export class LoginComponent implements OnInit {
   ingresar() {
     this.user = new Usuario(this.email, this.password, "indefinido");
   
-    let usuarioEncontrado = this.usuarios.find(u => u.email === this.email);
+    let usuarioEncontrado = this.usuarios.find(u => u.email == this.email);
   
     if (usuarioEncontrado) {
       this.perfil = usuarioEncontrado.perfil;
+      if(this.perfil == "especialista" || this.perfil=="Especialista"){
+        if(usuarioEncontrado.habilitacion == false){
+          this.mensajeError="Usted no se encuentra habilitado";
+          return
+
+        }else{
+          this.authService.login(this.user.email, this.password)
+          .then(userCredential => {
+            // Verifica si el correo electrónico del usuario está verificado
+            if (userCredential?.user && userCredential.user.emailVerified) {
+              // El usuario ha verificado su correo electrónico
+              console.log("Ingreso exitoso");
+              // Redirige al usuario a la página deseada
+              // this.router.navigate(['/menu']);
+            } else {
+              this.mensajeError="El usuario aún no ha verificado su correo electrónico.";
+              // Puedes mostrar un mensaje al usuario para que verifique su correo electrónico antes de continuar.
+            }
+          })
+          .catch(err => {
+            console.log("Error al iniciar sesión:", err);
+          });
+
+        }
+      }
   
       // Realiza el inicio de sesión en Firebase
       this.authService.login(this.user.email, this.password)

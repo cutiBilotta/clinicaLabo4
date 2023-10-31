@@ -20,6 +20,7 @@ export class RegistroPacienteComponent implements OnInit {
   nuevoPaciente:any;
   imagenes:any[]=[];
   mostrarCargaImg:boolean=false;
+  mensajeErrorImg:string="";
 
   @Output() verificacionEmail = new EventEmitter<string>();
 
@@ -68,7 +69,7 @@ export class RegistroPacienteComponent implements OnInit {
     if (this.form?.invalid) {
         for (const controlName in this.form?.controls) {
           if (this.form?.controls[controlName]?.invalid) {
-            this.mensajeError.push(`Campo ${controlName} incorrecto`);
+            this.mensajeError.push(`${controlName}`);
           }
         }
         console.log(this.mensajeError);
@@ -82,8 +83,13 @@ export class RegistroPacienteComponent implements OnInit {
     const password = this.form.get('password')?.value;
 
     this.nuevoPaciente = new Paciente(nombre, apellido, edad, dni, email, password, obraSocial);
-    this.registrarse();
-    this.mostrarCargaImg=true;
+    if(this.registrarse() == null){
+      this.mostrarCargaImg=false;
+
+    }else{
+      this.mostrarCargaImg=true;
+
+    }
   } else {
     console.log('Formulario Inválido');
   }
@@ -99,23 +105,29 @@ registrarse() {
 
   if (!existe) {
     this.authService.register(email, password).then(user => {
-      if (user !== null) {
+      if (user != null) {
         console.log("Se registró en Firebase Authentication: ", user);
 
         const nuevoPacienteJSON = this.nuevoPaciente.toJSON();
 
         console.log(nuevoPacienteJSON);
         this.database.crear('usuarios', nuevoPacienteJSON);
+        return true;
 
       } else {
         console.log("Error. Ingrese datos válidos");
+        return null;
       }
     }).catch(err => {
       console.log(err);
+      return null;
     });
   } else {
     this.mensajeError.push("El usuario ya se encuentra registrado");
+    return null;
+    
   }
+  return true;
 }
 
 redirigirVerificacionEmail() {
@@ -126,7 +138,7 @@ cargarImagen(event: any) {
   const archivos = event.target.files;
   
   if (this.imagenes.length + archivos.length > 2) {
-    alert('Se ha excedido el límite de imágenes (2).');
+    this.mensajeErrorImg= 'Se ha excedido el límite de imágenes';
     return;
   }
 

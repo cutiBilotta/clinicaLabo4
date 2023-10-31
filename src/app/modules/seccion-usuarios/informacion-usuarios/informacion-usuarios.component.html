@@ -1,23 +1,24 @@
 <body>
     <div class="container">
 
-        <br/><br/><br/>
-        <h2 class="text-center">Información de los Usuarios</h2>
         <br/><br/>
+        <h3 class="text-center">Información de los Usuarios</h3>
+        <br/>
+        <hr class="my-4">
         <h3 class="text-center text-light">Pacientes</h3>
         <br/>
         <!-- Tabla de Pacientes -->
-        <table class="table table-bordered table-dark">
+        <table class="table table-bordered table-light" >
             <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th *ngFor="let field of pacienteFields" scope="col">{{ field }}</th>
+            <tr >
+                <th style="background-color: #49708a;" scope="col">#</th>
+                <th  style="background-color: #caff42;" *ngFor="let key of keysPacientes" scope="col">{{ key }}</th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let paciente of pacientes; let i = index">
                 <th scope="row">{{ i + 1 }}</th>
-                <td *ngFor="let field of pacienteFields">{{ paciente[field] }}</td>
+                <td *ngFor="let key of keysPacientes">{{ paciente[key] }}</td>
             </tr>
             </tbody>
         </table>
@@ -28,30 +29,55 @@
         <h3 class="text-center text-light">Especialista</h3>
         <br/>
 
-        <table class="table table-bordered table-dark">
+        <table class="table table-bordered table-light" >
             <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th *ngFor="let field of especialistaFields" scope="col">{{ field }}</th>
+                    <th  style="background-color: #49708a;" scope="col">#</th>
+                    <th  style="background-color: #caff42;"  *ngFor="let key of keysEspecialistas" scope="col">{{ key }}</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let especialista of especialistas; let i = index" (click)="seleccionarEspecialista(especialista)">
                     <th scope="row">{{ i + 1 }}</th>
-                    <td *ngFor="let field of especialistaFields">{{ especialista[field] }}</td>
+                    <td *ngFor="let key of keysEspecialistas">{{ especialista[key] }}</td>
                 </tr>
             </tbody>
         </table>
+
+        <hr class="my-4">
+        
+        <!-- Tabla de Especialistas -->
+        <h3 class="text-center text-light">Administradores</h3>
         <br/>
         
-        <h4 class="text-success text-start" *ngIf="especialistaSeleccionado!=null">Ustedes seleccionó: {{especialistaSeleccionado.nombre}} {{especialistaSeleccionado.apellido}} - {{especialistaSeleccionado.especialidad}}</h4>
+        <table class="table table-bordered table-light">
+            <thead>
+                <tr>
+                    <th style="background-color: #49708a;" scope="col">#</th>
+                    <th style="background-color: #caff42;" *ngFor="let key of keysAdministradores" scope="col">{{ key }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let administrador of administradores; let i = index">
+                    <th scope="row">{{ i + 1 }}</th>
+                    <td *ngFor="let key of keysAdministradores">{{ administrador[key] }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr class="my-4">
+
+
+        <br/>
+        
+        <h4 class=" text-start" style="color: #49708a;" *ngIf="especialistaSeleccionado!=null">Ustedes seleccionó: {{especialistaSeleccionado.nombre}} {{especialistaSeleccionado.apellido}} - {{especialistaSeleccionado.especialidad}} - {{especialistaSeleccionado.dni}} </h4>
         
         <div *ngIf="especialistaSeleccionado!=null && !especialistaSeleccionado.habilitacion">
-            <button class="btn btn-primary" (click)="habilitar()">Habilitar</button>
+            <button class="btn btn-success mt-2" (click)="habilitar()">Habilitar</button>
         </div>
         
         <div *ngIf="especialistaSeleccionado!=null && especialistaSeleccionado.habilitacion">
-            <button class="btn btn-primary" (click)="deshabilitar()">Deshabilitar</button>
+            <button class="btn btn-danger mt-2" (click)="deshabilitar()" >Deshabilitar</button>
 
         </div>
         

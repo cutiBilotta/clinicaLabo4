@@ -1,13 +1,24 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from "@angular/fire/compat/firestore";
-
+import { Usuario } from '../classes/usuario';
 @Injectable({
   providedIn: 'root'
 })
 export class DataBaseService {
 
+  public usuarios: Usuario[] = [];
 
-  constructor(private firestore: AngularFirestore) { }
+  constructor(private firestore: AngularFirestore) {
+    this.obtenerTodos("usuarios").subscribe((usuariosRef) => {
+      this.usuarios = usuariosRef.map(userRef => {
+        let usuario: any = userRef.payload.doc.data();
+        usuario['id'] = userRef.payload.doc.id;
+        return usuario;
+      });
+    
+   }
+  )};
+
 
 
   //Crea un nuevo dato   

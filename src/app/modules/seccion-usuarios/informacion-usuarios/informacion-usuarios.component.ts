@@ -19,9 +19,13 @@ export class InformacionUsuariosComponent {
   mensajeError:string="";
   pacientes:any[]=[];
   especialistas:any[]=[];
-  pacienteFields: string[] = ['nombre', 'apellido', 'edad', 'email' , 'obra_social'];
-  especialistaFields: string[] = ['nombre', 'apellido' , 'edad', 'email', 'especialidad'];
+  administradores:any[] = [];
+
   especialistaSeleccionado: any | null = null;
+
+  keysAdministradores:any[] = [];
+  keysPacientes:any[]= [];
+  keysEspecialistas:any[]= [];
 
   ngOnInit() {
     this.database.obtenerTodos("usuarios").subscribe((usuariosRef) => {
@@ -31,26 +35,53 @@ export class InformacionUsuariosComponent {
         usuario['id'] = userRef.payload.doc.id;
         return usuario;
       });
-      this.verificarPerfiles();
+      this.obtenerKeys();
+      this.cargarTablas();
+
       console.log(this.usuarios)
     })
   }
 
-
-  verificarPerfiles(){
+  obtenerKeys(){
 
     this.usuarios.forEach((usuario) => {
       const perfil = usuario.perfil.toLowerCase(); 
-    
+      
+      if (this.keysPacientes.length==0 && perfil == "paciente") {
+        this.keysPacientes = Object.keys(usuario);
+      } else if ( this.keysEspecialistas.length==0 &&  perfil == "especialista") {
+        this.keysEspecialistas = Object.keys(usuario);
+      }else if( this.keysAdministradores.length==0 &&  perfil == "administrador") {
+        this.keysAdministradores = Object.keys(usuario);
+
+      }
+      if(this.keysPacientes.length>0 && this.keysEspecialistas.length>0 && this.keysAdministradores.length>0){
+        return
+      }
+    });
+
+
+  }
+
+
+  cargarTablas(){
+
+    this.usuarios.forEach((usuario) => {
+      const perfil = usuario.perfil.toLowerCase(); 
+
       if (perfil == "paciente") {
         this.pacientes.push(usuario);
       } else if (perfil == "especialista") {
         this.especialistas.push(usuario);
-      }
-    });
+      }else if( perfil == "administrador"){
+        this.administradores.push(usuario);
 
+      } 
+    });
+ 
     console.log(this.pacientes);
     console.log(this.especialistas);
+
   }
 
   seleccionarEspecialista(especialista: any) {

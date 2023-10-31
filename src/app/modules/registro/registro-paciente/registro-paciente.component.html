@@ -1,66 +1,72 @@
 <body >
-    <div class="container text-center d-flex  justify-content-center alig-items-center" > <!-- Agrega la clase text-center al div container -->
+    <div class="container" >
         <form class="needs-validation" *ngIf="form" [formGroup]="form">
             <br />
-            <h4 class="text-dark">Registro Paciente</h4>
+            <h4 class="text-dark text-center">Registro Paciente</h4>
             <br />
-            <!-- Nombre y Apellido en la misma fila, en distintas columnas -->
-            <div class="form-row">
+           
+            <div class="row mx-3">
                 <div class="form-group col-md-6">
                     <label for="nombre">Nombre</label>
-                    <input type="text" class="form-control" id="nombre" placeholder="Nombre" autocomplete="off" style="width:18rem;" formControlName="nombre">
+                    <input type="text" class="form-control" id="nombre"  autocomplete="off"  formControlName="nombre">
                 </div>
                 <br />
                 <div class="form-group col-md-6">
                     <label for="apellido">Apellido</label>
-                    <input type="text" class="form-control" id="apellido" placeholder="Apellido" autocomplete="off" style="width:18rem;" formControlName="apellido"> 
+                    <input type="text" class="form-control" id="apellido"  autocomplete="off" formControlName="apellido"> 
                 </div>
                 <br />
-                <div class="form-group col-md-6">
-                    <label for="Edad">Edad</label>
-                    <input type="number" class="form-control" id="edad" placeholder="Edad" autocomplete="off" style="width:10rem;" formControlName="edad"> 
-                </div>
             </div>
-            <br />
-            <!-- Email y Password en la misma fila, en distintas columnas -->
-            <div class="form-row">
+
+            <div class="row mt-4 mx-3">
+
                 <div class="form-group col-md-6">
                     <label for="inputEmail4">Email</label>
-                    <input type="email" class="form-control" id="email" placeholder="Email" autocomplete="off" style="width:18rem;" formControlName="email">
+                    <input type="email" class="form-control" id="email" placeholder="ejemplo@email.com" autocomplete="off"  formControlName="email">
                 </div>
                 <br />
                 <div class="form-group col-md-6">
                     <label for="inputPassword4">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Password" autocomplete="off" style="width:18rem;" formControlName="password">
+                    <input type="password" class="form-control" id="password" placeholder="1-8 caracteres" autocomplete="off" formControlName="password">
                 </div>
+
+
+            
             </div>
-            <br />
-            <!-- Especialidad y DNI en la misma fila, en distintas columnas -->
-            <div class="form-row">
+
+            <div class="row mt-4 mx-3">
+
+
+                <div class="form-group col-md-3">
+                    <label for="Edad">Edad</label>
+                    <input type="number" class="form-control" id="edad" placeholder="1-100" autocomplete="off"  formControlName="edad"> 
+                </div>
+
                 <div class="form-group col-md-6">
                     <label for="obrasSociales">Obra Social</label>
-                    <select *ngIf="listadoObrasSociales && listadoObrasSociales[0]?.prestadores" id="obraSocial" class="form-control" style="width:18rem;" formControlName="obraSocial">
+                    <select *ngIf="listadoObrasSociales && listadoObrasSociales[0]?.prestadores" id="obraSocial" class="form-control"  formControlName="obraSocial">
                         <option [value]="" disabled selected>Selecciona su Obra Social</option>
                         <option *ngFor="let item of listadoObrasSociales[0].prestadores">{{ item }}</option>
                     </select>
                 </div>
-                <br />
-                <div class="form-group col-md-6">
-                    <label for="dni">DNI</label>
-                    <input type="text" class="form-control" id="dni" placeholder="DNI" autocomplete="off" style="width:18rem;" formControlName="dni">
-                </div>
 
-    
+                <div class="form-group col-md-3">
+                    <label for="dni">DNI</label>
+                    <input type="text" class="form-control" id="dni" autocomplete="off" formControlName="dni">
+                </div>
+            
             </div>
             <br />
 
-            <p class="text-danger" *ngFor="let msj of mensajeError">{{msj}}</p>
-            
+            <p class="text-danger text-center" *ngIf="mensajeError.length>0">Campos inválidos: {{ mensajeError.join(', ') }}</p>
+
             <hr class="my-4">
 
             <p class="text-success" *ngIf="mensajeExito!='' ">{{mensajeExito}}</p>
 
-            <a class="btn btn-dark" (click)="aceptar()">Enviar Datos</a>
+            <div style="text-align: center;">
+                <button class="btn" (click)="aceptar()" style="background-color: #caff42;">Enviar Datos</button>
+              </div>
 
             <hr class="my-4">
 

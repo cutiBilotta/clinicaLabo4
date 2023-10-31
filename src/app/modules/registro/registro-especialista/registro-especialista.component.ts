@@ -17,6 +17,8 @@ export class RegistroEspecialistaComponent implements OnInit{
   usuarios:any[]=[];
   nuevoEspecialista:any;
   mostrarEmailComponent:boolean=false;
+  nuevaEspecialidad:boolean=false;
+  otra = "Otra";
 
   constructor(private authService: AuthService, private database: DataBaseService, private formBuilder: FormBuilder){}
 
@@ -61,7 +63,7 @@ export class RegistroEspecialistaComponent implements OnInit{
     if (this.form?.invalid) {
         for (const controlName in this.form?.controls) {
           if (this.form?.controls[controlName]?.invalid) {
-            this.mensajeError.push(`Campo ${controlName} incorrecto`);
+            this.mensajeError.push(` ${controlName} `);
           }
         }
         console.log(this.mensajeError);
@@ -77,6 +79,8 @@ export class RegistroEspecialistaComponent implements OnInit{
     this.nuevoEspecialista = new Especialista(nombre, apellido, edad, dni, email, password, especialidad);
     this.registrarse();
     this.form.reset();
+    this.nuevaEspecialidad = false;
+
   } else {
     console.log('Formulario Inválido');
   }
@@ -109,6 +113,20 @@ registrarse() {
   } else {
     this.mensajeError.push("El usuario ya se encuentra registrado");
   }
+}
+
+
+selectChange(event: Event) {
+  const valor = (event.target as HTMLSelectElement).value;
+
+  console.log("aca");
+
+  if (valor.toLowerCase() === "otra") {
+    this.nuevaEspecialidad = true;
+    console.log("aca");
+} else {
+    this.nuevaEspecialidad = false;
+}
 }
 
 }

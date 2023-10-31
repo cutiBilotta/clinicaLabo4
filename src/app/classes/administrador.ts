@@ -6,6 +6,7 @@ export class Administrador {
     dni:number;
     edad:number;
     perfil:string = "Administrador"
+    imgPerfil=""
   
     constructor(nombre:string, apellido: string, edad:number, dni: number, email: string, contraseña: string) {
       this.email = email;
@@ -26,7 +27,7 @@ export class Administrador {
           dni: this.dni,
           password: this.contraseña,
           perfil: this.perfil,
-          habilitacion:false
+          imgPerfil:this.imgPerfil
 
 
         };

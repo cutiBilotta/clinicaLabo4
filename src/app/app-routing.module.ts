@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
+import { AdministradorGuard } from './guards/administrador.guard';
 const routes: Routes = [
   {
     path: '',
@@ -30,7 +30,8 @@ const routes: Routes = [
   {
     path: 'seccion-usuarios',
     loadChildren: () => import('./modules/seccion-usuarios/seccion-usuarios.module')
-    .then(mod => mod.SeccionUsuariosModule)
+    .then(mod => mod.SeccionUsuariosModule),
+    canActivate : [AdministradorGuard]
   },
 
 
