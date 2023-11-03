@@ -14,8 +14,10 @@ export class SolicitarTurnoComponent {
   especialistas:any[]=[];
   especialidades:any[]=[];
   especialistasFiltrados:any[]=[];
-  fechas:any[]=[];
-    
+   fechasGeneradas:any[]= [];
+  hoarios:any[]=[];
+  especialidadSeleccionada:any;
+
   
   ngOnInit() {
     this.database.obtenerTodos("usuarios").subscribe((usuariosRef) => {
@@ -42,38 +44,85 @@ export class SolicitarTurnoComponent {
       console.log(this.especialidades);
     });
 
-    this.calcularFechas();
   }
 
 
 
   seleccionarEspecialidad(event: any) {
-    const selectedIndex = event.target.value;
-    if (selectedIndex !== '') {
-      const especialidadSeleccionada = this.especialidades[0].especialidades[selectedIndex];
-      console.log('Especialidad seleccionada:', especialidadSeleccionada);
-  
-      // Filtrar especialistas en función de la especialidad seleccionada
-      this.especialistasFiltrados = this.especialistas.filter(especialista => especialista.especialidad == especialidadSeleccionada);
-      console.log(this.especialistasFiltrados);
-      // Realiza la lógica de filtro u otras acciones aquí.
-    } else {
-      // Lógica si se selecciona la opción predeterminada.
-      // En este caso, podrías mostrar todos los especialistas sin filtrar.
-      this.especialistasFiltrados = this.especialistas;
+      const selectedIndex = event.target.value;
+      if (selectedIndex !== '') {
+         this.especialidadSeleccionada = this.especialidades[0].especialidades[selectedIndex];
+        console.log('Especialidad seleccionada:', this.especialidadSeleccionada);
+      }
+
+        this.especialistasFiltrados = [];
+
+        this.especialistas.forEach(especialista => {
+          if (especialista.especialidad.includes(this.especialidadSeleccionada)) {
+            
+            this.especialistasFiltrados.push(especialista);
+            }
+        });
+
+        // Agrega un console.log cuando termine de filtrar
+        console.log('Especialistas filtrados:', this.especialistasFiltrados);
+    
+}
+
+calcularFechas(disponibilidadEspecialista: any) {
+  console.log(disponibilidadEspecialista);
+  if (!disponibilidadEspecialista || !disponibilidadEspecialista.disponibilidad) {
+
+      return [];
+  }
+
+  const diasDisponibles = disponibilidadEspecialista.disponibilidad.map((dia: any) => dia.especialidad);
+
+  const fechaActual = new Date();
+
+  for (let i = 0; i < 15; i++) {
+      const fecha = new Date(fechaActual);
+      fecha.setDate(fecha.getDate() + i);
+      const diaSemana = fecha.getDay();
+
+      if (diasDisponibles.includes(this.obtenerNombreDia(diaSemana))) {
+          const dia = fecha.getDate();
+          const mes = fecha.getMonth() + 1;
+          this.fechasGeneradas.push({ dia, mes });
+      }
+  }
+
+  return this.fechasGeneradas;
+}
+
+obtenerNombreDia(numeroDia: number) {
+  // Convierte el número de día de la semana en el nombre del día correspondiente.
+  const diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+  return diasSemana[numeroDia];
+}
+
+seleccionarEspecialista(event: any) {
+
+  const especialistaId = event.target.value;
+  if (especialistaId) {
+      // Encuentra el médico seleccionado por su ID o como lo tengas en tus datos.
+      const especialistaSeleccionado = this.especialistasFiltrados.find(especialista => especialista.id == especialistaId);
+
+      if (especialistaSeleccionado) {
+        const especialidadSeleccionada = this.especialidadSeleccionada; // Supongo que ya tienes esta información
+    
+        // Busca la entrada de disponibilidad correspondiente a la especialidad seleccionada
+        const disponibilidadEspecialidad = especialistaSeleccionado.disponibilidad.find((disponibilidad: { especialidad: string, horarios: any }) => disponibilidad.especialidad === especialidadSeleccionada);
+    
+        if (disponibilidadEspecialidad) {
+            // Ahora puedes acceder a los horarios dentro de la disponibilidad de la especialidad
+            console.log('Horarios de la especialidad:', disponibilidadEspecialidad.horarios);
+    
+            // Llama a calcularFechas() con los horarios de disponibilidad
+            this.calcularFechas(disponibilidadEspecialidad.horarios);
+        }
     }
   }
-
-  calcularFechas(){
-    const fechaActual = new Date();
-
-    for (let i = 0; i < 15; i++) {
-    const fecha = new Date(fechaActual);
-    fecha.setDate(fecha.getDate() + i);
-    const dia = fecha.getDate();
-    const mes = fecha.getMonth() + 1;
-    this.fechas.push({ dia, mes });
 }
-  }
 
 }
