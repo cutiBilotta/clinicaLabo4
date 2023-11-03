@@ -5,7 +5,7 @@ import { RegistroRoutingModule } from './registro-routing.module';
 import { RegistroComponent } from './registro/registro.component';
 import { RegistroEspecialistaComponent } from './registro-especialista/registro-especialista.component';
 import { RegistroPacienteComponent } from './registro-paciente/registro-paciente.component';
-
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 @NgModule({
   declarations: [
     RegistroComponent,
@@ -16,7 +16,8 @@ import { RegistroPacienteComponent } from './registro-paciente/registro-paciente
   imports: [
     CommonModule,
     RegistroRoutingModule,
-    FormsModule,ReactiveFormsModule
+    FormsModule,ReactiveFormsModule,
+    NgMultiSelectDropDownModule.forRoot()
   ],
   exports: [RegistroEspecialistaComponent, RegistroPacienteComponent],
 })

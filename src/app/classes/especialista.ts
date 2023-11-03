@@ -3,13 +3,13 @@ export class Especialista {
     contraseña: string;
     nombre:string;
     apellido:string;
-    especialidad:string;
+    especialidad:string[];
     dni:number;
     edad:number;
     perfil:string = "Especialista"
     habilitacion:boolean=false;
   
-    constructor(nombre:string, apellido: string, edad:number, dni: number, email: string, contraseña: string, especialidad:string) {
+    constructor(nombre:string, apellido: string, edad:number, dni: number, email: string, contraseña: string, especialidad:string[]) {
       this.email = email;
       this.contraseña = contraseña;
       this.edad =edad;
@@ -35,6 +35,14 @@ export class Especialista {
 
         };
       }
-}
+
+      especialidadesToJSON(especialidades: string[] = []) {
+        return {
+          // ... otros campos
+          especialidad: especialidades,
+        };
+      }
+    }
+
 
    

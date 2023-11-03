@@ -71,7 +71,7 @@ export class LoginComponent implements OnInit {
               // El usuario ha verificado su correo electrónico
               console.log("Ingreso exitoso");
               // Redirige al usuario a la página deseada
-              // this.router.navigate(['/menu']);
+              this.router.navigate(['/home']);
             } else {
               this.mensajeError="El usuario aún no ha verificado su correo electrónico.";
               // Puedes mostrar un mensaje al usuario para que verifique su correo electrónico antes de continuar.
@@ -91,6 +91,8 @@ export class LoginComponent implements OnInit {
           if (userCredential?.user && userCredential.user.emailVerified) {
             // El usuario ha verificado su correo electrónico
             console.log("Ingreso exitoso");
+            this.router.navigate(['/home']);
+
             // Redirige al usuario a la página deseada
             // this.router.navigate(['/menu']);
           } else {

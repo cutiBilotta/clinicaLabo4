@@ -1,0 +1,126 @@
+<body>
+    
+    <div    class="container">
+
+        <section *ngIf="usuarioBD!=undefined" >
+            <div class="container py-5">
+              <h2 class="text-center">Mi Perfil</h2><br/><br/>
+          
+              <div class="row " style="background-color: #d0e0eb;" >
+                <div class="col-lg-4 ">
+                  <div class="card mb-4 mt-4" style="background-color: #d0e0eb;">
+                    <div class="card-body text-center">
+                      <img *ngIf="imagenUrl!=undefined"src="{{imagenUrl}}" alt="avatar"
+                        class="rounded-circle img-fluid" style="width: 150px;">
+                      <h5 class="my-3">{{usuarioBD.nombre}}</h5>
+                      <p class="text-muted mb-1">{{usuarioBD.perfil}}</p>
+                      <p *ngIf="usuarioBD.perfil == 'Especialista' "class="text-muted mb-1">{{usuarioBD.especialidad}}</p>
+
+                      
+                    </div>
+                  </div>
+                 
+                </div>
+                <div class="col-lg-8">
+                  <div class="card mb-4 mt-4"  style="background-color: #d0e0eb;">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-sm-3">
+                          <p class="mb-0">Nombre Completo</p>
+                        </div>
+                        <div class="col-sm-9">
+                          <p class="text-muted mb-0">{{usuarioBD.nombre}} {{usuarioBD.apellido}}</p>
+                        </div>
+                      </div>
+                      <hr>
+                      <div class="row">
+                        <div class="col-sm-3">
+                          <p class="mb-0">Email</p>
+                        </div>
+                        <div class="col-sm-9">
+                          <p class="text-muted mb-0">{{usuarioBD.email}}</p>
+                        </div>
+                      </div>
+                      <hr>
+                      <div class="row">
+                        <div class="col-sm-3">
+                          <p class="mb-0">Edad</p>
+                        </div>
+                        <div class="col-sm-9">
+                          <p class="text-muted mb-0">{{usuarioBD.edad}}</p>
+                        </div>
+                      </div>
+                      <hr>
+                      <div class="row">
+                        <div class="col-sm-3">
+                          <p class="mb-0">Dni</p>
+                        </div>
+                        <div class="col-sm-9">
+                          <p class="text-muted mb-0">{{usuarioBD.dni}}</p>
+                        </div>
+                      </div>                      
+                    </div>
+                  </div>
+                  <div class="row">
+                   
+               
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+
+          <div class="mt-4" *ngIf="usuarioBD != undefined && usuarioBD.perfil == 'Especialista'">
+
+            <div class="card text-center">
+              <div class="card-body" style="background-color: #d0e0eb;">
+                <h5 class="card-title">Defina su Disponibilidad Horaria</h5>
+
+
+          
+                <p *ngIf="usuarioBD!=undefined">Su especialidad: {{ usuarioBD.especialidad }}</p>
+                <select name="especialidad" id="" (change)="seleccionarEspecialidad($event)">
+                  <option value="" disabled selected>Seleccione una Especialidad</option>
+                  <option *ngFor="let especialidad of usuarioBD.especialidad" [value]="especialidad">{{ especialidad }}</option>
+                </select>
+    
+    
+                <hr>
+
+                <div class="form-check" *ngIf="mostrarForm">
+                  <div *ngFor="let dia of diasHabiles; let i = index">
+                    <div class="d-flex align-items-center"> <!-- Agregar contenedor flexible -->
+                      <input class="form-check-input" type="checkbox" [value]="dia" [id]="'checkDia' + i" name="diasSeleccionados" [(ngModel)]="diasSeleccionados[dia]">
+                      <label for="'checkDia' + i" class="form-check-label">
+                        <span class="font-weight-bold">{{ dia }}</span>
+                      </label>
+                    </div>
+                    <br><br>
+                    <div *ngIf="diasSeleccionados[dia]">
+                      <label for="inputIngreso_{{ dia }}">Horario Inicio</label>
+                      <input id="inputIngreso_{{ dia }}" type="number" min="8" max="19">hs.
+                      <label for="inputEgreso_{{ dia }}">Horario Egreso</label>
+                      <input id="inputEgreso_{{ dia }}" type="number" min="8" max="19">hs.
+                    </div>
+                    <hr>
+                  </div>
+                </div>
+    
+                <button class="btn mt-4" style="background-color: #caff42;" (click)="definirDisponibilidad()">Aceptar!</button>
+
+
+              </div>
+            </div>
+
+
+
+
+
+          </div>
+
+
+
+
+    </div>
+</body>

@@ -31,9 +31,23 @@ const routes: Routes = [
     path: 'seccion-usuarios',
     loadChildren: () => import('./modules/seccion-usuarios/seccion-usuarios.module')
     .then(mod => mod.SeccionUsuariosModule),
-    canActivate : [AdministradorGuard]
+    //canActivate : [AdministradorGuard]
   },
-
+  {
+    path: 'home',
+    loadChildren: () => import('./modules/home/home.module')
+    .then(mod => mod.HomeModule),
+  },
+  {
+    path: 'solicitar-turno',
+    loadChildren: () => import('./modules/solicitar-turno/solicitar-turno.module')
+    .then(mod => mod.SolicitarTurnoModule),
+  },
+  {
+    path: 'mi-perfil',
+    loadChildren: () => import('./modules/mi-perfil/mi-perfil.module')
+    .then(mod => mod.MiPerfilModule),
+  },
 
 ]
 

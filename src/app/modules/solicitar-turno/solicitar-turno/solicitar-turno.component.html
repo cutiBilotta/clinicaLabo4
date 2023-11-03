@@ -1,0 +1,34 @@
+<body>
+    <div class="container">
+
+        <h2>Solicitar Turno</h2>
+
+        <label for="especialidad">Especialidad</label> <br/>
+        <select *ngIf="especialidades != undefined && especialidades.length > 0" name="especialidad" id="especialidad" (change)="seleccionarEspecialidad($event)">
+          <option value="">Selecciona una especialidad</option>
+          <ng-container *ngFor="let especialidad of especialidades[0].especialidades; let i = index">
+            <option [value]="i">{{ especialidad }}</option>
+          </ng-container>
+        </select>
+        <br/>
+        <label for="especialidad">Especialistas</label><br/>
+        <select *ngIf="especialistasFiltrados != undefined && especialistasFiltrados.length > 0" name="especialistasFiltrados" id="especialistasFiltrados" >
+          <option value="">Selecciona un Especialista</option>
+          <ng-container *ngFor="let especialista of especialistasFiltrados">
+            <option >{{ especialista.nombre}} {{ especialista.apellido}}</option>
+          </ng-container>
+        </select>
+
+        <select name="fechaElegida" id="fechaElegida">
+            <option value="">Selecciona una fecha</option>
+            <ng-container *ngFor="let fecha of fechas">
+              <option [value]="fecha.dia + '/' + fecha.mes">{{ fecha.dia }}/{{ fecha.mes }}</option>
+            </ng-container>
+        </select>
+
+
+
+
+
+    </div>
+</body>

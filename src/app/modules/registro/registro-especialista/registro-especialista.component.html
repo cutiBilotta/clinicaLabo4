@@ -42,35 +42,34 @@
                     <input type="number" class="form-control" id="edad" placeholder="1-100" autocomplete="off"  formControlName="edad"> 
                 </div>
 
-                <div class="form-group col-md-6">
-                    <label for="especialidad">Especialidad</label>
-                    <select *ngIf="listadoEspecialidades!= undefined && listadoEspecialidades.length>0 " id="especialidad" class="form-control" (change)="selectChange($event)" formControlName="especialidad">
-                        <option [value]="" disabled selected>Selecciona una especialidad</option>
-                        <option [value]="otra">Otra</option>
-
-                        <ng-container *ngFor="let especialidad of listadoEspecialidades">
-                          <ng-container *ngFor="let item of especialidad.especialidades">
-                            <option [value]="item">{{ item }}</option>
-
-                          </ng-container>
-                        </ng-container>
-                    </select>
-                </div>
-
                 <div class="form-group col-md-3">
                     <label for="dni">DNI</label>
                     <input type="text" class="form-control" id="dni" autocomplete="off" formControlName="dni">
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="especialidad">Especialidad</label>
+                    <div multiple *ngIf="listadoEspecialidades!= undefined && listadoEspecialidades.length>0 " id="especialidad" class="form-control" (change)="selectChange($event)" >
+
+                        <ng-container *ngFor="let especialidad of listadoEspecialidades">
+                          <ng-container *ngFor="let item of especialidad.especialidades">
+                            <input  formControlName="especialidad" type="checkbox" [value]="item">{{ item }}<br/>
+
+                          </ng-container>
+                        </ng-container>
+                        <input  formControlName="especialidad" type="checkbox" [value]="otra">Otra<br/>
+
+                    </div>
                 </div>
             
             </div>
 
             <div class="row mt-4 mx-3" *ngIf="nuevaEspecialidad">
 
-                <div class="form-group col-md-6">
-                    <label>Especialidad</label>
-                    <input type="text" class="form-control" autocomplete="off"  formControlName="especialidad">
-               
-                </div>
+                <div class="form-group col-md-6" *ngIf="nuevaEspecialidad">
+                    <label>Especialidad Personalizada</label>
+                    <input type="text" class="form-control" autocomplete="off" formControlName="nuevaEspecialidadControl">
+                  </div>
 
             </div>
 
