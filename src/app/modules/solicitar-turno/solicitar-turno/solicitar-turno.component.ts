@@ -14,9 +14,14 @@ export class SolicitarTurnoComponent {
   especialistas:any[]=[];
   especialidades:any[]=[];
   especialistasFiltrados:any[]=[];
-   fechasGeneradas:any[]= [];
-  hoarios:any[]=[];
   especialidadSeleccionada:any;
+  fechasGeneradas:any[] = [];
+  horariosGenerados:any[] = [];
+  fechaSeleccionada:Date = new Date();
+  horarioSeleccionado: any;
+  disponibilidadEspecialidad:any;
+  especialistaSeleccionado:any;
+
 
   
   ngOnInit() {
@@ -47,51 +52,68 @@ export class SolicitarTurnoComponent {
   }
 
 
-
   seleccionarEspecialidad(event: any) {
-      const selectedIndex = event.target.value;
-      if (selectedIndex !== '') {
-         this.especialidadSeleccionada = this.especialidades[0].especialidades[selectedIndex];
-        console.log('Especialidad seleccionada:', this.especialidadSeleccionada);
-      }
+    
+    const selectedIndex = event.target.value;
+    if (selectedIndex !== '') {
+       this.especialidadSeleccionada = this.especialidades[0].especialidades[selectedIndex];
+      console.log('Especialidad seleccionada:', this.especialidadSeleccionada);
+    }
 
-        this.especialistasFiltrados = [];
+    const selectElement = document.getElementById("especialistasFiltrados") as HTMLSelectElement;
+    if(selectElement){
+    selectElement.value = ""; // Establece el valor a la opción vacía
+    }
+    this.obtenerEspecialidad();
+  }
 
-        this.especialistas.forEach(especialista => {
-          if (especialista.especialidad.includes(this.especialidadSeleccionada)) {
-            
-            this.especialistasFiltrados.push(especialista);
-            }
-        });
 
-        // Agrega un console.log cuando termine de filtrar
-        console.log('Especialistas filtrados:', this.especialistasFiltrados);
+  obtenerEspecialidad() {
+    this.especialistasFiltrados = [];
+
+    this.especialistas.forEach(especialista => {
+      if (especialista.especialidad.includes(this.especialidadSeleccionada)) {
+        
+        this.especialistasFiltrados.push(especialista);
+        }
+    });
+
+    // Agrega un console.log cuando termine de filtrar
+    console.log('Especialistas filtrados:', this.especialistasFiltrados);
+
+      
     
 }
 
 calcularFechas(disponibilidadEspecialista: any) {
-  console.log(disponibilidadEspecialista);
-  if (!disponibilidadEspecialista || !disponibilidadEspecialista.disponibilidad) {
-
-      return [];
+  this.fechasGeneradas=[];
+  // Verifica si disponibilidadEspecialista está definido
+  if (!disponibilidadEspecialista) {
+    return [];
   }
 
-  const diasDisponibles = disponibilidadEspecialista.disponibilidad.map((dia: any) => dia.especialidad);
+  // Extrae los días disponibles de los objetos de disponibilidad
+  const diasDisponibles = Object.keys(disponibilidadEspecialista);
+  console.log(diasDisponibles);
+  // Crea un arreglo para almacenar las fechas generadas
 
+  // Obtiene la fecha actual
   const fechaActual = new Date();
 
+  // Itera para los próximos 15 días
   for (let i = 0; i < 15; i++) {
-      const fecha = new Date(fechaActual);
-      fecha.setDate(fecha.getDate() + i);
-      const diaSemana = fecha.getDay();
-
-      if (diasDisponibles.includes(this.obtenerNombreDia(diaSemana))) {
-          const dia = fecha.getDate();
-          const mes = fecha.getMonth() + 1;
-          this.fechasGeneradas.push({ dia, mes });
-      }
+    const fecha = new Date(fechaActual);
+    fecha.setDate(fecha.getDate() + i);
+    const diaSemana = fecha.getDay();
+    // Verifica si el día de la semana coincide con alguno de los días disponibles
+    if (diasDisponibles.includes(this.obtenerNombreDia(diaSemana))) {
+      const dia = fecha.getDate();
+      const mes = fecha.getMonth() + 1;
+      this.fechasGeneradas.push({ dia, mes });
+    }
   }
 
+  console.log(this.fechasGeneradas);
   return this.fechasGeneradas;
 }
 
@@ -101,28 +123,84 @@ obtenerNombreDia(numeroDia: number) {
   return diasSemana[numeroDia];
 }
 
+
 seleccionarEspecialista(event: any) {
 
   const especialistaId = event.target.value;
   if (especialistaId) {
-      // Encuentra el médico seleccionado por su ID o como lo tengas en tus datos.
-      const especialistaSeleccionado = this.especialistasFiltrados.find(especialista => especialista.id == especialistaId);
+    this.especialistaSeleccionado = this.especialistasFiltrados.find(especialista => especialista.id == especialistaId);
+  }
 
-      if (especialistaSeleccionado) {
-        const especialidadSeleccionada = this.especialidadSeleccionada; // Supongo que ya tienes esta información
+  this.obtenerEspecialista();
+}
+
+obtenerEspecialista() {
+
+  if (this.especialistaSeleccionado) {
     
-        // Busca la entrada de disponibilidad correspondiente a la especialidad seleccionada
-        const disponibilidadEspecialidad = especialistaSeleccionado.disponibilidad.find((disponibilidad: { especialidad: string, horarios: any }) => disponibilidad.especialidad === especialidadSeleccionada);
-    
-        if (disponibilidadEspecialidad) {
-            // Ahora puedes acceder a los horarios dentro de la disponibilidad de la especialidad
-            console.log('Horarios de la especialidad:', disponibilidadEspecialidad.horarios);
-    
-            // Llama a calcularFechas() con los horarios de disponibilidad
-            this.calcularFechas(disponibilidadEspecialidad.horarios);
-        }
+    // Busca la entrada de disponibilidad correspondiente a la especialidad seleccionada
+    this.disponibilidadEspecialidad = this.especialistaSeleccionado.disponibilidad.find((disponibilidad: { especialidad: string, horarios: any }) => disponibilidad.especialidad == this.especialidadSeleccionada);
+
+    if (this.disponibilidadEspecialidad) {
+        // Ahora puedes acceder a los horarios dentro de la disponibilidad de la especialidad
+        console.log('Horarios de la especialidad:', this.disponibilidadEspecialidad.horarios);
+
+        // Llama a calcularFechas() con los horarios de disponibilidad
+        this.calcularFechas(this.disponibilidadEspecialidad.horarios);
     }
+
   }
 }
 
+seleccionarFecha(event: any) {
+  this.horariosGenerados=[];
+  const selectedDateParts = event.target.value.split('/'); // Suponiendo que el formato sea 'DD/MM'
+  const selectedDay = parseInt(selectedDateParts[0], 10);
+  const selectedMonth = parseInt(selectedDateParts[1], 10);
+  const currentYear = new Date().getFullYear(); // Obtener el año actual
+  this.fechaSeleccionada = new Date(currentYear, selectedMonth - 1, selectedDay); // Restar 1 a selectedMonth ya que los meses en JavaScript son 0-based
+  if (this.fechaSeleccionada) {
+    console.log(this.fechaSeleccionada.toLocaleDateString('en-US'));
+  }
+  this.calcularHorariosDisponibles(this.disponibilidadEspecialidad.horarios);
+}
+
+seleccionarHorario(event: any) {
+this.horarioSeleccionado = event.target.value;
+if(this.horarioSeleccionado){
+  console.log(this.horarioSeleccionado);
+}
+}
+
+calcularHorariosDisponibles(disponibilidadEspecialista: any) {
+
+  this.horariosGenerados=[];
+  if (!disponibilidadEspecialista || !this.fechaSeleccionada) {
+    return [];
+  }
+
+  const diaSemana = this.fechaSeleccionada.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
+  const nombreDia = this.obtenerNombreDia(diaSemana);
+
+  console.log (diaSemana);
+  console.log (nombreDia);
+
+  // Verificar si el día de la semana está en la disponibilidad del especialista
+  if (disponibilidadEspecialista[nombreDia] && disponibilidadEspecialista[nombreDia].inicio && disponibilidadEspecialista[nombreDia].egreso) {
+    const horaIngreso = disponibilidadEspecialista[nombreDia].inicio;
+    const horaEgreso = disponibilidadEspecialista[nombreDia].egreso;
+
+    // Iterar en intervalos de 30 minutos desde la hora de ingreso hasta la hora de egreso
+    for (let hora = horaIngreso; hora < horaEgreso; hora++) {
+      for (let minuto = 0; minuto < 60; minuto += 30) {
+        // Formatear la hora en formato de 24 horas (ejemplo: "08:00")
+        const horaFormateada = `${hora.toString().padStart(2, '0')}:${minuto.toString().padStart(2, '0')}`;
+        this.horariosGenerados.push(horaFormateada);
+      }
+    }
+  }
+
+  console.log(this.horariosGenerados);
+  return this.horariosGenerados;
+}
 }

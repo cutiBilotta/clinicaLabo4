@@ -22,7 +22,7 @@
           <label for="especialidad"><b>Especialistas</b></label><br/><br/>
           
           <select *ngIf="especialistasFiltrados != undefined && especialistasFiltrados.length > 0" name="especialistasFiltrados" id="especialistasFiltrados" (change)="seleccionarEspecialista($event)">
-            <option value="">Selecciona un Especialista</option>
+            <option value="" selected>Selecciona un Especialista</option>
             <ng-container *ngFor="let especialista of especialistasFiltrados">
                 <option value="{{ especialista.id }}">{{ especialista.nombre }} {{ especialista.apellido }}</option>
             </ng-container>
@@ -35,11 +35,11 @@
           <label for="fechaElegida"><b>Fecha</b></label><br/><br/>
 
 
-          <select name="fechaElegida" id="fechaElegida">
-              <option value="">Selecciona una fecha</option>
-              <ng-container *ngFor="let fecha of fechasGeneradas">
-                <option [value]="fecha.dia + '/' + fecha.mes">{{ fecha.dia }}/{{ fecha.mes }}</option>
-              </ng-container>
+          <select name="fechaElegida" id="fechaElegida" (change)="seleccionarFecha($event)">
+            <option value="">Selecciona una fecha</option>
+            <ng-container *ngFor="let fecha of fechasGeneradas">
+              <option [value]="fecha.dia + '/' + fecha.mes">{{ fecha.dia }}/{{ fecha.mes }}</option>
+            </ng-container>
           </select>
 
           <br/>
@@ -48,19 +48,21 @@
 
           <label for="horaElegida"><b>Horario</b></label><br/><br/>
 
-
-          <select name="horaElegida" id="horaElegida">
-              <option value="">Selecciona un Horario</option>
-              <ng-container *ngFor="let fecha of fechas">
-                <option [value]="fecha.dia + '/' + fecha.mes">{{ fecha.dia }}/{{ fecha.mes }}</option>
-              </ng-container>
+          <select name="horaElegida" id="horaElegida" (change)="seleccionarHorario($event)">
+            <option value="">Selecciona un Horario</option>
+            <ng-container *ngFor="let hora of horariosGenerados">
+              <option [value]="hora">{{ hora }}</option>
+            </ng-container>
           </select>
 
+          <br/>
+          <hr>
+          <br/>
 
           <button class="btn" style="background-color: #caff42;">Aceptar</button>
         </div>
-      </div>
 
+      </div>
 
        
 
@@ -69,4 +71,6 @@
 
 
     </div>
+    <br/><br/><br/><br/> 
+
 </body>

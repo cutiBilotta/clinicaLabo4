@@ -58,51 +58,56 @@ export class MiPerfilComponent implements OnInit{
   }
 
   definirDisponibilidad() {
-    let vacio:boolean=true;
-
-    const disponibilidadEspecialista: {
-      especialidad: string;
-      horarios: { [dia: string]: { inicio: number; egreso: number } };
-    } = {
+    let vacio = true;
+  
+    interface DiaHorario {
+      [dia: string]: { inicio: number; egreso: number };
+    }
+  
+    const disponibilidadEspecialista = {
       especialidad: this.especialidadSeleccionada,
-      horarios: {}  // Un objeto para almacenar los horarios de los días seleccionados
+      horarios: {} as DiaHorario  // Definimos el tipo de horarios
     };
   
     for (const dia in this.diasSeleccionados) {
-      vacio=false;
+      vacio = false;
       if (this.diasSeleccionados[dia]) {
         const horaIngresoInput = document.getElementById(`inputIngreso_${dia}`) as HTMLInputElement;
         const horaEgresoInput = document.getElementById(`inputEgreso_${dia}`) as HTMLInputElement;
   
         const horarioIngreso = +horaIngresoInput.value;
         const horarioEgreso = +horaEgresoInput.value;
+  
         console.log(horarioEgreso);
         console.log(horarioIngreso);
-
+  
         if (horaIngresoInput.value == "" || horaEgresoInput.value == "") {
           this.mensajeError = `Debe ingresar horarios para ${dia}`;
-          return; 
-      }
+          return;
+        }
   
         if (horarioIngreso >= 8 && horarioIngreso <= 19 && horarioEgreso >= 8 && horarioEgreso <= 19) {
           disponibilidadEspecialista.horarios[dia] = { inicio: horarioIngreso, egreso: horarioEgreso };
         } else {
-          this.mensajeError='Los horarios ingresados no son válidos';
+          this.mensajeError = 'Los horarios ingresados no son válidos';
           return;
         }
       }
-    }if(vacio){
-      this.mensajeError="Debe definir su disponibilidad";
-      return
-
-    }else if (!this.usuarioBD.disponibilidad || !this.usuarioBD.disponibilidad[this.especialidadSeleccionada]) {
-      this.usuarioBD.disponibilidad = this.usuarioBD.disponibilidad;
+    }
+  
+    if (vacio) {
+      this.mensajeError = "Debe definir su disponibilidad";
+      return;
+    } else {
+      if (!this.usuarioBD.disponibilidad) {
+        this.usuarioBD.disponibilidad = [];
+      }
       this.usuarioBD.disponibilidad.push(disponibilidadEspecialista);
   
-      this.database.actualizar("usuarios",this.usuarioBD, this.usuarioBD.id);
-      console.log( this.usuarioBD);
+      this.database.actualizar("usuarios", this.usuarioBD, this.usuarioBD.id);
+  
+      console.log(this.usuarioBD);
     }
-   
   }
 
 
