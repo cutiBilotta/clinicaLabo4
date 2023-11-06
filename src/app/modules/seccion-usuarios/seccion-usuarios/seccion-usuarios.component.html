@@ -47,6 +47,19 @@
                 </div>
               </div>
             </div>
+            
+            <div class="row mt-5">
+            <div class="col-sm-6">
+              <div class="card">
+                <div class="card-body" style="background-color: #ebf7f8;">
+                  <h5 class="card-title">Turnos</h5>
+                  <p class="card-text">Entra aqui para administrar Turnos</p>
+                  <button class="btn" (click)="turnos()" style="background-color: #caff42;">Administrar Turnos</button>
+                </div>
+              </div>
+            </div>
+            </div>
+            
           </div>
         </div>
 
@@ -66,7 +79,12 @@
 
       <div *ngIf="registrarAdministrador">
         <app-registro-admin></app-registro-admin>
-    </div>
+      </div>
+
+      <div *ngIf="mostrarTurnos">
+        <app-turnos></app-turnos>
+      </div>
+
 
         
 

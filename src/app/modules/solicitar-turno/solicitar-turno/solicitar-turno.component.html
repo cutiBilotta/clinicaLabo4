@@ -55,11 +55,25 @@
             </ng-container>
           </select>
 
-          <br/>
-          <hr>
-          <br/>
+          <div *ngIf="esAdmin && listadoPacientes!=undefined && listadoPacientes.length>0">
+            
+            <br/>
+            <hr>
+            <br/>
+            <label for="paciente"><b>Paciente</b></label><br/><br/>
 
-          <button class="btn" style="background-color: #caff42;">Aceptar</button>
+            <select name="paciente" id="paciente" (change)="seleccionarPaciente($event)">
+              <option value="">Selecciona un Paciente</option>
+              <ng-container *ngFor="let paciente of listadoPacientes">
+                <option [value]="paciente.id">{{ paciente.nombre }} {{ paciente.apellido }} - {{paciente.dni}}</option>
+              </ng-container>
+            </select>
+          </div>
+          <br/>
+            <hr>
+            <br/>
+
+          <button class="btn" style="background-color: #caff42;" (click)="aceptar()">Aceptar</button>
         </div>
 
       </div>

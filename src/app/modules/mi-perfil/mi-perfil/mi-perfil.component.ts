@@ -102,6 +102,8 @@ export class MiPerfilComponent implements OnInit{
       if (!this.usuarioBD.disponibilidad) {
         this.usuarioBD.disponibilidad = [];
       }
+      //resetearForm
+
       this.usuarioBD.disponibilidad.push(disponibilidadEspecialista);
   
       this.database.actualizar("usuarios", this.usuarioBD, this.usuarioBD.id);

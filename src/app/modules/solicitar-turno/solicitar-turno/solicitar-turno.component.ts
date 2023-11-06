@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DataBaseService } from 'src/app/services/database.service';
-
+import { Turno } from 'src/app/classes/turno';
+import { AuthService } from 'src/app/services/auth.service';
 @Component({
   selector: 'app-solicitar-turno',
   templateUrl: './solicitar-turno.component.html',
@@ -8,7 +9,7 @@ import { DataBaseService } from 'src/app/services/database.service';
 })
 export class SolicitarTurnoComponent {
 
-  constructor(private database: DataBaseService){}
+  constructor(private database: DataBaseService, private afauth: AuthService){}
 
   usuarios:any[]=[];
   especialistas:any[]=[];
@@ -17,39 +18,78 @@ export class SolicitarTurnoComponent {
   especialidadSeleccionada:any;
   fechasGeneradas:any[] = [];
   horariosGenerados:any[] = [];
+
   fechaSeleccionada:Date = new Date();
   horarioSeleccionado: any;
   disponibilidadEspecialidad:any;
   especialistaSeleccionado:any;
+  pacienteSeleccionado:any;
+
+  esAdmin:boolean=false;
+  especialistaId:any;
+  usuarioActualId:any;
+
+  usuarioSeleccionadoId:any;
+
+  listadoPacientes:any[]=[];
 
 
-  
   ngOnInit() {
-    this.database.obtenerTodos("usuarios").subscribe((usuariosRef) => {
-      this.usuarios = usuariosRef.map(userRef => {
-        let usuario: any = userRef.payload.doc.data();
-        usuario['id'] = userRef.payload.doc.id;
-        return usuario;
-      });
-  
-      // Filtrar especialistas y almacenarlos en this.especialistas
-      this.especialistas = this.usuarios.filter(usuario => usuario.perfil == "Especialista" );
-  
-      console.log(this.usuarios);
-      console.log(this.especialistas);
-    });
-  
-    this.database.obtenerTodos("especialidades").subscribe((especialidadesRef) => {
-      this.especialidades = especialidadesRef.map(especialidadRef => {
-        let especialidad: any = especialidadRef.payload.doc.data();
-        especialidad['id'] = especialidadRef.payload.doc.id;
-        return especialidad;
-      });
-  
-      console.log(this.especialidades);
-    });
+    this.afauth.getAuthState().subscribe(user => {
 
-  }
+      if (user) {
+        this.usuarioActualId = user.uid.toString();
+        const usuarioActualEmail = user.email?.toString();
+        console.log(usuarioActualEmail);
+  
+        this.database.obtenerTodos("usuarios").subscribe((usuariosRef) => {
+          this.usuarios = usuariosRef.map(userRef => {
+            let usuario: any = userRef.payload.doc.data();
+            usuario['id'] = userRef.payload.doc.id;
+            return usuario;
+          });
+  
+          const usuarioActual = this.usuarios.find(usuario => usuario.email == usuarioActualEmail);
+          this.usuarioActualId=usuarioActual.id;
+          console.log(this.usuarioActualId);
+
+          this.especialistas = this.usuarios.filter(usuario => usuario.perfil == "Especialista" );
+
+  
+          if (usuarioActual) {
+            this.esAdmin = usuarioActual.perfil == "Administrador" || usuarioActual.perfil == "administrador";
+            console.log("Es administrador: " + this.esAdmin);
+            if(this.esAdmin){
+              this.listadoPacientes = this.usuarios.filter(usuario => usuario.perfil.toLowerCase() === "paciente");
+            }else{
+              console.log("No es admin");
+            }
+            
+          } else {
+            console.log("Usuario no encontrado en la base de datos.");
+          }
+  
+          console.log(this.usuarios);
+          console.log(this.listadoPacientes);
+
+        })
+
+      }
+    });
+  
+        
+      this.database.obtenerTodos("especialidades").subscribe((especialidadesRef) => {
+          this.especialidades = especialidadesRef.map(especialidadRef => {
+            let especialidad: any = especialidadRef.payload.doc.data();
+            especialidad['id'] = especialidadRef.payload.doc.id;
+            return especialidad;
+          });
+        });
+
+
+      
+      }
+  
 
 
   seleccionarEspecialidad(event: any) {
@@ -126,9 +166,10 @@ obtenerNombreDia(numeroDia: number) {
 
 seleccionarEspecialista(event: any) {
 
-  const especialistaId = event.target.value;
-  if (especialistaId) {
-    this.especialistaSeleccionado = this.especialistasFiltrados.find(especialista => especialista.id == especialistaId);
+  this.especialistaId = event.target.value;
+  console.log(this.especialistaId);
+  if (this.especialistaId) {
+    this.especialistaSeleccionado = this.especialistasFiltrados.find(especialista => especialista.id == this.especialistaId);
   }
 
   this.obtenerEspecialista();
@@ -179,11 +220,9 @@ calcularHorariosDisponibles(disponibilidadEspecialista: any) {
     return [];
   }
 
-  const diaSemana = this.fechaSeleccionada.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
+  const diaSemana = this.fechaSeleccionada.getDay(); 
   const nombreDia = this.obtenerNombreDia(diaSemana);
 
-  console.log (diaSemana);
-  console.log (nombreDia);
 
   // Verificar si el día de la semana está en la disponibilidad del especialista
   if (disponibilidadEspecialista[nombreDia] && disponibilidadEspecialista[nombreDia].inicio && disponibilidadEspecialista[nombreDia].egreso) {
@@ -203,4 +242,36 @@ calcularHorariosDisponibles(disponibilidadEspecialista: any) {
   console.log(this.horariosGenerados);
   return this.horariosGenerados;
 }
+
+seleccionarPaciente(event: any) {
+  this.usuarioSeleccionadoId = event.target.value;
 }
+
+
+aceptar(){
+
+
+  console.log(this.usuarioActualId);
+  
+      if(this.usuarioActualId && !this.esAdmin){
+        
+          let turno = new Turno(this.usuarioActualId, this.especialistaId, this.especialidadSeleccionada, this.fechaSeleccionada.toLocaleDateString('en-US'), this.horarioSeleccionado);
+          let turnoJSON = turno.toJSON();
+          this.database.crear("turnos", turnoJSON);
+
+      }else if(this.esAdmin && this.usuarioSeleccionadoId!=undefined){
+        
+        let turno = new Turno(this.usuarioSeleccionadoId, this.especialistaId, this.especialidadSeleccionada, this.fechaSeleccionada.toLocaleDateString('en-US'), this.horarioSeleccionado);
+        let turnoJSON = turno.toJSON();
+        this.database.crear("turnos", turnoJSON);
+      }else{
+
+        console.log("ACA");
+      }
+} 
+
+
+
+
+}
+

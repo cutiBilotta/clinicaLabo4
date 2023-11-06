@@ -48,7 +48,12 @@ const routes: Routes = [
     loadChildren: () => import('./modules/mi-perfil/mi-perfil.module')
     .then(mod => mod.MiPerfilModule),
   },
-
+  {
+    path: 'mis-turnos',
+    loadChildren: () => import('./modules/mis-turnos/mis-turnos.module')
+    .then(mod => mod.MisTurnosModule),
+  },
+ 
 ]
 
 @NgModule({

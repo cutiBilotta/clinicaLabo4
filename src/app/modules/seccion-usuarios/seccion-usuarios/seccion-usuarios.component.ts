@@ -12,6 +12,8 @@ export class SeccionUsuariosComponent {
   registrarPaciente:boolean=false;
   registrarEspecialista:boolean=false;
   registrarAdministrador:boolean=false;
+  mostrarTurnos:boolean=false;
+
   mostrarUsuarios:boolean=false;
   mostrarCuerpo:boolean=true;
 
@@ -21,6 +23,8 @@ export class SeccionUsuariosComponent {
     this.registrarAdministrador=false;
     this.mostrarUsuarios=false;
     this.mostrarCuerpo=false;
+    this.mostrarTurnos=false;
+
   }
 
   especialista(){
@@ -29,6 +33,8 @@ export class SeccionUsuariosComponent {
     this.registrarAdministrador=false;
     this.mostrarUsuarios=false;
     this.mostrarCuerpo=false;
+    this.mostrarTurnos=false;
+
 
   }
 
@@ -38,6 +44,8 @@ export class SeccionUsuariosComponent {
     this.registrarEspecialista=false;
     this.mostrarUsuarios=false;
     this.mostrarCuerpo=false;
+    this.mostrarTurnos=false;
+
 
   }
 
@@ -47,7 +55,20 @@ export class SeccionUsuariosComponent {
     this.registrarEspecialista=false;
     this.registrarAdministrador=false;
     this.mostrarCuerpo=false;
+    this.mostrarTurnos=false;
+
 
   }
+  turnos(){
+    this.mostrarUsuarios=false;
+    this.registrarPaciente=false;
+    this.registrarEspecialista=false;
+    this.registrarAdministrador=false;
+    this.mostrarCuerpo=false;
+    this.mostrarTurnos=true;
+
+
+  }
+
 
 }

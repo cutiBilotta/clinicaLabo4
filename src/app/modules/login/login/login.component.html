@@ -15,15 +15,22 @@
                 <b>Ya tienes cuenta?</b>
               </div>
           
-              <div class="card-body p-4 bg-light">
-                <form >
-                  <label for="email" style="float: left">Usuario</label>
-                  <input type="email" class="form-control m-2" id="email" name="email" placeholder="Email" [(ngModel)]="email"  autocomplete="off">              
-                  <label for="password" style="float: left">Password</label>
-                  <input type="password" class="form-control m-2" id="password" name="password" placeholder="Password" [(ngModel)]="password" autocomplete="off">
-          
-                  <button *ngIf="usuarios.length>0"  style="background-color: #caff42;"type="submit" class="btn m-2" (click)="ingresar()">Ingresar</button>
-                </form>
+              <div class="card-body p-4 bg-light" >
+                <div *ngIf="usuarios!=undefined && usuarios.length>0">
+                  <form>
+                    <label for="email" style="float: left">Usuario</label>
+                    <input type="email" class="form-control m-2" id="email" name="email" placeholder="Email" [(ngModel)]="email"  autocomplete="off">              
+                    <label for="password" style="float: left">Password</label>
+                    <input type="password" class="form-control m-2" id="password" name="password" placeholder="Password" [(ngModel)]="password" autocomplete="off">
+            
+                    <button style="background-color: #caff42;"type="submit" class="btn m-2" (click)="ingresar()">Ingresar</button>
+                  </form>
+                </div>
+                <div *ngIf="usuarios.length==0" class="spinner-container text-center">
+                  <img src="../../../../assets/img/spinner.png"alt="spinner">
+  
+                </div>
+               
           
                 <p>Ingresar como:</p>
                 <button type="button" class="btn m-2" style="background-color: #88abc2;" (click)="autocompletarEmpleado()">Especialista</button>
@@ -33,6 +40,8 @@
                 <p class="text-danger">{{mensajeError}}</p>
                
               </div>
+
+              
           </div>
 
 

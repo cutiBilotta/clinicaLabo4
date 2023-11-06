@@ -65,6 +65,11 @@ export class AuthService {
     return this.afauth.authState;
   }
 
+  getAuthState() {
+    return this.afauth.authState;
+  }
+
+
 
   logout() {
     this.afauth.signOut();

@@ -6,18 +6,34 @@ import { Usuario } from '../classes/usuario';
 })
 export class DataBaseService {
 
-  public usuarios: Usuario[] = [];
+    public usuarios: Usuario[] = [];
+    public especialidades: any[] = [];
+    public turnos: any[] = [];
+    public prestadores: any[] = [];
+  
+    constructor(private firestore: AngularFirestore) {
+      // Inicializa los arrays utilizando el método obtenerTodos
+      this.inicializarArray("usuarios", this.usuarios);
+      this.inicializarArray("especialidades", this.especialidades);
+      this.inicializarArray("turnos", this.turnos);
+      this.inicializarArray("prestadores", this.prestadores);
+    }
+  
+    // Método para inicializar un array utilizando obtenerTodos
+    private inicializarArray(coleccion: string, array: any[]) {
+      
+      this.obtenerTodos(coleccion).subscribe((dataRef) => {
+        array = dataRef.map(itemRef => {
+          let item: any = itemRef.payload.doc.data();
+          item['id'] = itemRef.payload.doc.id;
 
-  constructor(private firestore: AngularFirestore) {
-    this.obtenerTodos("usuarios").subscribe((usuariosRef) => {
-      this.usuarios = usuariosRef.map(userRef => {
-        let usuario: any = userRef.payload.doc.data();
-        usuario['id'] = userRef.payload.doc.id;
-        return usuario;
+          return item;
+        });
+        console.log(this.turnos);
+
       });
-    
-   }
-  )};
+
+    }
 
 
 

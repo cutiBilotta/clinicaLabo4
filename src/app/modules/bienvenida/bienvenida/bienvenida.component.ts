@@ -10,9 +10,5 @@ export class BienvenidaComponent {
 
   constructor(private router:Router){}
 
-  ruteoSeccionUsuarios(){
-
-    this.router.navigateByUrl('/seccion-usuarios');
-  }
-
+  
 }

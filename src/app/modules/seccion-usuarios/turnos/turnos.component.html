@@ -1,0 +1,75 @@
+<body>
+    <div class="container">
+
+        <br/><br/>
+        <h3 class="text-center text-dark">Turnos</h3>
+        <br/>
+
+        <table class="table table-bordered table-light" >
+            <thead>
+                <tr>
+                    <th  style="background-color: #49708a;" scope="col">#</th>
+                    <th  style="background-color: #caff42;"  *ngFor="let key of turnosKeys" scope="col">{{ key }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let turno of tablaFiltrada; let i = index" (click)="seleccionarTurno(turno)">
+                    <th scope="row">{{ i + 1 }}</th>
+                    <td *ngFor="let key of turnosKeys">{{ turno[key] }}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div *ngIf="mostrarBoton">
+            <div class="input-group input-group-sm mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="reseña" style="background-color: #ddd;">Reseña por Cancelación </span>
+              </div>
+              <input type="text" class="form-control" #reseniaInput aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+            </div>
+
+            <p class="text-danger" *ngIf="mensajeError!=''"><b>{{mensajeError}}</b></p>
+          
+            <button class="btn" style="background-color: #caff42;" (click)="cancelarTurno(reseniaInput.value)">Cancelar turno</button>
+        </div>
+
+        <hr>
+        <br/>
+            <div class="row justify-content-center">
+                <h4>Filtrar tablas </h4>
+
+                <div class="form-group col-4" *ngIf="especialidades != undefined && especialidades.length > 0">
+                    <h5 for="especialidad">Especialidad</h5>
+                    <div multiple id="especialidad" class="form-control" style="background-color: #d0e0eb;">
+                      <ng-container *ngFor="let especialidad of especialidades">
+                        <ng-container *ngFor="let item of especialidad.especialidades">
+                          <input type="radio" [value]="item" name="especialidadSeleccionada" (change)="filtrarTabla(item)">
+                          {{ item }}<br/>
+                        </ng-container>
+                      </ng-container>
+                    </div>
+                  </div>
+
+                <div class="form-group col-4" *ngIf="especialistas!= undefined && especialistas.length > 0 ">
+                    <h5 for="especialista">Especialista</h5>
+
+                    <div multiple id="especialista" class="form-control" style="background-color: #d0e0eb;">
+                        <ng-container *ngFor="let item of especialistas">
+                            <input type="radio" name="especialista" [value]="item" (change)="filtrarTablaEspecialista(item.id)">{{ item.nombre }} {{item.apellido}} - {{item.id}}<br/>
+                        </ng-container>
+                    </div>
+
+                </div>
+            </div>
+
+
+        <br/><br/>
+        
+
+
+
+
+
+
+    </div>
+</body>
