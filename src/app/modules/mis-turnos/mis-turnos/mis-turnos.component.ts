@@ -25,6 +25,7 @@ mensajeError:string="";
   resenias:any[]=[];
 turnoSeleccionado:any;
   mostrarBotonCancelar:boolean=false;
+  mostrarDivDiagnostico:boolean = false;
 
     ngOnInit() {
       this.afauth.getAuthState().subscribe(user => {
@@ -132,6 +133,7 @@ filtrarTablaPacientes(pacienteSeleccionado: string) {
 
 seleccionarTurno(turno:any){
   this.turnoSeleccionado=turno;
+  console.log(turno.id);
 
   if(turno.estado.toLowerCase() != "realizado" && turno.estado.toLowerCase() != "cancelado" ){
 
@@ -144,13 +146,58 @@ seleccionarTurno(turno:any){
 
 cancelarTurno(resenia:string){
 
-  if (resenia.trim() !== '') { // Verifica si el campo de reseña no está vacío
+  if (resenia.trim() !== '' && this.turnoSeleccionado.estado.toLowerCase() == "solicitado") {
     this.turnoSeleccionado.estado = "Cancelado";
     this.turnoSeleccionado.reseñaCancelacion = resenia; // Asigna el valor del campo de reseña al objeto
     this.database.actualizar("turnos", this.turnoSeleccionado, this.turnoSeleccionado.id);
   } else {
     // Maneja el caso en el que el campo de reseña está vacío
     this.mensajeError="El campo de reseña por cancelación no puede estar vacío";
+  }
+
+  this.resenias=[];
+
+}
+
+aceptarTurno(){
+
+
+  if (this.turnoSeleccionado.estado.toLowerCase() == "solicitado") {
+    this.turnoSeleccionado.estado = "Aceptado";
+    this.database.actualizar("turnos", this.turnoSeleccionado, this.turnoSeleccionado.id);
+  }
+
+  this.resenias=[];
+
+}
+
+rechazarTurno(resenia:string){
+
+  if (resenia.trim() !== '') {
+    this.turnoSeleccionado.estado = "Rechazado";
+    this.turnoSeleccionado.reseñaCancelacion = resenia; 
+    this.database.actualizar("turnos", this.turnoSeleccionado, this.turnoSeleccionado.id);
+  } else {
+    // Maneja el caso en el que el campo de reseña está vacío
+    this.mensajeError="El campo de reseña por cancelación no puede estar vacío";
+  }
+
+  this.resenias=[];
+
+}
+
+finalizarTurno(resenia:string, diagnostico:string){
+  this.mostrarDivDiagnostico=true;
+
+  if (resenia.trim() !== '' && diagnostico.trim() !== ''  && this.turnoSeleccionado.estado.toLowerCase() == "aceptado") {
+    this.turnoSeleccionado.estado = "Finalizado";
+    this.turnoSeleccionado.reseña = resenia; // Asigna el valor del campo de reseña al objeto
+    this.turnoSeleccionado.diagnostico = diagnostico
+
+    this.database.actualizar("turnos", this.turnoSeleccionado, this.turnoSeleccionado.id);
+  } else {
+    // Maneja el caso en el que el campo de reseña está vacío
+    this.mensajeError="El campo de reseña y diagnostico no puede estar vacío";
   }
 
   this.resenias=[];

@@ -24,14 +24,25 @@
         <div *ngIf="mostrarBotonCancelar">
             <div class="input-group input-group-sm mb-3">
               <div class="input-group-prepend">
-                <span class="input-group-text" id="reseña" style="background-color: #ddd;">Reseña por Cancelación </span>
+                <span class="input-group-text" id="reseña" style="background-color: #ddd;">Reseña  </span>
               </div>
               <input type="text" class="form-control" #reseniaInput aria-label="Small" aria-describedby="inputGroup-sizing-sm">
             </div>
+            <div class="input-group input-group-sm mb-3" >
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="diagnostico" style="background-color: #ddd;">Diagnóstico  </span>
+                </div>
+                <input type="text" class="form-control" #diagnosticoInput aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+              </div>
 
             <p class="text-danger" *ngIf="mensajeError!=''"><b>{{mensajeError}}</b></p>
           
-            <button class="btn" style="background-color: #caff42;" (click)="cancelarTurno(reseniaInput.value)">Cancelar turno</button>
+            
+            <button *ngIf="turnoSeleccionado.estado== 'solicitado'" class="btn mx-2" style="background-color: #caff42;" (click)="cancelarTurno(reseniaInput.value)">Cancelar</button>
+            <button *ngIf="turnoSeleccionado.estado== 'solicitado'" class="btn mx-2" style="background-color: #caff42;" (click)="aceptarTurno()">Aceptar</button>
+            <button  *ngIf="turnoSeleccionado.estado.toLowerCase()== 'aceptado'" class="btn mx-2" style="background-color: #caff42;" (click)="finalizarTurno(reseniaInput.value, diagnosticoInput.value)">Finalizar</button>
+            <button *ngIf="turnoSeleccionado.estado== 'solicitado'" class="btn mx-2" style="background-color: #caff42;" (click)="rechazarTurno(reseniaInput.value)">Rechazar</button>
+
         </div>
 
 
@@ -44,7 +55,6 @@
         </div>
 
 
-        <hr>
         <br/>
             <div class="row justify-content-center">
                 <h4 class="text-center">Filtrar tablas </h4>
@@ -78,7 +88,7 @@
 
                     <div  id="pacientes" class="form-control" style="background-color: #88abc2;">
                         <ng-container *ngFor="let item of pacientes">
-                            <input type="radio" name="pacientes" [value]="item" (change)="filtrarTablaPacientes(item.id)">{{ item.nombre }} {{item.apellido}} - {{item.id}}<br/>
+                            <input type="radio" name="pacientes" [value]="item" (change)="filtrarTablaPacientes(item.id)">{{ item.nombre }} {{item.apellido}}<br/>
                         </ng-container>
                     </div>
 
