@@ -19,34 +19,48 @@ export class MiPerfilComponent implements OnInit{
   especialidadSeleccionada:string="";
   mostrarForm:boolean=false;
   mensajeError:string="";
+  usuarios:any[]=[];
   
   ngOnInit(): void {
     // Obtener el usuario loggeado
-    this.authService.getUserLogged().subscribe(async (user) => {
+    this.authService.getUserLogged().subscribe((user) => {
       if (user) {
         this.usuarioLoggeado = user;
-
+  
         // Ahora puedes acceder al email del usuario
         const email = user.email;
         console.log('Email del usuario loggeado:', email);
-
-        // Comparar el email del usuario loggeado con el array de usuarios
-        this.usuarioBD = this.database.usuarios.find((usuario) => usuario.email == email);
-
-        if (this.usuarioBD) {
-          // El usuario loggeado coincide con un usuario en el array de usuarios
-          console.log('Usuario encontrado en el array de usuarios:', this.usuarioBD);
-
-          // Obtener la imagen del usuario desde el StorageService
-          const nombreImagen = this.usuarioBD.imgPerfil;
-           // Reemplaza con el nombre de la imagen que deseas obtener
-          this.imagenUrl = await this.storageService.obtenerImagen(nombreImagen);
-
-          if (this.imagenUrl) {
-            // La URL de la imagen está disponible, puedes usarla en tu componente
-            console.log('URL de la imagen:', this.imagenUrl);
+        this.database.obtenerTodos("usuarios").subscribe((usuariosRef) => {
+          this.usuarios = usuariosRef.map((userRef) => {
+            let usuario: any = userRef.payload.doc.data();
+            usuario['id'] = userRef.payload.doc.id;
+            return usuario;
+          });
+          console.log(this.usuarios);
+  
+          this.usuarioBD = this.usuarios.find((usuario) => usuario.email == email);
+  
+          if (this.usuarioBD) {
+            // El usuario loggeado coincide con un usuario en el array de usuarios
+            console.log('Usuario encontrado en el array de usuarios:', this.usuarioBD);
+  
+            // Obtener la imagen del usuario desde el StorageService
+            // Reemplaza con el nombre de la imagen que deseas obtener
+            if (this.usuarioBD.perfil.toLowerCase() == "paciente") {
+              const nombreImagen = this.usuarioBD.imgPerfil[0];
+              this.storageService.obtenerImagen(nombreImagen).then((url) => {
+                this.imagenUrl = url;
+                console.log(this.imagenUrl);
+              });
+            } else if (this.usuarioBD.perfil.toLowerCase() == "administrador") {
+              const nombreImagen = this.usuarioBD.imgPerfil;
+              this.storageService.obtenerImagen(nombreImagen).then((url) => {
+                this.imagenUrl = url;
+                console.log(this.imagenUrl);
+              });
+            }
           }
-        }
+        });
       }
     });
   }

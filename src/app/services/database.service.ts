@@ -29,7 +29,7 @@ export class DataBaseService {
 
           return item;
         });
-        console.log(this.turnos);
+        //console.log(this.turnos);
 
       });
 

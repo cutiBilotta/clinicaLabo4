@@ -45,7 +45,7 @@
                 <div class="form-group col-md-6">
                     <label for="obrasSociales">Obra Social</label>
                     <select *ngIf="listadoObrasSociales && listadoObrasSociales[0]?.prestadores" id="obraSocial" class="form-control"  formControlName="obraSocial">
-                        <option [value]="" disabled selected>Selecciona su Obra Social</option>
+                        <option [value]="" hidden selected >Selecciona su Obra Social</option>
                         <option *ngFor="let item of listadoObrasSociales[0].prestadores">{{ item }}</option>
                     </select>
                 </div>
@@ -64,18 +64,20 @@
 
             <p class="text-success" *ngIf="mensajeExito!='' ">{{mensajeExito}}</p>
 
+
+            <div *ngIf="form.get('edad')?.value !== '' && form.get('dni')?.value !== '' && form.get('obraSocial')?.value !== '' " class="form-group col-md-6">
+                <h4 class="text-dark text-center">Imágen de Perfil</h4>
+                <input type="file" class="form-control" accept=".png, .jpg,.jpeg" multiple  id="inputFile">
+            </div>
+
             <div style="text-align: center;">
-                <button class="btn" (click)="aceptar()" style="background-color: #caff42;">Enviar Datos</button>
-              </div>
+                <button class="btn mt-5" (click)="aceptar()" style="background-color: #caff42;">Enviar Datos</button>
+            </div>
 
             <hr class="my-4">
 
 
-            <div *ngIf="mostrarCargaImg"class="form-group col-md-6">
-                <label for="imagen">Imagen de perfil</label><br/>
-                <input type="file" accept=".png, .jpg,.jpeg" multiple (change)="cargarImagen($event)" id="inputFile">
-                <button [hidden]="imagenes.length>2">Cargar Imagen</button>
-            </div>
+           
             <br /><br />
         </form>
     </div>

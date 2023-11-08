@@ -64,6 +64,11 @@ export class RegistroPacienteComponent implements OnInit {
 }
     
   aceptar() {
+    const inputFile = document.getElementById('inputFile') as HTMLInputElement;
+    const archivos = inputFile.files;
+    console.log(archivos);
+
+
     this.mensajeError=[];
     console.log("Nombre" + this.form?.get('nombre')?.value);
     if (this.form?.invalid) {
@@ -87,10 +92,14 @@ export class RegistroPacienteComponent implements OnInit {
       this.mostrarCargaImg=false;
 
     }else{
-      this.mostrarCargaImg=true;
+      if (archivos) {
+        console.log("ACA");
+       this.cargarImagen(archivos);
+      }
 
     }
   } else {
+    
     console.log('Formulario Inválido');
   }
 }
@@ -134,61 +143,73 @@ redirigirVerificacionEmail() {
   this.verificacionEmail.emit();
 }
 
-cargarImagen(event: any) {
-  const archivos = event.target.files;
-  
-  if (this.imagenes.length + archivos.length > 2) {
-    this.mensajeErrorImg= 'Se ha excedido el límite de imágenes';
+cargarImagen(archivos: any) {
+  let id: any;
+  console.log(archivos);
+
+  if (archivos.length > 2) {
+    this.mensajeErrorImg = 'Se ha excedido el límite de imágenes';
     return;
   }
 
-  let id = this.buscarUsuarioPorDNI();
+  setTimeout(() => {
+    id = this.buscarUsuarioPorDNI();
 
-  if (id) {
-    const nombresArchivos: string[] = []; // Array to store file names
+    console.log(id);
+    if (id) {
+      const nombresArchivos: string[] = []; // Array to store file names
 
-    for (let i = 0; i < archivos.length; i++) {
-      const reader = new FileReader();
-      const nombreArchivo = this.form.get('nombre')?.value + this.form.get('apellido')?.value + "_" + Date.now() + "_" + i;
+      for (let i = 0; i < archivos.length; i++) {
+        const reader = new FileReader();
+        const nombreArchivo =
+          this.form.get('nombre')?.value +
+          this.form.get('apellido')?.value +
+          '_' +
+          Date.now() +
+          '_' +
+          i;
 
-      reader.readAsDataURL(archivos[i]);
-      reader.onloadend = () => {
-        this.imagenes.push(reader.result);
-        
-        // Upload the image to Firebase Storage
-        this.storageService.subirImagen(nombreArchivo, reader.result).then(urlImagen => {
-          nombresArchivos.push(nombreArchivo); // Store the file name
+        reader.readAsDataURL(archivos[i]);
+        reader.onloadend = () => {
+          this.imagenes.push(reader.result);
 
-          if (nombresArchivos.length === archivos.length) {
-            // Update the 'imgPerfil' field in nuevoPaciente with the array of file names
-            this.nuevoPaciente.imgPerfil = nombresArchivos;
+          // Upload the image to Firebase Storage
+          this.storageService.subirImagen(nombreArchivo, reader.result).then((urlImagen) => {
+            nombresArchivos.push(nombreArchivo); // Store the file name
+            console.log(nombreArchivo);
+            if (nombresArchivos.length === archivos.length) {
+              // Update the 'imgPerfil' field in nuevoPaciente with the array of file names
+              this.nuevoPaciente.imgPerfil = nombresArchivos;
 
-            const nuevoPacienteJSON = this.nuevoPaciente.toJSON();
-            // Update the user's data in the Firestore database
-            this.database.actualizar("usuarios", nuevoPacienteJSON, id);
+              const nuevoPacienteJSON = this.nuevoPaciente.toJSON();
+              // Update the user's data in the Firestore database
+              this.database.actualizar('usuarios', nuevoPacienteJSON, id);
+              console.log('se actualizo el database');
 
-            this.form.reset();
-            this.redirigirVerificacionEmail();
-          }
-        });
+              this.form.reset();
+              this.redirigirVerificacionEmail();
+            }
+          });
+        }
       }
+    } else {
+      // Handle the case where the user is not found
     }
-  } else {
-    // Handle the case where the user is not found
-  }
+  }, 5000); // Agregamos un retraso de 1 segundo
 }
 
 buscarUsuarioPorDNI() {
   const dniToFind = this.nuevoPaciente.dni; // DNI to search for
 
-  const matchingUser = this.usuarios.find(user => user.dni === dniToFind);
+  console.log(this.nuevoPaciente.dni);
+  const matchingUser = this.usuarios.find((user) => user.dni == dniToFind);
 
   if (matchingUser) {
     const userId = matchingUser.id;
-    // userId is the ID of the user with the matching DNI
+    // userId es el ID del usuario con el DNI coincidente
     return userId;
   } else {
-    // User not found
+    // Usuario no encontrado
     return null;
   }
 }

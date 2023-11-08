@@ -10,8 +10,7 @@
                 <div class="col-lg-4 ">
                   <div class="card mb-4 mt-4" style="background-color: #d0e0eb;">
                     <div class="card-body text-center">
-                      <img *ngIf="imagenUrl!=undefined"src="{{imagenUrl}}" alt="avatar"
-                        class="rounded-circle img-fluid" style="width: 150px;">
+                      <img *ngIf="imagenUrl!=undefined" [src]="imagenUrl" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;"> 
                       <h5 class="my-3">{{usuarioBD.nombre}}</h5>
                       <p class="text-muted mb-1">{{usuarioBD.perfil}}</p>
                       <p *ngIf="usuarioBD.perfil == 'Especialista' "class="text-muted mb-1">{{usuarioBD.especialidad}}</p>
