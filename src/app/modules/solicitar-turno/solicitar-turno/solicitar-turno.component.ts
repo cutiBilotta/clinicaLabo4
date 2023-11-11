@@ -53,7 +53,7 @@ export class SolicitarTurnoComponent {
           this.usuarioActualId=usuarioActual.id;
           console.log(this.usuarioActualId);
 
-          this.especialistas = this.usuarios.filter(usuario => usuario.perfil == "Especialista" );
+          this.especialistas = this.usuarios.filter(usuario => usuario.perfil == "Especialista" && usuario.disponibilidad);
 
   
           if (usuarioActual) {

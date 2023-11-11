@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NotFoundComponent } from './components/not-found/not-found.component';
+import { CalificacionComponent } from './components/calificacion/calificacion.component';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDhMeOKg3NlfID1yZj0pWK3C0XIT-dM9gU",
@@ -18,7 +20,9 @@ const firebaseConfig = {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    NotFoundComponent,
+    CalificacionComponent
   ],
   imports: [
     BrowserModule,

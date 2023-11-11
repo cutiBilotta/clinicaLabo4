@@ -12,24 +12,22 @@ export class RegistroComponent {
 
 
   opcionSeleccionada:string = "";
-  altaPaciente:boolean=false;
-  altaEspecialista:boolean=false;
+  paciente:boolean=false;
+  especialista:boolean=false;
   mostrarVerificacionEmail:boolean=false;
 
-  aceptar(){
-    
-    if(this.opcionSeleccionada == "paciente"){
-      this.altaPaciente=true;
-
-    }else if (this.opcionSeleccionada == "especialista"){
-      this.altaEspecialista=true;
-    }
-
+  altaPaciente(){
+    this.paciente=true;
   }
 
+  altaEspecialista(){
+    this.especialista=true;
+  }
+
+
   verificacionEmail(){
-    this.altaEspecialista=false;
-    this.altaPaciente=false;
+    this.especialista=false;
+    this.paciente=false;
     this.router.navigateByUrl('/verificacion');
 
 

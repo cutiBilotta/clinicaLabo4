@@ -3,6 +3,7 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Especialista } from 'src/app/classes/especialista';
 import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-registro-especialista',
   templateUrl: './registro-especialista.component.html',
@@ -19,11 +20,11 @@ export class RegistroEspecialistaComponent implements OnInit{
   mostrarEmailComponent:boolean=false;
   nuevaEspecialidad:boolean=false;
   otra = "Otra";
-
+  imagenIngresada:boolean = false;
   especialidadesSeleccionadas: string[] = [];
 
 
-  constructor(private authService: AuthService, private database: DataBaseService, private formBuilder: FormBuilder){}
+  constructor(private authService: AuthService, private database: DataBaseService, private formBuilder: FormBuilder, private router:Router){}
 
   ngOnInit() {
     this.form = this.formBuilder.group({
@@ -34,7 +35,7 @@ export class RegistroEspecialistaComponent implements OnInit{
       dni: new FormControl("", [Validators.required, Validators.minLength(6), Validators.maxLength(8)]),
       especialidad: new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z ]*')]),
       email: new FormControl("", [Validators.email, Validators.required]),
-      password: new FormControl("", [Validators.required]),
+      password: new FormControl("", [Validators.required, Validators.minLength(6)]),
       nuevaEspecialidadControl: new FormControl('')
 
 
@@ -61,6 +62,8 @@ export class RegistroEspecialistaComponent implements OnInit{
      })
   }
     
+
+
   aceptar() {
     this.mensajeError=[];
     console.log("Nombre" + this.form?.get('nombre')?.value);
@@ -92,6 +95,7 @@ export class RegistroEspecialistaComponent implements OnInit{
       this.registrarse();
       this.form.reset();
       this.nuevaEspecialidad = false;
+      this.router.navigateByUrl('/verificacion');
       this.especialidadesSeleccionadas = []; // Reinicia la lista de especialidades seleccionadas
     } else {
       console.log('Formulario Inválido');
@@ -128,19 +132,29 @@ registrarse() {
 }
 
 
-selectChange(event: Event) {
-  const valor = (event.target as HTMLInputElement).value;
+selectChange(event: any) {
+  const checkbox = event.target as HTMLInputElement;
+  const valor = checkbox.value;
 
-  if (valor.toLowerCase() === "otra") {
-    this.nuevaEspecialidad = true;
+  if (valor.toLowerCase() == "otra") {
+    this.nuevaEspecialidad = checkbox.checked; // Solo actualiza nuevaEspecialidad si "Otra" está marcada
   } else {
     this.nuevaEspecialidad = false;
+  
 
     // Verifica si la especialidad ya está en la lista de seleccionadas antes de agregarla.
-    if (!this.especialidadesSeleccionadas.includes(valor)) {
+    if (checkbox.checked && !this.especialidadesSeleccionadas.includes(valor)) {
       this.especialidadesSeleccionadas.push(valor);
+    } else if (!checkbox.checked) {
+      // Checkbox desmarcado, eliminar del array
+      const index = this.especialidadesSeleccionadas.indexOf(valor);
+      if (index !== -1) {
+        this.especialidadesSeleccionadas.splice(index, 1);
+      }
     }
   }
+
+  console.log(this.especialidadesSeleccionadas);
 }
 
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Calificacion } from 'src/app/classes/calificacion';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 
@@ -19,13 +20,15 @@ export class MisTurnosComponent implements OnInit {
   usuarioActualBd:any;
   turnosKeys:any[]=[];
   tablaFiltrada:any[]=[];
-mensajeError:string="";
+  mensajeError:string="";
   especialidades:any[]=[];
-
   resenias:any[]=[];
-turnoSeleccionado:any;
-  mostrarBotonCancelar:boolean=false;
+  turnoSeleccionado:any;
+  mostrarDivEspecialista:boolean=false;
   mostrarDivDiagnostico:boolean = false;
+  mostrarEncuesta:boolean=false;
+  mostrarCalificacion:boolean=false;
+  puntuacion:number=0;
 
     ngOnInit() {
       this.afauth.getAuthState().subscribe(user => {
@@ -65,23 +68,29 @@ turnoSeleccionado:any;
     
       this.database.obtenerTodos("turnos").subscribe((turnosRef) => {
         this.turnos = turnosRef.map(turnoRef => {
-          let usuario: any = turnoRef.payload.doc.data();
-          usuario['id'] = turnoRef.payload.doc.id;
-          return usuario;
+          let turno: any = turnoRef.payload.doc.data();
+          turno['id'] = turnoRef.payload.doc.id;
+          return turno;
         });
 
         this.turnos.forEach((turno) => {   
           this.turnosKeys = Object.keys(turno);
-          if(turno.reseñaCancelacion!= undefined){
+          if((this.esPaciente && turno.pacienteId==this.usuarioActualId && turno.hasOwnProperty('reseñaCancelacion')) || (!this.esPaciente && turno.especialistaId == this.usuarioActualId &&  turno.hasOwnProperty('reseñaCancelacion'))){
             this.resenias.push({id: turno.id , resenia: turno.reseñaCancelacion});
           }
 
         });
+        console.log(this.resenias);
         console.log(this.turnos);
         this.filtrarTurnos(); // Llama a la función para filtrar los turnos      
       });
     
     }
+
+  seleccionarPuntuacion(starNumber: number) {
+      this.puntuacion = starNumber;
+      console.log('Puntuación seleccionada:', this.puntuacion);
+}
 
 filtrarTurnos() {
   if (this.esPaciente) {
@@ -133,12 +142,27 @@ filtrarTablaPacientes(pacienteSeleccionado: string) {
 
 seleccionarTurno(turno:any){
   this.turnoSeleccionado=turno;
-  console.log(turno.id);
+  console.log(turno.estado);
+  if(!this.esPaciente && this.turnoSeleccionado.estado.toLowerCase() != "finalizado" && this.turnoSeleccionado.estado.toLowerCase() != "cancelado"){
+    this.mostrarDivEspecialista = true;
+  }else if((this.esPaciente &&turno.estado.toLowerCase() == "finalizado" ) || (this.esPaciente && turno.estado.toLowerCase() == "finalizado" && turno.hasOwnProperty('reseñaFinalizacion'))){
+    this.mostrarCalificacion = true;
+  }
+  
 
-  if(turno.estado.toLowerCase() != "realizado" && turno.estado.toLowerCase() != "cancelado" ){
+}
 
-    this.mostrarBotonCancelar = true;
+aceptar(resenia:string){
 
+  if (resenia.trim() !== '' && this.turnoSeleccionado.estado.toLowerCase() == "finalizado") {
+    console.log("aqui");
+    let nuevaCalificacion= new Calificacion(this.turnoSeleccionado.especialistaId, this.usuarioActualId, this.puntuacion.toString(), resenia , this.turnoSeleccionado.id)
+    let calificacionJSON= nuevaCalificacion.toJSON();
+    console.log(calificacionJSON);
+    this.database.crear("calificaciones", calificacionJSON);
+  } else {
+    // Maneja el caso en el que el campo de reseña está vacío
+    this.mensajeError="El campo de reseña y diagnostico no puede estar vacío";
   }
 
 
@@ -191,7 +215,7 @@ finalizarTurno(resenia:string, diagnostico:string){
 
   if (resenia.trim() !== '' && diagnostico.trim() !== ''  && this.turnoSeleccionado.estado.toLowerCase() == "aceptado") {
     this.turnoSeleccionado.estado = "Finalizado";
-    this.turnoSeleccionado.reseña = resenia; // Asigna el valor del campo de reseña al objeto
+    this.turnoSeleccionado.reseñaFinalizacion = resenia; // Asigna el valor del campo de reseña al objeto
     this.turnoSeleccionado.diagnostico = diagnostico
 
     this.database.actualizar("turnos", this.turnoSeleccionado, this.turnoSeleccionado.id);

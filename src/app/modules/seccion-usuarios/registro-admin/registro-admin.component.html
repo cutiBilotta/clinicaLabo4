@@ -53,22 +53,22 @@
 
             <p class="text-danger text-center" *ngIf="mensajeError.length>0">Campos inválidos: {{ mensajeError.join(', ') }}</p>
 
-            <hr class="my-4">
-
             <p class="text-success" *ngIf="mensajeExito!='' ">{{mensajeExito}}</p>
 
-            <div style="text-align: center;">
-                <button class="btn" (click)="aceptar()" style="background-color: #caff42;">Enviar Datos</button>
+            <div class="col-md-6 offset-md-3 text-center" *ngIf="form.get('edad')?.value !== '' && form.get('dni')?.value !== '' && form.get('nombre')?.value !== '' && form.get('apellido')?.value !== '' && form.get('mail')?.value !== ''" >
+                <hr>
+                <h4 class="text-dark text-center">Imágen de Perfil</h4>
+                <input type="file" class="form-control" accept=".png, .jpg,.jpeg"  id="inputFile" (change)="onFileChange($event)">
+            </div>
+
+            <div style="text-align: center;" *ngIf="imagenIngresada">
+                <button *ngIf="!spinner" class="btn mt-5" (click)="aceptar()" style="background-color: #caff42;">Enviar Datos</button>
+            </div>
+            <div *ngIf="spinner" class="spinner-container text-center mt-4">
+                <img src="../../../../assets/img/spinner.png"alt="spinner">
+
               </div>
 
-            <hr class="my-4">
-
-
-            <div *ngIf="mostrarCargaImg"class="form-group col-md-6">
-                <label for="imagen">Imagen de perfil</label><br/>
-                <input type="file" accept=".png, .jpg,.jpeg" multiple (change)="cargarImagen($event)" id="inputFile">
-                <button [hidden]="imagenes.length>2">Cargar Imagen</button>
-            </div>
             <br /><br />
         </form>
     </div>

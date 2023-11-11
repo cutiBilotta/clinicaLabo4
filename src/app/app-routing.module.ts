@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdministradorGuard } from './guards/administrador.guard';
+import { NotFoundComponent } from './components/not-found/not-found.component';
+import { CalificacionComponent } from './components/calificacion/calificacion.component';
 const routes: Routes = [
   {
     path: '',
@@ -31,7 +33,7 @@ const routes: Routes = [
     path: 'seccion-usuarios',
     loadChildren: () => import('./modules/seccion-usuarios/seccion-usuarios.module')
     .then(mod => mod.SeccionUsuariosModule),
-    //canActivate : [AdministradorGuard]
+    canActivate : [AdministradorGuard]
   },
   {
     path: 'home',
@@ -53,7 +55,16 @@ const routes: Routes = [
     loadChildren: () => import('./modules/mis-turnos/mis-turnos.module')
     .then(mod => mod.MisTurnosModule),
   },
- 
+  {
+    path: "calificacion",
+    component: CalificacionComponent
+  } ,
+  {
+    path: "**",
+    component: NotFoundComponent
+  },
+
+
 ]
 
 @NgModule({

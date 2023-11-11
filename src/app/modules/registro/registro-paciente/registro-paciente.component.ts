@@ -21,7 +21,8 @@ export class RegistroPacienteComponent implements OnInit {
   imagenes:any[]=[];
   mostrarCargaImg:boolean=false;
   mensajeErrorImg:string="";
-
+  imagenIngresada:boolean =false; 
+  spinner:boolean=false;
   @Output() verificacionEmail = new EventEmitter<string>();
 
   constructor(private authService: AuthService, private database: DataBaseService, private formBuilder: FormBuilder, private storageService: StorageService){}
@@ -35,7 +36,7 @@ export class RegistroPacienteComponent implements OnInit {
       dni: new FormControl("", [Validators.required, Validators.minLength(6), Validators.maxLength(8)]),
       obraSocial: new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z ]*')]),
       email: new FormControl("", [Validators.email, Validators.required]),
-      password: new FormControl("", [Validators.required]),
+      password: new FormControl("", [Validators.required, Validators.minLength(6)]),
 
 
     });
@@ -61,6 +62,10 @@ export class RegistroPacienteComponent implements OnInit {
      });
      //console.log(this.usuarios)
    })
+}
+onFileChange(event: any) {
+  // Verifica si se seleccionó algún archivo
+  this.imagenIngresada = event.target.files && event.target.files.length > 0;
 }
     
   aceptar() {
@@ -144,6 +149,7 @@ redirigirVerificacionEmail() {
 }
 
 cargarImagen(archivos: any) {
+  this.spinner=true;
   let id: any;
   console.log(archivos);
 

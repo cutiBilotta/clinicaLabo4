@@ -5,84 +5,89 @@
 
 
       <div class="card mt-5">
-        <h5 class="card-header" style="background-color: #49708a;">Turnos</h5>
+        <h5 class="card-header text-center" style="background-color: #49708a;">Turnos</h5>
         <div class="card-body" style="background-color: #d0e0eb;">
-          <h5 class="card-title text-center">Solicitar Turno</h5>
+            <h5 class="card-title text-center">Solicitar Turno</h5>
+            <div class="row">
+            <div class="col"></div>
+            <div class="col-6">
 
-          <label for="especialidad"><b>Especialidad</b></label> <br/><br/>
-          <select *ngIf="especialidades != undefined && especialidades.length > 0" name="especialidad" id="especialidad" (change)="seleccionarEspecialidad($event)">
-            <option value="">Selecciona una especialidad</option>
-            <ng-container *ngFor="let especialidad of especialidades[0].especialidades; let i = index">
-              <option [value]="i">{{ especialidad }}</option>
-            </ng-container>
-          </select>
-          <br/>
-          <hr>
-          <br/>
-          <label for="especialidad"><b>Especialistas</b></label><br/><br/>
+                <label for="especialidad"><b>Especialidad</b></label> <br/><br/>
+                <select  class="form-select" *ngIf="especialidades != undefined && especialidades.length > 0" name="especialidad" id="especialidad" (change)="seleccionarEspecialidad($event)">
+                  <option value="">Selecciona una especialidad</option>
+                  <ng-container *ngFor="let especialidad of especialidades[0].especialidades; let i = index">
+                    <option [value]="i">{{ especialidad }}</option>
+                  </ng-container>
+                </select>
+                <br/>
+                <hr>
+                <br/>
+                <label for="especialidad"><b>Especialistas</b></label><br/><br/>
+                
+                <select  class="form-select" *ngIf="especialistasFiltrados != undefined && especialistasFiltrados.length > 0" name="especialistasFiltrados" id="especialistasFiltrados" (change)="seleccionarEspecialista($event)">
+                  <option value="" selected>Selecciona un Especialista</option>
+                  <ng-container *ngFor="let especialista of especialistasFiltrados">
+                      <option value="{{ especialista.id }}">{{ especialista.nombre }} {{ especialista.apellido }}</option>
+                  </ng-container>
+                </select>
+        
+                <br/>
+                <hr>
+                <br/>
+
+                <label for="fechaElegida"><b>Fecha</b></label><br/><br/>
+
+
+                <select  class="form-select" name="fechaElegida" id="fechaElegida" (change)="seleccionarFecha($event)">
+                  <option value="">Selecciona una fecha</option>
+                  <ng-container *ngFor="let fecha of fechasGeneradas">
+                    <option [value]="fecha.dia + '/' + fecha.mes">{{ fecha.dia }}/{{ fecha.mes }}</option>
+                  </ng-container>
+                </select>
+
+                <br/>
+                <hr>
+                <br/>
+
+                <label for="horaElegida"><b>Horario</b></label><br/><br/>
+
+                <select   class="form-select" name="horaElegida" id="horaElegida" (change)="seleccionarHorario($event)">
+                  <option value="">Selecciona un Horario</option>
+                  <ng-container *ngFor="let hora of horariosGenerados">
+                    <option [value]="hora">{{ hora }}</option>
+                  </ng-container>
+                </select>
+
+                <div *ngIf="esAdmin && listadoPacientes!=undefined && listadoPacientes.length>0">
+                  
+                  <br/>
+                  <hr>
+                  <br/>
+                  <label for="paciente"><b>Paciente</b></label><br/><br/>
+
+                  <select   class="form-select" name="paciente" id="paciente" (change)="seleccionarPaciente($event)">
+                    <option value="">Selecciona un Paciente</option>
+                    <ng-container *ngFor="let paciente of listadoPacientes">
+                      <option [value]="paciente.id">{{ paciente.nombre }} {{ paciente.apellido }} - {{paciente.dni}}</option>
+                    </ng-container>
+                  </select>
+                </div>
+                <br/>
+                  <hr>
+                  <br/>
+
+                <div style="text-align: center;">
+                <button class="btn btn-lg" style="background-color: #caff42;" (click)="aceptar()">Aceptar</button>
+                </div>
+                <br/><br/>
+            </div>
           
-          <select *ngIf="especialistasFiltrados != undefined && especialistasFiltrados.length > 0" name="especialistasFiltrados" id="especialistasFiltrados" (change)="seleccionarEspecialista($event)">
-            <option value="" selected>Selecciona un Especialista</option>
-            <ng-container *ngFor="let especialista of especialistasFiltrados">
-                <option value="{{ especialista.id }}">{{ especialista.nombre }} {{ especialista.apellido }}</option>
-            </ng-container>
-        </select>
-  
-          <br/>
-          <hr>
-          <br/>
-
-          <label for="fechaElegida"><b>Fecha</b></label><br/><br/>
-
-
-          <select name="fechaElegida" id="fechaElegida" (change)="seleccionarFecha($event)">
-            <option value="">Selecciona una fecha</option>
-            <ng-container *ngFor="let fecha of fechasGeneradas">
-              <option [value]="fecha.dia + '/' + fecha.mes">{{ fecha.dia }}/{{ fecha.mes }}</option>
-            </ng-container>
-          </select>
-
-          <br/>
-          <hr>
-          <br/>
-
-          <label for="horaElegida"><b>Horario</b></label><br/><br/>
-
-          <select name="horaElegida" id="horaElegida" (change)="seleccionarHorario($event)">
-            <option value="">Selecciona un Horario</option>
-            <ng-container *ngFor="let hora of horariosGenerados">
-              <option [value]="hora">{{ hora }}</option>
-            </ng-container>
-          </select>
-
-          <div *ngIf="esAdmin && listadoPacientes!=undefined && listadoPacientes.length>0">
-            
-            <br/>
-            <hr>
-            <br/>
-            <label for="paciente"><b>Paciente</b></label><br/><br/>
-
-            <select name="paciente" id="paciente" (change)="seleccionarPaciente($event)">
-              <option value="">Selecciona un Paciente</option>
-              <ng-container *ngFor="let paciente of listadoPacientes">
-                <option [value]="paciente.id">{{ paciente.nombre }} {{ paciente.apellido }} - {{paciente.dni}}</option>
-              </ng-container>
-            </select>
+            <div class="col"></div>
           </div>
-          <br/>
-            <hr>
-            <br/>
 
-          <button class="btn" style="background-color: #caff42;" (click)="aceptar()">Aceptar</button>
         </div>
 
       </div>
-
-       
-
-
-
-
 
     </div>
     <br/><br/><br/><br/> 

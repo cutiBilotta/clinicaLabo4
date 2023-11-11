@@ -64,49 +64,49 @@ export class InformacionUsuariosComponent {
   }
 
 
-  cargarTablas(){
-
+  cargarTablas() {
+    this.pacientes = [];
+    this.especialistas = [];
+    this.administradores = [];
+  
     this.usuarios.forEach((usuario) => {
-      const perfil = usuario.perfil.toLowerCase(); 
-
+      const perfil = usuario.perfil.toLowerCase();
+  
       if (perfil == "paciente") {
         this.pacientes.push(usuario);
       } else if (perfil == "especialista") {
         this.especialistas.push(usuario);
-      }else if( perfil == "administrador"){
+      } else if (perfil == "administrador") {
         this.administradores.push(usuario);
-
-      } 
+      }
     });
- 
+  
     console.log(this.pacientes);
     console.log(this.especialistas);
-
   }
 
   seleccionarEspecialista(especialista: any) {
     this.especialistaSeleccionado = especialista;
   }
 
-  habilitar(){
-
+  habilitar() {
     this.especialistaSeleccionado.habilitacion = true;
-   
-    this.database.actualizar("usuarios", this.especialistaSeleccionado, this.especialistaSeleccionado.id );
+    this.database.actualizar("usuarios", this.especialistaSeleccionado, this.especialistaSeleccionado.id);
     console.log("Especialista Habilitado");
-
   }
   
-  deshabilitar(){
-
-
+  deshabilitar() {
     this.especialistaSeleccionado.habilitacion = false;
-   
-    this.database.actualizar("usuarios", this.especialistaSeleccionado, this.especialistaSeleccionado.id );
+    this.database.actualizar("usuarios", this.especialistaSeleccionado, this.especialistaSeleccionado.id);
+  
+    // Remove the disabled especialista from the local array
+    const index = this.especialistas.findIndex(e => e.id === this.especialistaSeleccionado.id);
+    if (index !== -1) {
+      this.especialistas.splice(index, 1);
+    }
+  
     console.log("Especialista Inhabilitado");
-
-
   }
-
+  
 }
 

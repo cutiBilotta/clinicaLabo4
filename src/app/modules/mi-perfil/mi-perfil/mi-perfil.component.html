@@ -70,54 +70,67 @@
           </section>
 
 
-          <div class="mt-4" *ngIf="usuarioBD != undefined && usuarioBD.perfil == 'Especialista'">
+          <div class="mt-4" *ngIf="usuarioBD != undefined && usuarioBD.perfil == 'Especialista' && !usuarioBD.disponibilidad">
 
             <div class="card ">
               <div class="card-body " style="background-color: #d0e0eb;">
                 <h5 class="card-title text-center ">Defina su Disponibilidad Horaria</h5>
+                <div class="input-group mb-3">
 
+                  <div class="col"></div>
+                  <div class="col-6">
+                    <div class="row">
+                      <div>
+                        <p class="text-center" *ngIf="usuarioBD!=undefined">Su especialidad: {{ usuarioBD.especialidad }}</p>
+        
+                        <select  class="form-select"name="especialidad" id="" (change)="seleccionarEspecialidad($event)">
+                          <option value="" disabled selected>Seleccione una Especialidad</option>
+                          <option *ngFor="let especialidad of usuarioBD.especialidad" [value]="especialidad">{{ especialidad }}</option>
+                        </select>
 
-          
-                <p class="text-center" *ngIf="usuarioBD!=undefined">Su especialidad: {{ usuarioBD.especialidad }}</p>
-                <div style="display: flex; align-items: center; justify-content: center;">
-                <select  name="especialidad" id="" (change)="seleccionarEspecialidad($event)">
-                  <option value="" disabled selected>Seleccione una Especialidad</option>
-                  <option *ngFor="let especialidad of usuarioBD.especialidad" [value]="especialidad">{{ especialidad }}</option>
-                </select>
-                </div>
-    
-                <hr>
+                      </div>
+            
 
-                <div class="form-check" *ngIf="mostrarForm" style="align-items: center; justify-content: center;">
-                  <div *ngFor="let dia of diasHabiles; let i = index">
-                    <div class="d-flex align-items-center"> <!-- Agregar contenedor flexible -->
-                      <input class="form-check-input" type="checkbox" [value]="dia" [id]="'checkDia' + i" name="diasSeleccionados" [(ngModel)]="diasSeleccionados[dia]">
-                      <label for="'checkDia' + i" class="form-check-label">&nbsp;	&nbsp;<b>{{ dia }}</b></label>
                     </div>
-                    <br>
-                    <div *ngIf="diasSeleccionados[dia]">
-                      <label for="inputIngreso_{{ dia }}">Horario Ingreso &nbsp;&nbsp;</label>
-                      <input style="background-color: #bbc8d0;" id="inputIngreso_{{ dia }}" type="number" min="8" max="19">hs.
-                      <br/><br/>
-                      <label for="inputEgreso_{{ dia }}">Horario Egreso &nbsp;&nbsp;</label>
-                      <input style="background-color: #bbc8d0;" id="inputEgreso_{{ dia }}" type="number" min="8" max="19">hs.
-                    </div>
+                  
                     <hr>
+
+                    <div class="form-check" *ngIf="mostrarForm" style="align-items: center; justify-content: center;">
+                      <div *ngFor="let dia of diasHabiles; let i = index">
+                        <div class="d-flex align-items-center"> <!-- Agregar contenedor flexible -->
+                          <input class="form-check-input" type="checkbox" [value]="dia" [id]="'checkDia' + i" name="diasSeleccionados" [(ngModel)]="diasSeleccionados[dia]">
+                          <label for="'checkDia' + i" class="form-check-label">&nbsp;	&nbsp;<b>{{ dia }}</b></label>
+                        </div>
+                        <br>
+                        <div *ngIf="diasSeleccionados[dia]">
+                          <label for="inputIngreso_{{ dia }}">Horario Ingreso &nbsp;&nbsp;</label>
+                          <input class="form-control" style="background-color: #bbc8d0;" id="inputIngreso_{{ dia }}" type="number" min="8" max="19" width="50">
+                          <br/><br/>
+                          <label for="inputEgreso_{{ dia }}">Horario Egreso &nbsp;&nbsp;</label>
+                          <input  class="form-control" style="background-color: #bbc8d0;" id="inputEgreso_{{ dia }}" type="number" min="8" max="19">
+                        </div>
+                        <hr>
+                      </div>
+                    
+                      
+                      <p class="text-danger"><b>{{mensajeError}}</b></p>
+                      <div style="text-align: center;">
+                      <button class="btn mt-4 text-center btn-lg" style="background-color: #caff42;" (click)="definirDisponibilidad()">Aceptar</button>
+                      </div>
+                    </div>
                   </div>
-                
-    
-                <p class="text-danger"><b>{{mensajeError}}</b></p>
-                <button class="btn mt-4 text-center" style="background-color: #caff42;" (click)="definirDisponibilidad()">Aceptar</button>
+                  <div class="col"></div>
+
                 </div>
+                <br/><br/>
 
               </div>
-            </div>
-            <br/><br/>
 
 
 
 
 
+             </div>
           </div>
 
 

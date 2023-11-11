@@ -2,20 +2,14 @@
     <div class="container">
       
 
+      <div class="row justify-content-center">
+        <div class="col-4">
 
-
-      <div class="container">
-        <div class="row ">
-          <div class="col">
-          </div>
-          <div class="col-6">
-            
-            <div class="card text-center mx-2 mt-5">
-              <div class="card-header text-white" style="background-color: #49708a;">
-                <b>Ya tienes cuenta?</b>
-              </div>
+          <br/><br/><br/><br/><br/>
+          <div class="card">
+            <h5 class="card-header text-center">Ya tienes cuenta?</h5>
+            <div class="card-body p-4 bg-light">
           
-              <div class="card-body p-4 bg-light" >
                 <div *ngIf="usuarios!=undefined && usuarios.length>0">
                   <form>
                     <label for="email" style="float: left">Usuario</label>
@@ -23,43 +17,58 @@
                     <label for="password" style="float: left">Password</label>
                     <input type="password" class="form-control m-2" id="password" name="password" placeholder="Password" [(ngModel)]="password" autocomplete="off">
             
-                    <button style="background-color: #caff42;"type="submit" class="btn m-2" (click)="ingresar()">Ingresar</button>
                   </form>
                 </div>
-                <div *ngIf="usuarios.length==0" class="spinner-container text-center">
-                  <img src="../../../../assets/img/spinner.png"alt="spinner">
-  
-                </div>
-               
-          
-                <p>Ingresar como:</p>
-                <button type="button" class="btn m-2" style="background-color: #88abc2;" (click)="autocompletarEmpleado()">Especialista</button>
-                <button type="button" class="btn m-2" style="background-color: #88abc2;" (click)="autocompletarAdmin()">Paciente</button>
-    
                 
-                <p class="text-danger">{{mensajeError}}</p>
                
-              </div>
 
-              
-          </div>
-
-
+                <div style="text-align: center;">
+                <button style="background-color: #caff42;"type="submit" class="btn m-2" (click)="ingresar()">Ingresar</button>
+                </div>
 
 
-          </div>
-          <div class="col">
+            </div>
           </div>
         </div>
 
- 
 
-        
+        <div class="col-4">
+
+          <br/><br/><br/><br/><br/>
+
+          <div class="card">
+              <h5 class="card-header text-center">Elige el perfil</h5>
+              <div class="card-body" style="text-align: center;">
+             <div *ngIf="!spinner">
+
+                <div *ngFor="let usuario of usuariosAcceso">
+                  <button type="button" class="btn m-2 btn-lg" style="background-color: #88abc2;" (click)="autocompletar(usuario)">
+                    {{ usuario.nombre }} - {{usuario.perfil}}
+                    <img *ngIf="usuario.perfil === 'Paciente' || usuario.perfil === 'Administrador'" [src]="usuario.imagenURL" style="width: 40px; height: 40px; border-radius: 50%;">
+                  </button><br/>
+                </div>     
+            </div>
+            </div>
+
+
+            <div *ngIf="spinner" class="spinner-container text-center mb-4">
+              <img src="../../../../assets/img/spinner.png"alt="spinner">
+            </div>
+
+
+          </div>
+
+          
 
 
 
+
+        </div>
       </div>
 
+
+
+      
 
 
     </div>

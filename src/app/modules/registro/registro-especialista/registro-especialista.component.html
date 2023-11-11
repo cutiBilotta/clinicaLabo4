@@ -49,18 +49,17 @@
 
                 <div class="form-group col-md-6">
                     <label for="especialidad">Especialidad</label>
-                    <div multiple *ngIf="listadoEspecialidades!= undefined && listadoEspecialidades.length>0 " id="especialidad" class="form-control" (change)="selectChange($event)" >
-
-                        <ng-container *ngFor="let especialidad of listadoEspecialidades">
-                          <ng-container *ngFor="let item of especialidad.especialidades">
-                            <input  formControlName="especialidad" type="checkbox" [value]="item">{{ item }}<br/>
-
-                          </ng-container>
+                    <div multiple *ngIf="listadoEspecialidades != undefined && listadoEspecialidades.length > 0" id="especialidad" class="form-control" (change)="selectChange($event)" style="background-color: #88abc2;">
+                  
+                      <ng-container *ngFor="let especialidad of listadoEspecialidades">
+                        <ng-container *ngFor="let item of especialidad.especialidades">
+                          <input formControlName="especialidad" type="checkbox" [value]="item">{{ item }}<br />
                         </ng-container>
-                        <input  formControlName="especialidad" type="checkbox" [value]="otra">Otra<br/>
-
+                      </ng-container>
+                      <input formControlName="especialidad" type="checkbox" [value]="otra">Otra<br />
+                  
                     </div>
-                </div>
+                  </div>
             
             </div>
 
@@ -81,11 +80,10 @@
 
             <p class="text-success" *ngIf="mensajeExito!='' ">{{mensajeExito}}</p>
 
-            <div style="text-align: center;">
+            <div *ngIf="form.get('edad')?.value !== '' && form.get('dni')?.value !== '' && form.get('especialidad')?.value !== '' && form.get('nombre')?.value !== '' && form.get('apellido')?.value !== '' && form.get('password')?.value !== '' " style="text-align: center;">
                 <button class="btn" (click)="aceptar()" style="background-color: #caff42;">Enviar Datos</button>
-              </div>
+            </div>
 
-            <hr class="my-4">
 
             <br /><br />
         </form>

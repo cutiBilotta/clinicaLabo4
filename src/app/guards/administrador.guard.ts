@@ -16,6 +16,7 @@ export const AdministradorGuard: CanActivateFn = (route, state) => {
   return authService.getUserEmail().pipe(
     switchMap((userEmail) => {
       if (userEmail) {
+        console.log(userEmail);
         const email = userEmail;
         const usuarioEncontrado = database.usuarios.find((usuario: Usuario) => usuario.email == email);
 
@@ -25,8 +26,7 @@ export const AdministradorGuard: CanActivateFn = (route, state) => {
         }
       }
 
-      // Si no es administrador o no hay un usuario autenticado, redirige a otra página o devuelve false según tus necesidades
-      //router.navigate(['/login']); // Puedes redirigir a otra página
+  
       return of(false);
     })
   );

@@ -1,6 +1,28 @@
 body{
     background-color: #d0e0eb;
-    
+    height: 100%;
   
 
 }
+
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  .spinner-container img {
+    width: 50px; /* Ajusta el tamaño de la imagen spinner */
+    height: 50px;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }

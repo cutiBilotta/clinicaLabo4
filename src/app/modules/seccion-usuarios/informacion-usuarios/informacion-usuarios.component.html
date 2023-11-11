@@ -8,6 +8,7 @@
         <h3 class="text-center text-light">Pacientes</h3>
         <br/>
         <!-- Tabla de Pacientes -->
+        <div class="table-responsive">
         <table class="table table-bordered table-light" >
             <thead>
             <tr >
@@ -22,6 +23,7 @@
             </tr>
             </tbody>
         </table>
+    </div>
         
         <hr class="my-4">
         
@@ -29,48 +31,34 @@
         <h3 class="text-center text-light">Especialista</h3>
         <br/>
 
-        <table class="table table-bordered table-light" >
-            <thead>
-                <tr>
-                    <th  style="background-color: #49708a;" scope="col">#</th>
-                    <th  style="background-color: #caff42;"  *ngFor="let key of keysEspecialistas" scope="col">{{ key }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let especialista of especialistas; let i = index" (click)="seleccionarEspecialista(especialista)">
-                    <th scope="row">{{ i + 1 }}</th>
-                    <td *ngFor="let key of keysEspecialistas">{{ especialista[key] }}</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <hr class="my-4">
-        
-        <!-- Tabla de Especialistas -->
-        <h3 class="text-center text-light">Administradores</h3>
-        <br/>
-        
-        <table class="table table-bordered table-light">
-            <thead>
-                <tr>
-                    <th style="background-color: #49708a;" scope="col">#</th>
-                    <th style="background-color: #caff42;" *ngFor="let key of keysAdministradores" scope="col">{{ key }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let administrador of administradores; let i = index">
-                    <th scope="row">{{ i + 1 }}</th>
-                    <td *ngFor="let key of keysAdministradores">{{ administrador[key] }}</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <hr class="my-4">
-
+        <div class="table-responsive">
+            <table class="table table-bordered table-light">
+                <thead>
+                    <tr>
+                        <th style="background-color: #49708a;" scope="col">#</th>
+                        <th style="background-color: #caff42;" *ngFor="let key of keysEspecialistas" scope="col">{{ key }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let especialista of especialistas; let i = index" (click)="seleccionarEspecialista(especialista)">
+                        <th scope="row">{{ i + 1 }}</th>
+                        <td *ngFor="let key of keysEspecialistas">
+                            <ng-container *ngIf="key === 'habilitacion'">
+                                <ng-container *ngIf="especialista[key]">si</ng-container>
+                                <ng-container *ngIf="!especialista[key]">no</ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="key !== 'habilitacion'">
+                                {{ especialista[key] }}
+                            </ng-container>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <br/>
         
-        <h4 class=" text-start" style="color: #49708a;" *ngIf="especialistaSeleccionado!=null">Ustedes seleccionó: {{especialistaSeleccionado.nombre}} {{especialistaSeleccionado.apellido}} - {{especialistaSeleccionado.especialidad}} - {{especialistaSeleccionado.dni}} </h4>
+        <h4 class=" text-start" style="color: #49708a;" *ngIf="especialistaSeleccionado!=null">Especialista seleccionado: {{especialistaSeleccionado.nombre}} {{especialistaSeleccionado.apellido}} - {{especialistaSeleccionado.especialidad}} </h4>
         
         <div *ngIf="especialistaSeleccionado!=null && !especialistaSeleccionado.habilitacion">
             <button class="btn btn-success mt-2" (click)="habilitar()">Habilitar</button>
@@ -80,6 +68,33 @@
             <button class="btn btn-danger mt-2" (click)="deshabilitar()" >Deshabilitar</button>
 
         </div>
+
+        <hr class="my-4">
+        
+        <!-- Tabla de Especialistas -->
+        <h3 class="text-center text-light">Administradores</h3>
+        <br/>
+        
+         <div class="table-responsive">
+            <table class="table table-bordered table-light">
+                <thead>
+                    <tr>
+                        <th style="background-color: #49708a;" scope="col">#</th>
+                        <th style="background-color: #caff42;" *ngFor="let key of keysAdministradores" scope="col">{{ key }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let administrador of administradores; let i = index">
+                        <th scope="row">{{ i + 1 }}</th>
+                        <td *ngFor="let key of keysAdministradores">{{ administrador[key] }}</td>
+                    </tr>
+                </tbody>
+            </table>
+          </div>
+        <hr class="my-4">
+
+
+      
         
 
 
