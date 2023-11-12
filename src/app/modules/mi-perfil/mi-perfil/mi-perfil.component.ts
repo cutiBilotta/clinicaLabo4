@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-mi-perfil',
@@ -10,7 +11,7 @@ import { StorageService } from 'src/app/services/storage.service';
 })
 export class MiPerfilComponent implements OnInit{
 
-  constructor(private authService:AuthService, private database:DataBaseService, private storageService:StorageService){}
+  constructor(private authService:AuthService, private database:DataBaseService, private storageService:StorageService, private formBuilder: FormBuilder){}
   usuarioLoggeado:any;
   usuarioBD:any;
   imagenUrl:any;
@@ -20,9 +21,12 @@ export class MiPerfilComponent implements OnInit{
   mostrarForm:boolean=false;
   mensajeError:string="";
   usuarios:any[]=[];
-  
+  form!: FormGroup;
+  especialidadesSelect:any;
+
   ngOnInit(): void {
-    // Obtener el usuario loggeado
+
+
     this.authService.getUserLogged().subscribe((user) => {
       if (user) {
         this.usuarioLoggeado = user;
@@ -44,8 +48,7 @@ export class MiPerfilComponent implements OnInit{
             // El usuario loggeado coincide con un usuario en el array de usuarios
             console.log('Usuario encontrado en el array de usuarios:', this.usuarioBD);
   
-            // Obtener la imagen del usuario desde el StorageService
-            // Reemplaza con el nombre de la imagen que deseas obtener
+   
             if (this.usuarioBD.perfil.toLowerCase() == "paciente") {
               const nombreImagen = this.usuarioBD.imgPerfil[0];
               this.storageService.obtenerImagen(nombreImagen).then((url) => {
@@ -58,6 +61,25 @@ export class MiPerfilComponent implements OnInit{
                 this.imagenUrl = url;
                 console.log(this.imagenUrl);
               });
+
+
+            }else if(this.usuarioBD.perfil.toLowerCase() == "especialista"){
+              if (this.usuarioBD.perfil.toLowerCase() == "especialista") {
+                const especialidadesEspecialista = this.usuarioBD.especialidad; // Obtén las especialidades del especialista
+                const especialidadesConDisponibilidad = this.usuarioBD.disponibilidad.map((disponibilidad: any) => disponibilidad.especialidad);
+                const especialidadesSinDisponibilidad = especialidadesEspecialista.filter((especialidad: string) =>
+                    !especialidadesConDisponibilidad.includes(especialidad)
+                );
+                if (especialidadesSinDisponibilidad.length > 0) {
+             
+                    this.especialidadesSelect = especialidadesSinDisponibilidad;
+                } else {
+                   
+                    this.especialidadesSelect = [];
+                }
+            }
+
+
             }
           }
         });
@@ -121,7 +143,6 @@ export class MiPerfilComponent implements OnInit{
       this.usuarioBD.disponibilidad.push(disponibilidadEspecialista);
   
       this.database.actualizar("usuarios", this.usuarioBD, this.usuarioBD.id);
-  
       console.log(this.usuarioBD);
     }
   }

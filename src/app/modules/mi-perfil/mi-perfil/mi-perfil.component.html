@@ -70,7 +70,7 @@
           </section>
 
 
-          <div class="mt-4" *ngIf="usuarioBD != undefined && usuarioBD.perfil == 'Especialista' && !usuarioBD.disponibilidad">
+          <div class="mt-4" *ngIf="usuarioBD != undefined && usuarioBD.perfil == 'Especialista' ">
 
             <div class="card ">
               <div class="card-body " style="background-color: #d0e0eb;">
@@ -84,8 +84,8 @@
                         <p class="text-center" *ngIf="usuarioBD!=undefined">Su especialidad: {{ usuarioBD.especialidad }}</p>
         
                         <select  class="form-select"name="especialidad" id="" (change)="seleccionarEspecialidad($event)">
-                          <option value="" disabled selected>Seleccione una Especialidad</option>
-                          <option *ngFor="let especialidad of usuarioBD.especialidad" [value]="especialidad">{{ especialidad }}</option>
+                          <option value="" disabled selected>Seleccione una Especialidad - sin disponibilidad definida</option>
+                          <option *ngFor="let especialidad of especialidadesSelect" [value]="especialidad">{{ especialidad }}</option>
                         </select>
 
                       </div>

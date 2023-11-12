@@ -83,23 +83,21 @@ export class LoginComponent implements OnInit {
   
     if (usuarioEncontrado) {
       this.perfil = usuarioEncontrado.perfil;
-      if(this.perfil == "especialista" || this.perfil=="Especialista"){
-        if(usuarioEncontrado.habilitacion == false){
+      if(this.perfil.toLocaleLowerCase() == "especialista" && usuarioEncontrado.habilitacion == false) {
           this.mensajeError="Usted no se encuentra habilitado";
           return
 
-        }else{
+      }else{
           this.authService.login(this.user.email, this.password)
           .then(userCredential => {
-            // Verifica si el correo electrónico del usuario está verificado
-            if (userCredential?.user && userCredential.user.emailVerified) {
-              // El usuario ha verificado su correo electrónico
-              console.log("Ingreso exitoso");
-              // Redirige al usuario a la página deseada
+            if(!userCredential?.user){
+              this.mensajeError="Contraseña incorrecta";
+
+            }else if ( !userCredential?.user?.emailVerified) {
+              this.mensajeError="El usuario no ha verificado el email";
+            }else if(userCredential?.user && userCredential.user.emailVerified){
+
               this.router.navigate(['/home']);
-            } else {
-              this.mensajeError="El usuario aún no ha verificado su correo electrónico.";
-              // Puedes mostrar un mensaje al usuario para que verifique su correo electrónico antes de continuar.
             }
           })
           .catch(err => {
@@ -108,31 +106,10 @@ export class LoginComponent implements OnInit {
 
         }
       }
-  
-      // Realiza el inicio de sesión en Firebase
-      this.authService.login(this.user.email, this.password)
-        .then(userCredential => {
-          // Verifica si el correo electrónico del usuario está verificado
-          if (userCredential?.user && userCredential.user.emailVerified) {
-            // El usuario ha verificado su correo electrónico
-            console.log("Ingreso exitoso");
-            this.router.navigate(['/home']);
-
-            // Redirige al usuario a la página deseada
-            // this.router.navigate(['/menu']);
-          } else {
-            this.mensajeError="El usuario aún no ha verificado su correo electrónico.";
-            // Puedes mostrar un mensaje al usuario para que verifique su correo electrónico antes de continuar.
-          }
-        })
-        .catch(err => {
-          console.log("Error al iniciar sesión:", err);
-        });
-    } else {
-      this.mensajeError="Antes de ingresar debe registrarse";
-    }
+       
   }
 
 
 
 }
+
