@@ -25,10 +25,16 @@ export class MisTurnosComponent implements OnInit {
   resenias:any[]=[];
   turnoSeleccionado:any;
   mostrarDivEspecialista:boolean=false;
+  mostrarDivResenia:boolean=false;
+
   mostrarDivDiagnostico:boolean = false;
   mostrarEncuesta:boolean=false;
   mostrarCalificacion:boolean=false;
   puntuacion:number=0;
+  mostrarBtnCancelar:boolean=false;
+
+  especialidadSeleccionada: string = '';
+especialistaSeleccionado: string = '';
 
     ngOnInit() {
       this.afauth.getAuthState().subscribe(user => {
@@ -57,13 +63,14 @@ export class MisTurnosComponent implements OnInit {
           })
   
         }
-      });
+      
       this.database.obtenerTodos("especialidades").subscribe((especialidadesRef) => {
         this.especialidades = especialidadesRef.map(especialidadRef => {
           let especialidad: any = especialidadRef.payload.doc.data();
           especialidad['id'] = especialidadRef.payload.doc.id;
           return especialidad;
         })
+        console.log(this.especialidades);
         });
     
       this.database.obtenerTodos("turnos").subscribe((turnosRef) => {
@@ -80,11 +87,12 @@ export class MisTurnosComponent implements OnInit {
           }
 
         });
-        console.log(this.resenias);
-        console.log(this.turnos);
+  
         this.filtrarTurnos(); // Llama a la función para filtrar los turnos      
+        console.log(this.resenias);
       });
-    
+    });
+
     }
 
   seleccionarPuntuacion(starNumber: number) {
@@ -104,7 +112,40 @@ filtrarTurnos() {
 }
 
 
+
+
+filtrarTablaPacientes(pacienteSeleccionado: string) {
+  const radiosC = document.getElementsByName('especialistaRadio') as NodeListOf<HTMLInputElement>;
+  const radiosB  = document.getElementsByName('especialidadRadio') as NodeListOf<HTMLInputElement>;
+  for (let i = 0; i < radiosC.length; i++) {
+    radiosC[i].checked = false;
+  }
+  for (let i = 0; i < radiosB.length; i++) {
+    radiosB[i].checked = false;
+  }
+
+
+  const filtroSeleccionado = pacienteSeleccionado;
+  console.log(filtroSeleccionado);
+  if(this.esPaciente){
+  this.tablaFiltrada = this.turnos.filter((turno: any) => turno.pacienteId == filtroSeleccionado);
+  }else{
+    this.tablaFiltrada = this.turnos.filter((turno: any) => turno.pacienteId == filtroSeleccionado && turno.especialistaId == this.usuarioActualId);
+
+  } 
+}
+
 filtrarTablaEspecialidad(especialidadSeleccionada: string) {
+
+  const radios = document.getElementsByName('especialistaRadio') as NodeListOf<HTMLInputElement>;
+  const radiosC = document.getElementsByName('pacientesRadio') as NodeListOf<HTMLInputElement>;
+
+  for (let i = 0; i < radios.length; i++) {
+    radios[i].checked = false;
+  }
+  for (let i = 0; i < radiosC.length; i++) {
+    radiosC[i].checked = false;
+  }
 
   const filtroSeleccionado = especialidadSeleccionada;
   console.log(filtroSeleccionado);
@@ -118,6 +159,16 @@ filtrarTablaEspecialidad(especialidadSeleccionada: string) {
 
 filtrarTablaEspecialista(especialistaSeleccionado: string) {
 
+  const radios = document.getElementsByName('especialidadRadio') as NodeListOf<HTMLInputElement>;
+  const radiosC = document.getElementsByName('pacientesRadio') as NodeListOf<HTMLInputElement>;
+
+  for (let i = 0; i < radiosC.length; i++) {
+    radiosC[i].checked = false;
+  }
+  for (let i = 0; i < radios.length; i++) {
+    radios[i].checked = false;
+  }
+
   const filtroSeleccionado = especialistaSeleccionado;
   console.log(filtroSeleccionado);
   if(this.esPaciente){
@@ -128,25 +179,18 @@ filtrarTablaEspecialista(especialistaSeleccionado: string) {
   }
 }
 
-filtrarTablaPacientes(pacienteSeleccionado: string) {
-
-  const filtroSeleccionado = pacienteSeleccionado;
-  console.log(filtroSeleccionado);
-  if(this.esPaciente){
-  this.tablaFiltrada = this.turnos.filter((turno: any) => turno.pacienteId == filtroSeleccionado);
-  }else{
-    this.tablaFiltrada = this.turnos.filter((turno: any) => turno.pacienteId == filtroSeleccionado && turno.especialistaId == this.usuarioActualId);
-
-  } 
-}
-
 seleccionarTurno(turno:any){
   this.turnoSeleccionado=turno;
   console.log(turno.estado);
   if(!this.esPaciente && this.turnoSeleccionado.estado.toLowerCase() != "finalizado" && this.turnoSeleccionado.estado.toLowerCase() != "cancelado"){
     this.mostrarDivEspecialista = true;
+  }else if(!this.esPaciente && this.turnoSeleccionado.estado.toLowerCase() == "finalizado" || this.turnoSeleccionado.estado.toLowerCase() == "cancelado"){
+    this.mostrarDivEspecialista = false;
   }else if((this.esPaciente &&turno.estado.toLowerCase() == "finalizado" ) || (this.esPaciente && turno.estado.toLowerCase() == "finalizado" && turno.hasOwnProperty('reseñaFinalizacion'))){
     this.mostrarCalificacion = true;
+  }else if(this.esPaciente && turno.estado.toLowerCase() != "finalizado"){
+    this.mostrarCalificacion = false;
+
   }
   
 
@@ -226,6 +270,28 @@ finalizarTurno(resenia:string, diagnostico:string){
 
   this.resenias=[];
 
+}
+
+
+eliminarFiltros(){
+
+  const radiosA = document.getElementsByName('especialidadRadio') as NodeListOf<HTMLInputElement>;
+  const radiosB = document.getElementsByName('especialistaRadio') as NodeListOf<HTMLInputElement>;
+  const radiosC = document.getElementsByName('pacientesRadio') as NodeListOf<HTMLInputElement>;
+
+  for (let i = 0; i < radiosA.length; i++) {
+    radiosA[i].checked = false;
+  }
+
+  for (let i = 0; i < radiosB.length; i++) {
+    radiosB[i].checked = false;
+  }
+
+  for (let i = 0; i < radiosC.length; i++) {
+    radiosC[i].checked = false;
+  }
+
+  this.filtrarTurnos();
 }
 
 }

@@ -6,18 +6,18 @@
         <h3 class="text-center text-dark">Tus Turnos</h3>
         <br/>
 
-        <table class="table table-bordered table-light">
+        <table class="table table-bordered table-light"  >  
             <thead>
               <tr>
                 <th style="background-color: #49708a;" scope="col">#</th>
-                <th style="background-color: #EEE0C9;" *ngFor="let key of turnosKeys" scope="col">{{ key }}</th>
+                <th style="background-color: #49708a;" *ngFor="let key of turnosKeys" scope="col">{{ key }}</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody *ngIf="tablaFiltrada!= undefined && tablaFiltrada.length>0">
               <tr *ngFor="let turno of tablaFiltrada; let i = index">
                 <th scope="row">{{ i + 1 }}</th>
                 <td *ngFor="let key of turnosKeys" (click)="seleccionarTurno(turno)">
-                  <ng-container *ngIf="key === 'estado'">
+                  <ng-container *ngIf="key == 'estado'">
                     <b>{{ turno[key] }}</b>
                   </ng-container>
                   <ng-container *ngIf="key !== 'estado'">
@@ -28,7 +28,7 @@
             </tbody>
           </table>
 
-        <div *ngIf="esPaciente && mostrarDivEspecialista && !mostrarCalificacion" style="text-align: center;">
+        <div *ngIf="esPaciente && !mostrarCalificacion && turnoSeleccionado?.estado == 'solicitado'" style="text-align: center;">
            
             <div class="input-group input-group-sm mb-3">
                 <div class="input-group-prepend">
@@ -44,11 +44,12 @@
         
 
         <div *ngIf="mostrarDivEspecialista">
-            <div class="input-group input-group-sm mb-3">
+            <div class="input-group input-group-sm mb-3"  >
               <div class="input-group-prepend">
                 <span class="input-group-text" id="reseña" style="background-color: #ddd;">Reseña  </span>
               </div>
               <input type="text" class="form-control" #reseniaInput aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+
             </div>
             
             <div class="input-group input-group-sm mb-3" >
@@ -56,15 +57,17 @@
                   <span class="input-group-text" id="diagnostico" style="background-color: #ddd;">Diagnóstico  </span>
                 </div>
                 <input type="text" class="form-control" #diagnosticoInput aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+
             </div>
+
+            <button *ngIf="turnoSeleccionado.estado.toLowerCase()== 'solicitado'" class="btn mx-2" style="background-color: #caff42;" (click)="cancelarTurno(reseniaInput.value)">Cancelar</button>
+            <button *ngIf="turnoSeleccionado.estado.toLowerCase()== 'solicitado'" class="btn mx-2" style="background-color: #caff42;" (click)="rechazarTurno(reseniaInput.value)">Rechazar</button>
+            <button  *ngIf="turnoSeleccionado.estado.toLowerCase()== 'aceptado'" class="btn mx-2" style="background-color: #caff42;" (click)="finalizarTurno(reseniaInput.value, diagnosticoInput.value)">Finalizar</button>
+            <button *ngIf="turnoSeleccionado.estado.toLowerCase()== 'solicitado'" class="btn mx-2" style="background-color: #caff42;" (click)="aceptarTurno()">Aceptar</button>
 
             <p class="text-danger" *ngIf="mensajeError!=''"><b>{{mensajeError}}</b></p>
           
             
-            <button *ngIf="turnoSeleccionado.estado.toLowerCase()== 'solicitado'" class="btn mx-2" style="background-color: #caff42;" (click)="cancelarTurno(reseniaInput.value)">Cancelar</button>
-            <button *ngIf="turnoSeleccionado.estado.toLowerCase()== 'solicitado'" class="btn mx-2" style="background-color: #caff42;" (click)="aceptarTurno()">Aceptar</button>
-            <button  *ngIf="turnoSeleccionado.estado.toLowerCase()== 'aceptado'" class="btn mx-2" style="background-color: #caff42;" (click)="finalizarTurno(reseniaInput.value, diagnosticoInput.value)">Finalizar</button>
-            <button *ngIf="turnoSeleccionado.estado.toLowerCase()== 'solicitado'" class="btn mx-2" style="background-color: #caff42;" (click)="rechazarTurno(reseniaInput.value)">Rechazar</button>
 
 
         </div>
@@ -98,8 +101,9 @@
         <div *ngIf=""></div>
 
 
-        <hr>
         <div *ngIf="resenias!=undefined && resenias.length>0">
+          <hr>
+
             <h4 class="text-center">Turnos Cancelados: </h4>
             <div *ngFor="let item of resenias">
                 <p>ID Turno: {{item.id}} - <b class="text-danger">Comentario: {{item.resenia}}</b></p>
@@ -111,14 +115,13 @@
 
         <br/>
             <div class="row justify-content-center">
-                <h4 class="text-center">Filtrar tablas </h4>
 
                 <div class="form-group col-4" *ngIf="especialidades != undefined && especialidades.length > 0">
-                    <h5 for="especialidad">Especialidad</h5>
+                    <h5 for="especialidad">Filtrar por Especialidad</h5>
                     <div multiple id="especialidad" class="form-control" style="background-color: #88abc2;">
                       <ng-container *ngFor="let especialidad of especialidades">
                         <ng-container *ngFor="let item of especialidad.especialidades">
-                          <input type="radio" [value]="item" name="especialidadSeleccionada" (change)="filtrarTablaEspecialidad(item)">
+                          <input type="radio" [value]="item" name="especialidadRadio" (change)="filtrarTablaEspecialidad(item)">
                           {{ item }}<br/>
                         </ng-container>
                       </ng-container>
@@ -126,12 +129,13 @@
                   </div>
 
 
-                <div class="form-group col-4" *ngIf="esPaciente && especialistas!= undefined && especialistas.length > 0 ">
-                    <h5 for="especialista">Especialista</h5>
-
-                    <div  id="especialista" class="form-control" style="background-color: #88abc2;">
+                  <div class="form-group col-4" *ngIf="esPaciente && especialistas!= undefined && especialistas.length > 0">
+                    <h5 for="especialista">Filtrar por Especialista</h5>
+                
+                    <div class="form-control" style="background-color: #88abc2;">
                         <ng-container *ngFor="let item of especialistas">
-                            <input type="radio" name="especialista" [value]="item" (change)="filtrarTablaEspecialista(item.id)"> {{ item.nombre }} {{item.apellido}}<br/>
+                            <input type="radio" name="especialistaRadio" [value]="item.id" (change)="filtrarTablaEspecialista(item.id)">
+                            {{ item.nombre }} {{item.apellido}}<br/>
                         </ng-container>
                     </div>
 
@@ -142,10 +146,16 @@
 
                     <div  id="pacientes" class="form-control" style="background-color: #88abc2;">
                         <ng-container *ngFor="let item of pacientes">
-                            <input type="radio" name="pacientes" [value]="item" (change)="filtrarTablaPacientes(item.id)"> {{ item.nombre }} {{item.apellido}}<br/>
+                            <input type="radio" name="pacientesRadio" [value]="item" (change)="filtrarTablaPacientes(item.id)"> {{ item.nombre }} {{item.apellido}}<br/>
                         </ng-container>
                     </div>
 
+
+                </div>
+
+
+                <div class="row justify-content-center mt-4">
+                  <button  class="btn mx-2" style="background-color: #caff42; width: 200px;" (click)="eliminarFiltros()">Eliminar Filtros</button>
                 </div>
             </div>
 

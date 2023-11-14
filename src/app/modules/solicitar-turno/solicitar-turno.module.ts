@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { SolicitarTurnoRoutingModule } from './solicitar-turno-routing.module';
 import { SolicitarTurnoComponent } from './solicitar-turno/solicitar-turno.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -11,7 +12,7 @@ import { SolicitarTurnoComponent } from './solicitar-turno/solicitar-turno.compo
   ],
   imports: [
     CommonModule,
-    SolicitarTurnoRoutingModule
+    SolicitarTurnoRoutingModule, FormsModule
   ]
 })
 export class SolicitarTurnoModule { }

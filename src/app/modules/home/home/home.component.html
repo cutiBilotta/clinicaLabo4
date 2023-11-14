@@ -3,55 +3,56 @@
     <div class="container">
 
         <br/><br/>
-        <h1 class="text-center">Gestión de Turnos de La Clínica</h1>
+        <h1 class="text-center">Menú Principal</h1><br/><br/>
 
         <div class="row justify-content-center mt-2">
-            <div class="col-3">
-                <div class="card" style="width: 18rem; background-color: #d0e0eb;" >
-                    <div class="card-body  text-center">
-                      <h5 class="card-title ">Mis Turnos</h5>
-                       <p>En esta sección podrás ver todos tus turnos</p>
-                      <button routerLink="/mis-turnos" class="btn " style="background-color: #49708a;">Ir a Mis Turnos</button>
-                    </div>
-                  </div>
+            <div class="col-6 text-center">
+                
+              <div class="card">
+                <h5 class="card-header">Mis Turnos</h5>
+                <div class="card-body">
+                  <p class="card-text">En esta sección podrás ver todos tus turnos</p>
+                  <button routerLink="/mis-turnos" class="btn " style="background-color: #caff42;">Ir a Mis Turnos</button>
+                </div>
+              </div>
+             
             </div>
           </div>
 
           <div class="row justify-content-center mt-2">
 
-            <div class="col-3">
-                <div class="card" style="width: 18rem;background-color: #d0e0eb;">
-                    <div class="card-body  text-center">
-                      <h5 class="card-title  ">Solicitar Turnos</h5>
-                      <p>En esta sección podrás solicitar nuevos turnos</p>
-                      <button class="btn" routerLink="/solicitar-turno" style="background-color: #49708a;">Nuevo Turno</button>
-                    </div>
-                  </div>
+            <div class="col-6  text-center">
+              <div class="card">
+                <h5 class="card-header">Solicitar Turnos</h5>
+                <div class="card-body">
+                  <p class="card-text">En esta sección podrás solicitar nuevos turnos</p>
+                  <button class="btn" routerLink="/solicitar-turno" style="background-color: #caff42;">Solicitar Turno</button>
+                </div>
+              </div>
             </div>
           </div>
+          
+          
           <div class="row justify-content-center mt-2">
 
-            <div class="col-3">
-                <div class="card" style="width: 18rem;background-color: #d0e0eb;">
-                    <div class="card-body  text-center" >
-                      <h5 class="card-title ">Mi perfil</h5>
-                      <p>En esta sección podrás ver tu información de usuario</p>
-                      <button routerLink="/mi-perfil" class="btn" style="background-color: #49708a;">Ir a Mi Perfil</button>
-                    </div>
-                  </div>
+            <div class="col-6 text-center">
+
+              <div class="card">
+                <h5 class="card-header">Mi Perfil</h5>
+                <div class="card-body">
+                  <p class="card-text">En esta sección podrás ver tu información de usuario</p>
+                  <button routerLink="/mi-perfil" class="btn" style="background-color: #caff42;">Ir a Mi Perfil</button>
+                </div>
+              </div>
+    
             </div>
         </div>
 
 
 
-        <div class="adminIconContainer" routerLink="/seccion-usuarios" style="background-color: #d0e0eb;">
+        <div class="adminIconContainer" routerLink="/seccion-usuarios" style="background-color: #88abc2;">
           <img src="../../../assets/img/admin.png" alt="" class="adminIcon" >
         </div>
-
-    
-
-
-
 
     </div>
 </body>

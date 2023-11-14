@@ -5,13 +5,14 @@
 
 
       <div class="card mt-5">
-        <h5 class="card-header text-center" style="background-color: #49708a;">Turnos</h5>
+        <h5 class="card-header text-center" style="background-color: #88abc2;">Turnos</h5>
         <div class="card-body" style="background-color: #d0e0eb;">
-            <h5 class="card-title text-center">Solicitar Turno</h5>
+          <form  #turnoForm="ngForm">
             <div class="row">
             <div class="col"></div>
             <div class="col-6">
 
+              <br/>
                 <label for="especialidad"><b>Especialidad</b></label> <br/><br/>
                 <select  class="form-select" *ngIf="especialidades != undefined && especialidades.length > 0" name="especialidad" id="especialidad" (change)="seleccionarEspecialidad($event)">
                   <option value="">Selecciona una especialidad</option>
@@ -77,14 +78,14 @@
                   <br/>
 
                 <div style="text-align: center;">
-                <button class="btn btn-lg" style="background-color: #caff42;" (click)="aceptar()">Aceptar</button>
+                <button class="btn btn-lg" style="background-color: #caff42;" (click)="aceptar(); turnoForm.resetForm()">Aceptar</button>
                 </div>
                 <br/><br/>
             </div>
           
             <div class="col"></div>
           </div>
-
+          </form>
         </div>
 
       </div>
