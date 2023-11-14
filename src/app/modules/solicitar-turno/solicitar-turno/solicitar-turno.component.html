@@ -81,7 +81,11 @@
                 <button class="btn btn-lg" style="background-color: #caff42;" (click)="aceptar(); turnoForm.resetForm()">Aceptar</button>
                 </div>
                 <br/><br/>
-            </div>
+
+                <div *ngIf="mostrarCaptcha">
+                  <app-captcha (captchaStatusChange)="onCaptchaStatusChange($event)"></app-captcha>
+                </div>
+              </div>
           
             <div class="col"></div>
           </div>

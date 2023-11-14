@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { DataBaseService } from 'src/app/services/database.service';
 import { Turno } from 'src/app/classes/turno';
 import { AuthService } from 'src/app/services/auth.service';
@@ -9,6 +9,7 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./solicitar-turno.component.scss']
 })
 export class SolicitarTurnoComponent {
+  @Input() captchaStatus: string = '';
 
   constructor(private database: DataBaseService, private afauth: AuthService){}
 
@@ -32,8 +33,10 @@ export class SolicitarTurnoComponent {
 
   usuarioSeleccionadoId:any;
 
+  captchaGenerado: any;
   listadoPacientes:any[]=[];
 
+  mostrarCaptcha:boolean=false;
 
   ngOnInit() {
     this.afauth.getAuthState().subscribe(user => {
@@ -288,11 +291,22 @@ seleccionarPaciente(event: any) {
 }
 
 
+onCaptchaStatusChange(status: string) {
+  this.captchaStatus = status;
+  console.log(this.captchaStatus);
+  this.mostrarCaptcha=true;
+
+}
+
 aceptar(){
 
 
+  this.mostrarCaptcha=true;
+  console.log('mostrarCaptcha:', this.mostrarCaptcha);
+
   console.log(this.usuarioActualId);
   
+if(this.captchaStatus == "valido"){
       if(this.usuarioActualId && !this.esAdmin){
         
           let turno = new Turno(this.usuarioActualId, this.especialistaId, this.especialidadSeleccionada, this.fechaSeleccionada.toLocaleDateString('en-GB'), this.horarioSeleccionado);
@@ -306,10 +320,14 @@ aceptar(){
         let turnoJSON = turno.toJSON();
         this.database.crear("turnos", turnoJSON);
       }
+    }else{
+      console.log("captcha invalido");
+    }
+    
   
 } 
 
-
+ 
 
 
 }

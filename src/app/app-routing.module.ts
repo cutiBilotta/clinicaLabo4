@@ -55,10 +55,7 @@ const routes: Routes = [
     loadChildren: () => import('./modules/mis-turnos/mis-turnos.module')
     .then(mod => mod.MisTurnosModule),
   },
-  {
-    path: "calificacion",
-    component: CalificacionComponent
-  } ,
+
   {
     path: "**",
     component: NotFoundComponent

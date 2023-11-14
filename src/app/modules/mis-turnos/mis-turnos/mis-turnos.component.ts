@@ -80,6 +80,7 @@ especialistaSeleccionado: string = '';
           return turno;
         });
 
+        this.resenias = [];
         this.turnos.forEach((turno) => {   
           this.turnosKeys = Object.keys(turno);
           if((this.esPaciente && turno.pacienteId==this.usuarioActualId && turno.hasOwnProperty('reseñaCancelacion')) || (!this.esPaciente && turno.especialistaId == this.usuarioActualId &&  turno.hasOwnProperty('reseñaCancelacion'))){
@@ -223,7 +224,6 @@ cancelarTurno(resenia:string){
     this.mensajeError="El campo de reseña por cancelación no puede estar vacío";
   }
 
-  this.resenias=[];
 
 }
 
@@ -235,7 +235,6 @@ aceptarTurno(){
     this.database.actualizar("turnos", this.turnoSeleccionado, this.turnoSeleccionado.id);
   }
 
-  this.resenias=[];
 
 }
 
@@ -250,7 +249,6 @@ rechazarTurno(resenia:string){
     this.mensajeError="El campo de reseña por cancelación no puede estar vacío";
   }
 
-  this.resenias=[];
 
 }
 
@@ -268,7 +266,6 @@ finalizarTurno(resenia:string, diagnostico:string){
     this.mensajeError="El campo de reseña y diagnostico no puede estar vacío";
   }
 
-  this.resenias=[];
 
 }
 
