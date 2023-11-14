@@ -22,11 +22,11 @@
         
         <div *ngIf="mostrarBoton">
             <div class="input-group input-group-sm mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="reseña" style="background-color: #ddd;">Reseña por Cancelación </span>
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="reseña" style="background-color: #ddd;">Reseña por Cancelación </span>
+                </div>
+                <input type="text" class="form-control" #reseniaInput aria-label="Small" aria-describedby="inputGroup-sizing-sm">
               </div>
-              <input type="text" class="form-control" #reseniaInput aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-            </div>
 
             <p class="text-danger" *ngIf="mensajeError!=''"><b>{{mensajeError}}</b></p>
           
@@ -43,7 +43,7 @@
                     <div multiple id="especialidad" class="form-control" style="background-color: #d0e0eb;">
                       <ng-container *ngFor="let especialidad of especialidades">
                         <ng-container *ngFor="let item of especialidad.especialidades">
-                          <input type="radio" [value]="item" name="especialidadSeleccionada" (change)="filtrarTabla(item)">
+                          <input type="radio" [value]="item" name="especialidadRadio" (change)="filtrarTabla(item)">
                           {{ item }}<br/>
                         </ng-container>
                       </ng-container>
@@ -55,11 +55,16 @@
 
                     <div multiple id="especialista" class="form-control" style="background-color: #d0e0eb;">
                         <ng-container *ngFor="let item of especialistas">
-                            <input type="radio" name="especialista" [value]="item" (change)="filtrarTablaEspecialista(item.id)">{{ item.nombre }} {{item.apellido}} - {{item.id}}<br/>
+                            <input type="radio" name="especialistaRadio" [value]="item" (change)="filtrarTablaEspecialista(item.id)">{{ item.nombre }} {{item.apellido}} - {{item.id}}<br/>
                         </ng-container>
                     </div>
 
                 </div>
+
+                
+            </div>
+            <div class="row justify-content-center mt-4 ">
+                <button class="btn" style="background-color: #caff42; width:200px;" (click)="eliminarFiltros()">Eliminar filtros</button>
             </div>
 
 

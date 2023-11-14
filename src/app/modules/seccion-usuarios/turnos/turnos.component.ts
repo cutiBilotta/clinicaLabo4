@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataBaseService } from 'src/app/services/database.service';
+import { ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-turnos',
@@ -8,6 +9,7 @@ import { DataBaseService } from 'src/app/services/database.service';
 })
 export class TurnosComponent implements OnInit {
 
+  @ViewChild('reseniaInput') reseniaInput!: ElementRef;
 
   turnos: any[] = [];
   turnosKeys:any[] = [];
@@ -103,6 +105,8 @@ export class TurnosComponent implements OnInit {
       this.turnoSeleccionado.estado = "Cancelado";
       this.turnoSeleccionado.reseñaCancelacion = resenia; // Asigna el valor del campo de reseña al objeto
       this.database.actualizar("turnos", this.turnoSeleccionado, this.turnoSeleccionado.id);
+      this.reseniaInput.nativeElement.value = '';
+
     } else {
       // Maneja el caso en el que el campo de reseña está vacío
       this.mensajeError="El campo de reseña por cancelación no puede estar vacío";
@@ -110,6 +114,11 @@ export class TurnosComponent implements OnInit {
   }
 
   filtrarTabla(especialidadSeleccionada: string) {
+    
+    const radiosB  = document.getElementsByName('especialistaRadio') as NodeListOf<HTMLInputElement>;
+    for (let i = 0; i < radiosB.length; i++) {
+      radiosB[i].checked = false;
+    }
 
     const filtroSeleccionado = especialidadSeleccionada;
     console.log(filtroSeleccionado);
@@ -123,6 +132,12 @@ export class TurnosComponent implements OnInit {
 
   filtrarTablaEspecialista(especialistaSeleccionado: string) {
 
+    const radiosB  = document.getElementsByName('especialidadRadio') as NodeListOf<HTMLInputElement>;
+    for (let i = 0; i < radiosB.length; i++) {
+      radiosB[i].checked = false;
+    }
+    
+
     const filtroSeleccionado = especialistaSeleccionado;
     console.log(filtroSeleccionado);
 
@@ -133,6 +148,23 @@ export class TurnosComponent implements OnInit {
     
   }
 
+  eliminarFiltros(){
+
+    const radiosA = document.getElementsByName('especialidadRadio') as NodeListOf<HTMLInputElement>;
+    const radiosB = document.getElementsByName('especialistaRadio') as NodeListOf<HTMLInputElement>;
+  
+    for (let i = 0; i < radiosA.length; i++) {
+      radiosA[i].checked = false;
+    }
+  
+    for (let i = 0; i < radiosB.length; i++) {
+      radiosB[i].checked = false;
+    }
+  
+    
+    this.tablaFiltrada=this.turnos;
+  }
+  
 
 
 

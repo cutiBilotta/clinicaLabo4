@@ -5,7 +5,7 @@
         <h3 class="text-center">Información de los Usuarios</h3>
         <br/>
         <hr class="my-4">
-        <h3 class="text-center text-light">Pacientes</h3>
+        <h3 class="text-center">Pacientes</h3>
         <br/>
         <!-- Tabla de Pacientes -->
         <div class="table-responsive">
@@ -28,34 +28,39 @@
         <hr class="my-4">
         
         <!-- Tabla de Especialistas -->
-        <h3 class="text-center text-light">Especialista</h3>
+        <h3 class="text-center">Especialista</h3>
         <br/>
 
         <div class="table-responsive">
             <table class="table table-bordered table-light">
-                <thead>
-                    <tr>
-                        <th style="background-color: #49708a;" scope="col">#</th>
-                        <th style="background-color: #caff42;" *ngFor="let key of keysEspecialistas" scope="col">{{ key }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let especialista of especialistas; let i = index" (click)="seleccionarEspecialista(especialista)">
-                        <th scope="row">{{ i + 1 }}</th>
-                        <td *ngFor="let key of keysEspecialistas">
-                            <ng-container *ngIf="key === 'habilitacion'">
-                                <ng-container *ngIf="especialista[key]">si</ng-container>
-                                <ng-container *ngIf="!especialista[key]">no</ng-container>
-                            </ng-container>
-                            <ng-container *ngIf="key !== 'habilitacion'">
-                                {{ especialista[key] }}
-                            </ng-container>
-                        </td>
-                    </tr>
-                </tbody>
+              <thead>
+                <tr>
+                  <th style="background-color: #49708a;" scope="col">#</th>
+                  <ng-container *ngFor="let key of keysEspecialistas">
+                    <ng-container *ngIf="key !== 'disponibilidad'">
+                      <th style="background-color: #caff42;" scope="col">{{ key }}</th>
+                    </ng-container>
+                  </ng-container>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let especialista of especialistas; let i = index" (click)="seleccionarEspecialista(especialista)">
+                  <th scope="row">{{ i + 1 }}</th>
+                  <ng-container *ngFor="let key of keysEspecialistas">
+                    <ng-container *ngIf="key !== 'disponibilidad'">
+                      <td *ngIf="key !== 'habilitacion'">
+                        {{ especialista[key] }}
+                      </td>
+                      <td *ngIf="key === 'habilitacion'">
+                        <ng-container *ngIf="especialista[key]">si</ng-container>
+                        <ng-container *ngIf="!especialista[key]">no</ng-container>
+                      </td>
+                    </ng-container>
+                  </ng-container>
+                </tr>
+              </tbody>
             </table>
-        </div>
-
+          </div>
         <br/>
         
         <h4 class=" text-start" style="color: #49708a;" *ngIf="especialistaSeleccionado!=null">Especialista seleccionado: {{especialistaSeleccionado.nombre}} {{especialistaSeleccionado.apellido}} - {{especialistaSeleccionado.especialidad}} </h4>
@@ -72,7 +77,7 @@
         <hr class="my-4">
         
         <!-- Tabla de Especialistas -->
-        <h3 class="text-center text-light">Administradores</h3>
+        <h3 class="text-center ">Administradores</h3>
         <br/>
         
          <div class="table-responsive">

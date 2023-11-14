@@ -84,7 +84,7 @@ especialistaSeleccionado: string = '';
         this.turnos.forEach((turno) => {   
           this.turnosKeys = Object.keys(turno);
           if((this.esPaciente && turno.pacienteId==this.usuarioActualId && turno.hasOwnProperty('reseñaCancelacion')) || (!this.esPaciente && turno.especialistaId == this.usuarioActualId &&  turno.hasOwnProperty('reseñaCancelacion'))){
-            this.resenias.push({id: turno.id , resenia: turno.reseñaCancelacion});
+            this.resenias.push({id: turno.id , resenia: turno.reseñaCancelacion, dia: turno.dia, horario:turno.horario, especialidad:turno.especialidad});
           }
 
         });
@@ -205,6 +205,7 @@ aceptar(resenia:string){
     let calificacionJSON= nuevaCalificacion.toJSON();
     console.log(calificacionJSON);
     this.database.crear("calificaciones", calificacionJSON);
+    this.mostrarCalificacion=false;
   } else {
     // Maneja el caso en el que el campo de reseña está vacío
     this.mensajeError="El campo de reseña y diagnostico no puede estar vacío";

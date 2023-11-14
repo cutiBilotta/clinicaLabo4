@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdministradorGuard } from './guards/administrador.guard';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { CalificacionComponent } from './components/calificacion/calificacion.component';
+import { especialistaGuard } from './guards/especialista.guard';
 const routes: Routes = [
   {
     path: '',
@@ -44,6 +45,8 @@ const routes: Routes = [
     path: 'solicitar-turno',
     loadChildren: () => import('./modules/solicitar-turno/solicitar-turno.module')
     .then(mod => mod.SolicitarTurnoModule),
+    canActivate : [especialistaGuard]
+
   },
   {
     path: 'mi-perfil',

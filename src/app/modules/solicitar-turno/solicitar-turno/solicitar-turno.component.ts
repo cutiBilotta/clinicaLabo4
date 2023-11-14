@@ -296,34 +296,36 @@ onCaptchaStatusChange(status: string) {
   console.log(this.captchaStatus);
   this.mostrarCaptcha=true;
 
+  if(this.captchaStatus=="valido"){
+    if(this.usuarioActualId && !this.esAdmin){
+        
+      let turno = new Turno(this.usuarioActualId, this.especialistaId, this.especialidadSeleccionada, this.fechaSeleccionada.toLocaleDateString('en-GB'), this.horarioSeleccionado);
+      let turnoJSON = turno.toJSON();
+      this.database.crear("turnos", turnoJSON);
+
+
+  }else if(this.esAdmin && this.usuarioSeleccionadoId!=undefined){
+    
+    let turno = new Turno(this.usuarioSeleccionadoId, this.especialistaId, this.especialidadSeleccionada, this.fechaSeleccionada.toLocaleDateString('en-GB'), this.horarioSeleccionado);
+    let turnoJSON = turno.toJSON();
+    this.database.crear("turnos", turnoJSON);
+  }
+}
+else{
+  console.log("captcha invalido");
 }
 
-aceptar(){
 
+  }
+
+
+
+aceptar(){
 
   this.mostrarCaptcha=true;
   console.log('mostrarCaptcha:', this.mostrarCaptcha);
 
-  console.log(this.usuarioActualId);
-  
-if(this.captchaStatus == "valido"){
-      if(this.usuarioActualId && !this.esAdmin){
-        
-          let turno = new Turno(this.usuarioActualId, this.especialistaId, this.especialidadSeleccionada, this.fechaSeleccionada.toLocaleDateString('en-GB'), this.horarioSeleccionado);
-          let turnoJSON = turno.toJSON();
-          this.database.crear("turnos", turnoJSON);
-
-
-      }else if(this.esAdmin && this.usuarioSeleccionadoId!=undefined){
-        
-        let turno = new Turno(this.usuarioSeleccionadoId, this.especialistaId, this.especialidadSeleccionada, this.fechaSeleccionada.toLocaleDateString('en-GB'), this.horarioSeleccionado);
-        let turnoJSON = turno.toJSON();
-        this.database.crear("turnos", turnoJSON);
-      }
-    }else{
-      console.log("captcha invalido");
-    }
-    
+      
   
 } 
 

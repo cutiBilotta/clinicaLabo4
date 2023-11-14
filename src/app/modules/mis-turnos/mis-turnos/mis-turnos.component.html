@@ -1,5 +1,6 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <body>
-    
     <div class="container">
 
         <br/><br/>
@@ -106,7 +107,7 @@
 
             <h4 class="text-center">Turnos Cancelados: </h4>
             <div *ngFor="let item of resenias">
-                <p>ID Turno: {{item.id}} - <b class="text-danger">Comentario: {{item.resenia}}</b></p>
+                <p>{{item.dia}} {{item.horario}} - {{item.especialidad}} - Comentario: <b class="text-danger">{{item.resenia}}</b></p>
             </div>
         </div>
 
