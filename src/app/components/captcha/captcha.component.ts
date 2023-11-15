@@ -36,7 +36,7 @@ export class CaptchaComponent implements OnInit {
       <input class="form-control" id="captchaInput" placeholder="Ingrese el captcha">`;
 
     Swal.fire({
-      title: "Captcha",
+      title: "Verifique Captcha",
       html: content,
       confirmButtonText: 'Verificar',
       confirmButtonColor: '#caff42', // Cambia el color del botón de confirmación
@@ -45,6 +45,13 @@ export class CaptchaComponent implements OnInit {
       }
     }).then((result) => {
       if (result.isConfirmed) {
+        Swal.fire({
+          title:"Turno otorgado exitosamente",
+          confirmButtonText: 'Entendido',
+          confirmButtonColor: '#caff42',
+
+        });
+
         this.router.navigateByUrl('/home');
       } else if (result.isDismissed) {
         // Hacer algo si se cancela, por ejemplo, mostrar un mensaje de cancelación
@@ -55,6 +62,7 @@ export class CaptchaComponent implements OnInit {
   verificarCaptcha(): boolean {
     const captchaInput = document.getElementById('captchaInput') as HTMLInputElement;
     if (captchaInput.value == this.captcha) {
+
       this.captchaStatusChange.emit('valido');
       return true;
     } else {
