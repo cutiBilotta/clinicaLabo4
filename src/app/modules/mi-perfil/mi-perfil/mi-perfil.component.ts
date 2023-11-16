@@ -3,6 +3,8 @@ import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import Swal from'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-mi-perfil',
@@ -11,7 +13,7 @@ import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } 
 })
 export class MiPerfilComponent implements OnInit{
 
-  constructor(private authService:AuthService, private database:DataBaseService, private storageService:StorageService, private formBuilder: FormBuilder){}
+  constructor(private router: Router, private authService:AuthService, private database:DataBaseService, private storageService:StorageService, private formBuilder: FormBuilder){}
   usuarioLoggeado:any;
   usuarioBD:any;
   imagenUrl:any;
@@ -109,7 +111,7 @@ export class MiPerfilComponent implements OnInit{
   
     const disponibilidadEspecialista = {
       especialidad: this.especialidadSeleccionada,
-      horarios: {} as DiaHorario  // Definimos el tipo de horarios
+      horarios: {} as DiaHorario // Definimos el tipo de horarios
     };
   
     for (const dia in this.diasSeleccionados) {
@@ -130,6 +132,11 @@ export class MiPerfilComponent implements OnInit{
         }
   
         if (horarioIngreso >= 8 && horarioIngreso <= 19 && horarioEgreso >= 8 && horarioEgreso <= 19) {
+          if (dia == "Sábado" && horarioEgreso > 14) {
+            this.mensajeError = 'El horario de egreso no puede ser mayor a 14 los sábados';
+            return;
+          }
+  
           disponibilidadEspecialista.horarios[dia] = { inicio: horarioIngreso, egreso: horarioEgreso };
         } else {
           this.mensajeError = 'Los horarios ingresados no son válidos';
@@ -145,17 +152,26 @@ export class MiPerfilComponent implements OnInit{
       if (!this.usuarioBD.disponibilidad) {
         this.usuarioBD.disponibilidad = [];
       }
-      //resetearForm
-
+      // resetearForm
+  
       this.usuarioBD.disponibilidad.push(disponibilidadEspecialista);
   
       this.database.actualizar("usuarios", this.usuarioBD, this.usuarioBD.id);
       console.log(this.usuarioBD);
+      Swal.fire({
+        title: "Disponibilidad Actualizada",
+        confirmButtonColor: '#caff42',
+        confirmButtonText: "Entendido"
+      }).then(() => {
+        // Redireccionar a '/home'
+        this.router.navigateByUrl('/home');
+      });
     }
-  }
-
-
+    }
 }
+
+
+
 
 
 
