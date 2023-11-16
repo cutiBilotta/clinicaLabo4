@@ -183,17 +183,18 @@ filtrarTablaEspecialista(especialistaSeleccionado: string) {
 seleccionarTurno(turno:any){
   this.turnoSeleccionado=turno;
   console.log(turno.estado);
-  if(!this.esPaciente && this.turnoSeleccionado.estado.toLowerCase() != "finalizado" && this.turnoSeleccionado.estado.toLowerCase() != "cancelado"){
+  if((!this.esPaciente && this.turnoSeleccionado.estado.toLowerCase() == "aceptado") || (!this.esPaciente && this.turnoSeleccionado.estado.toLowerCase() == "solicitado")){
     this.mostrarDivEspecialista = true;
-  }else if(!this.esPaciente && this.turnoSeleccionado.estado.toLowerCase() == "finalizado" || this.turnoSeleccionado.estado.toLowerCase() == "cancelado"){
+    console.log("ACAAAAAAAA");
+  }else if(((!this.esPaciente && this.turnoSeleccionado.estado.toLowerCase() != "aceptado") && (!this.esPaciente && this.turnoSeleccionado.estado.toLowerCase() != "solicitado"))|| this.turnoSeleccionado.estado.toLowerCase() == "cancelado"){
     this.mostrarDivEspecialista = false;
+    this.mostrarCalificacion=false;
   }else if((this.esPaciente &&turno.estado.toLowerCase() == "finalizado" ) || (this.esPaciente && turno.estado.toLowerCase() == "finalizado" && turno.hasOwnProperty('reseñaFinalizacion'))){
     this.mostrarCalificacion = true;
   }else if(this.esPaciente && turno.estado.toLowerCase() != "finalizado"){
     this.mostrarCalificacion = false;
 
   }
-  
 
 }
 
@@ -293,5 +294,3 @@ eliminarFiltros(){
 }
 
 }
-
-

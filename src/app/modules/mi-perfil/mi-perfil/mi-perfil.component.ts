@@ -63,24 +63,31 @@ export class MiPerfilComponent implements OnInit{
               });
 
 
-            }else if(this.usuarioBD.perfil.toLowerCase() == "especialista"){
-              if (this.usuarioBD.perfil.toLowerCase() == "especialista") {
-                const especialidadesEspecialista = this.usuarioBD.especialidad; // Obtén las especialidades del especialista
-                const especialidadesConDisponibilidad = this.usuarioBD.disponibilidad.map((disponibilidad: any) => disponibilidad.especialidad);
-                const especialidadesSinDisponibilidad = especialidadesEspecialista.filter((especialidad: string) =>
-                    !especialidadesConDisponibilidad.includes(especialidad)
-                );
-                if (especialidadesSinDisponibilidad.length > 0) {
-             
-                    this.especialidadesSelect = especialidadesSinDisponibilidad;
-                } else {
-                   
-                    this.especialidadesSelect = [];
-                }
-            }
+            }else if(this.usuarioBD.perfil.toLowerCase() == "especialista") {
+                  const especialidadesEspecialista = this.usuarioBD.especialidad; // Obtén las especialidades del especialista
+          
+                  console.log(this.usuarioBD);
+                  if (this.usuarioBD.disponibilidad !== false) {
+
+                      const especialidadesConDisponibilidad = this.usuarioBD.disponibilidad.map((disponibilidad: any) => disponibilidad.especialidad);
+                      const especialidadesSinDisponibilidad = especialidadesEspecialista.filter((especialidad: string) =>
+                          !especialidadesConDisponibilidad.includes(especialidad)
+                      );
+          
+                      if (especialidadesSinDisponibilidad.length > 0) {
+                          this.especialidadesSelect = especialidadesSinDisponibilidad;
+                      } else {
+                          this.especialidadesSelect = [];
+                      }
+                  } else {
+                      // Si no existe el campo "disponibilidad", cargar todas las especialidades
+                      this.especialidadesSelect = especialidadesEspecialista;
+                  }
+              
+          }
 
 
-            }
+            
           }
         });
       }
