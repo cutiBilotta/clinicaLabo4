@@ -44,7 +44,7 @@
                 <div *ngFor="let usuario of usuariosAcceso">
                   <button type="button" class="btn m-2 btn-lg" style="background-color: #88abc2;" (click)="autocompletar(usuario)">
                     {{ usuario.nombre }} - {{usuario.perfil}}
-                    <img *ngIf="usuario.perfil === 'Paciente' || usuario.perfil === 'Administrador'" [src]="usuario.imagenURL" style="width: 40px; height: 40px; border-radius: 50%;">
+                    <img [src]="usuario.imagenURL" style="width: 40px; height: 40px; border-radius: 50%;">
                   </button><br/>
                 </div>     
             </div>

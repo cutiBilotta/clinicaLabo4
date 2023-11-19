@@ -53,13 +53,13 @@ export class MiPerfilComponent implements OnInit{
    
             if (this.usuarioBD.perfil.toLowerCase() == "paciente") {
               const nombreImagen = this.usuarioBD.imgPerfil[0];
-              this.storageService.obtenerImagen(nombreImagen).then((url) => {
+              this.storageService.obtenerImagen("users",nombreImagen).then((url) => {
                 this.imagenUrl = url;
                 console.log(this.imagenUrl);
               });
             } else if (this.usuarioBD.perfil.toLowerCase() == "administrador") {
               const nombreImagen = this.usuarioBD.imgPerfil;
-              this.storageService.obtenerImagen(nombreImagen).then((url) => {
+              this.storageService.obtenerImagen("users",nombreImagen).then((url) => {
                 this.imagenUrl = url;
                 console.log(this.imagenUrl);
               });
@@ -67,7 +67,7 @@ export class MiPerfilComponent implements OnInit{
 
             }else if(this.usuarioBD.perfil.toLowerCase() == "especialista") {
                   const especialidadesEspecialista = this.usuarioBD.especialidad; // Obtén las especialidades del especialista
-          
+          console.log(especialidadesEspecialista);
                   console.log(this.usuarioBD);
                   if (this.usuarioBD.disponibilidad !== false) {
 
@@ -83,7 +83,9 @@ export class MiPerfilComponent implements OnInit{
                       }
                   } else {
                       // Si no existe el campo "disponibilidad", cargar todas las especialidades
+
                       this.especialidadesSelect = especialidadesEspecialista;
+                      console.log(this.especialidadesSelect);
                   }
               
           }

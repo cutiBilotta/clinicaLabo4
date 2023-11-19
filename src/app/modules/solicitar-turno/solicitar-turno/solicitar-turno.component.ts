@@ -3,15 +3,15 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { Turno } from 'src/app/classes/turno';
 import { AuthService } from 'src/app/services/auth.service';
 import { NgForm } from '@angular/forms';
+import { StorageService } from 'src/app/services/storage.service';
 @Component({
   selector: 'app-solicitar-turno',
   templateUrl: './solicitar-turno.component.html',
   styleUrls: ['./solicitar-turno.component.scss']
 })
 export class SolicitarTurnoComponent {
-  @Input() captchaStatus: string = '';
 
-  constructor(private database: DataBaseService, private afauth: AuthService){}
+  constructor(private database: DataBaseService, private afauth: AuthService, private storageService:StorageService){}
 
   usuarios:any[]=[];
   especialistas:any[]=[];
@@ -26,18 +26,19 @@ export class SolicitarTurnoComponent {
   disponibilidadEspecialidad:any;
   especialistaSeleccionado:any;
   pacienteSeleccionado:any;
-
+spinner:boolean=true;
   esAdmin:boolean=false;
   especialistaId:any;
   usuarioActualId:any;
-
+  especialidadesFiltradas:any[]=[];
   usuarioSeleccionadoId:any;
-
+especialidadesDelEspecialista:any[]=[];
   captchaGenerado: any;
   listadoPacientes:any[]=[];
-
+  especialidadesConImagenes:any[]=[];
   mostrarCaptcha:boolean=false;
 
+  disponibilidadEspecialista:any;
   ngOnInit() {
     this.afauth.getAuthState().subscribe(user => {
 
@@ -46,12 +47,36 @@ export class SolicitarTurnoComponent {
         const usuarioActualEmail = user.email?.toString();
         console.log(usuarioActualEmail);
   
-        this.database.obtenerTodos("usuarios").subscribe((usuariosRef) => {
+        this.database.obtenerTodos("usuarios").subscribe(async (usuariosRef) => {
           this.usuarios = usuariosRef.map(userRef => {
             let usuario: any = userRef.payload.doc.data();
             usuario['id'] = userRef.payload.doc.id;
             return usuario;
           });
+          for (const usuario of this.usuarios) {
+            if (usuario.imgPerfil && usuario.imgPerfil.length > 0) {
+              const nombreImagen = usuario.imgPerfil[0];
+              const url = await this.storageService.obtenerImagen("users", nombreImagen);
+              usuario.imagenURL = url;
+            }
+          }
+      
+          this.especialistas = this.usuarios.map(usuario => {
+            if (this.especialistas.includes(usuario.email)) {
+               
+                return {
+                  nombre: usuario.nombre,
+                  email:usuario.email,
+                  perfil: usuario.perfil,
+                  password: usuario.password,
+                  imagenURL: usuario.imagenURL
+                };
+              
+            }
+            return null;
+          }).filter(usuario => usuario !== null);
+          this.spinner=false;
+
   
           const usuarioActual = this.usuarios.find(usuario => usuario.email == usuarioActualEmail);
           this.usuarioActualId=usuarioActual.id;
@@ -73,8 +98,7 @@ export class SolicitarTurnoComponent {
             console.log("Usuario no encontrado en la base de datos.");
           }
   
-          console.log(this.usuarios);
-          console.log(this.listadoPacientes);
+  
          
 
         })
@@ -89,65 +113,117 @@ export class SolicitarTurnoComponent {
         return turno;
       });
         
-      this.database.obtenerTodos("especialidades").subscribe((especialidadesRef) => {
-          this.especialidades = especialidadesRef.map(especialidadRef => {
-            let especialidad: any = especialidadRef.payload.doc.data();
-            especialidad['id'] = especialidadRef.payload.doc.id;
-            return especialidad;
-          });
+      this.database.obtenerTodos("especialidades").subscribe(async (especialidadesRef) => {
+        this.especialidades = especialidadesRef.map(async (especialidadRef) => {
+          let especialidad: any = especialidadRef.payload.doc.data();
+          especialidad['id'] = especialidadRef.payload.doc.id;
+      
+          return especialidad.especialidades.map((nombreEspecialidad: string) => nombreEspecialidad.toLowerCase());
         });
+      
+        // Esperar a que todas las promesas se resuelvan
+        const nombresEspecialidadesArrays = await Promise.all(this.especialidades);
+      
+        for (const nombresEspecialidades of nombresEspecialidadesArrays) {
+          for (const nombreEspecialidad of nombresEspecialidades) {
+            const nombreImagen = nombreEspecialidad + '.png';
+            const url = await this.storageService.obtenerImagen("especialidades", nombreImagen);
+      
+            this.especialidadesConImagenes.push({
+              nombreEspecialidad: nombreEspecialidad,
+              urlImagen: url
+            });
+          }
+        }
+      
+        // Puedes realizar otras operaciones con this.especialidadesConImagenes después de obtener todas las imágenes
+      });
+ 
+    
+
+    
 
         console.log(this.turnos);
-      });
+    });
 
       
   }
   
-
-
-  seleccionarEspecialidad(event: any) {
+  seleccionarEspecialista(especialista: any) {
+    this.especialistaId= especialista.id;
+  
+    if (this.especialistaId) {
+      this.especialistaSeleccionado = this.especialistas.find(especialista => especialista.id == this.especialistaId);
+      console.log(this.especialistaSeleccionado);
+  
+    }
+  
+    this.obtenerEspecialidadesDelEspecialista();
+  }
+  
+  
+  
+  obtenerEspecialidadesDelEspecialista() {
+  
+    if (this.especialistaSeleccionado) {
+      this.especialidadesDelEspecialista = this.especialistaSeleccionado.especialidad || [];
+      console.log(this.especialidadesDelEspecialista);
     
-    const selectedIndex = event.target.value;
-    if (selectedIndex !== '') {
-       this.especialidadSeleccionada = this.especialidades[0].especialidades[selectedIndex];
-      console.log('Especialidad seleccionada:', this.especialidadSeleccionada);
     }
-
-    const selectElement = document.getElementById("especialistasFiltrados") as HTMLSelectElement;
-    if(selectElement){
-    selectElement.value = ""; // Establece el valor a la opción vacía
-    }
-    this.obtenerEspecialidad();
   }
 
-
+  async seleccionarEspecialidad(especialidad: string) {
+    this.especialidadSeleccionada = especialidad;
   
-
-obtenerEspecialidad() {
-
-  interface Disponibilidad {
-    especialidad: string;
-    horarios: { [key: string]: { inicio: number; egreso: number } };
-}
-
-interface Especialista {
-    especialidad: string;
-    disponibilidad: Disponibilidad[];
-}
-    this.especialistasFiltrados = [];
-
-    this.especialistas.forEach((especialista: Especialista) => {
-        if (especialista.especialidad.includes(this.especialidadSeleccionada)) {
-            const disponibilidadParaEspecialidad = especialista.disponibilidad.find((item: Disponibilidad) => item.especialidad === this.especialidadSeleccionada);
-
-            if (disponibilidadParaEspecialidad) {
-                this.especialistasFiltrados.push(especialista);
-            }
-        }
-    });
-
-    console.log('Especialistas filtrados:', this.especialistasFiltrados);
-}
+    console.log(this.especialidadSeleccionada);
+  
+    let disponibilidadEspecialista = await this.obtenerDisponibilidadEspecialista();
+    console.log(disponibilidadEspecialista);
+  
+    this.calcularFechas(disponibilidadEspecialista.horarios);
+  }
+  
+  async obtenerDisponibilidadEspecialista() {
+    interface Disponibilidad {
+      especialidad: string;
+      horarios: { [key: string]: { inicio: number; egreso: number } };
+    }
+  
+    interface Especialista {
+      especialidad: string;
+      disponibilidad: Disponibilidad[];
+    }
+  
+    // Variables para almacenar la información seleccionada
+    let especialistaSeleccionado: Especialista | undefined;
+  
+    // Lógica para obtener la disponibilidad del especialista seleccionado
+    if (this.especialistas && this.especialistas.length > 0 && this.especialidadSeleccionada) {
+      especialistaSeleccionado = this.especialistas.find((especialista) => especialista.especialidad.includes(this.especialidadSeleccionada));
+  
+      if (especialistaSeleccionado) {
+        this.disponibilidadEspecialista = especialistaSeleccionado.disponibilidad
+          .filter((disp) => disp.especialidad === this.especialidadSeleccionada)
+          .map((disp) => {
+            const disponibilidad: any = { especialidad: disp.especialidad, horarios: {} };
+  
+            Object.keys(disp.horarios).forEach((nombreDia) => {
+              const detalleHorario = disp.horarios[nombreDia];
+  
+              disponibilidad.horarios[nombreDia] = {
+                inicio: detalleHorario.inicio,
+                egreso: detalleHorario.egreso
+              };
+            });
+            return disponibilidad;
+          })[0];
+      }
+    }
+  
+    console.log(this.disponibilidadEspecialista);
+  
+    return this.disponibilidadEspecialista; // Retornar la disponibilidad al final
+  }
 
 calcularFechas(disponibilidadEspecialista: any) {
   this.fechasGeneradas=[];
@@ -188,34 +264,7 @@ obtenerNombreDia(numeroDia: number) {
 }
 
 
-seleccionarEspecialista(event: any) {
 
-  this.especialistaId = event.target.value;
-  console.log(this.especialistaId);
-  if (this.especialistaId) {
-    this.especialistaSeleccionado = this.especialistasFiltrados.find(especialista => especialista.id == this.especialistaId);
-  }
-
-  this.obtenerEspecialista();
-}
-
-obtenerEspecialista() {
-
-  if (this.especialistaSeleccionado) {
-    
-    // Busca la entrada de disponibilidad correspondiente a la especialidad seleccionada
-    this.disponibilidadEspecialidad = this.especialistaSeleccionado.disponibilidad.find((disponibilidad: { especialidad: string, horarios: any }) => disponibilidad.especialidad == this.especialidadSeleccionada);
-
-    if (this.disponibilidadEspecialidad) {
-        // Ahora puedes acceder a los horarios dentro de la disponibilidad de la especialidad
-        console.log('Horarios de la especialidad:', this.disponibilidadEspecialidad.horarios);
-
-        // Llama a calcularFechas() con los horarios de disponibilidad
-        this.calcularFechas(this.disponibilidadEspecialidad.horarios);
-    }
-
-  }
-}
 seleccionarFecha(event: any) {
   this.horariosGenerados = [];
   const selectedDateParts = event.target.value.split('/'); // Suponiendo que el formato sea 'DD/MM'
@@ -227,8 +276,8 @@ seleccionarFecha(event: any) {
   if (this.fechaSeleccionada) {
     console.log(this.fechaSeleccionada.toLocaleDateString('en-GB'));
   }
-  
-  this.calcularHorariosDisponibles(this.disponibilidadEspecialidad.horarios);
+  console.log(this.fechaSeleccionada);
+ this.calcularHorariosDisponibles();
 }
 
 seleccionarHorario(event: any) {
@@ -237,9 +286,10 @@ if(this.horarioSeleccionado){
   console.log(this.horarioSeleccionado);
 }
 }
-calcularHorariosDisponibles(disponibilidadEspecialista:any) {
+
+calcularHorariosDisponibles() {
   this.horariosGenerados = [];
-  if (!disponibilidadEspecialista || !this.fechaSeleccionada) {
+  if (!this.disponibilidadEspecialista || !this.fechaSeleccionada) {
     return [];
   }
 
@@ -248,14 +298,16 @@ calcularHorariosDisponibles(disponibilidadEspecialista:any) {
   console.log(diaSemana);
   console.log(nombreDia);
 
+  console.log(this.disponibilidadEspecialista);
   if (
-    disponibilidadEspecialista[nombreDia] &&
-    disponibilidadEspecialista[nombreDia].inicio &&
-    disponibilidadEspecialista[nombreDia].egreso
+    this.disponibilidadEspecialista.horarios[nombreDia] &&
+    this.disponibilidadEspecialista.horarios[nombreDia].inicio &&
+    this.disponibilidadEspecialista.horarios[nombreDia].egreso
   ) {
-    const horaIngreso = disponibilidadEspecialista[nombreDia].inicio;
-    const horaEgreso = disponibilidadEspecialista[nombreDia].egreso;
+    const horaIngreso = this.disponibilidadEspecialista.horarios[nombreDia].inicio;
+    const horaEgreso = this.disponibilidadEspecialista.horarios[nombreDia].egreso;
 
+    console.log(horaEgreso); console.log(horaIngreso);
     /*console.log(this.fechaSeleccionada.toLocaleDateString('en-GB'));
     console.log(this.especialistaSeleccionado.id);*/
 
@@ -282,9 +334,20 @@ calcularHorariosDisponibles(disponibilidadEspecialista:any) {
     }
   }
 
+  console.log(this.horariosGenerados);
   return this.horariosGenerados;
 }
 
+getImage(especialidad: string): string | undefined {
+  let imagenUrl: string | undefined;
+  this.especialidadesConImagenes.forEach((item) => {
+    if (item.nombreEspecialidad == especialidad.toLocaleLowerCase()) {
+      return imagenUrl = item.urlImagen;
+    }
+  });
+
+  return imagenUrl;
+}
 
 seleccionarPaciente(event: any) {
   this.usuarioSeleccionadoId = event.target.value;
@@ -292,24 +355,10 @@ seleccionarPaciente(event: any) {
 
 
 onCaptchaStatusChange(status: string) {
-  this.captchaStatus = status;
-  console.log(this.captchaStatus);
   this.mostrarCaptcha=true;
 
-  if(this.captchaStatus=="valido"){
-    if(this.usuarioActualId && !this.esAdmin){
-        
-      let turno = new Turno(this.usuarioActualId, this.especialistaId, this.especialidadSeleccionada, this.fechaSeleccionada.toLocaleDateString('en-GB'), this.horarioSeleccionado);
-      let turnoJSON = turno.toJSON();
-      this.database.crear("turnos", turnoJSON);
-
-
-  }else if(this.esAdmin && this.usuarioSeleccionadoId!=undefined){
+  if(this.mostrarCaptcha){
     
-    let turno = new Turno(this.usuarioSeleccionadoId, this.especialistaId, this.especialidadSeleccionada, this.fechaSeleccionada.toLocaleDateString('en-GB'), this.horarioSeleccionado);
-    let turnoJSON = turno.toJSON();
-    this.database.crear("turnos", turnoJSON);
-  }
 }
 else{
   console.log("captcha invalido");
@@ -325,7 +374,19 @@ aceptar(){
   this.mostrarCaptcha=true;
   console.log('mostrarCaptcha:', this.mostrarCaptcha);
 
-      
+  if(this.usuarioActualId && !this.esAdmin){
+        
+    let turno = new Turno(this.usuarioActualId, this.especialistaId, this.especialidadSeleccionada, this.fechaSeleccionada.toLocaleDateString('en-GB'), this.horarioSeleccionado);
+    let turnoJSON = turno.toJSON();
+    this.database.crear("turnos", turnoJSON);
+
+
+}else if(this.esAdmin && this.usuarioSeleccionadoId!=undefined){
+  
+  let turno = new Turno(this.usuarioSeleccionadoId, this.especialistaId, this.especialidadSeleccionada, this.fechaSeleccionada.toLocaleDateString('en-GB'), this.horarioSeleccionado);
+  let turnoJSON = turno.toJSON();
+  this.database.crear("turnos", turnoJSON);
+}
   
 } 
 

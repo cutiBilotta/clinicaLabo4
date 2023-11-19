@@ -21,6 +21,7 @@ const firebaseConfig = {
   declarations: [
     AppComponent,
     NotFoundComponent,
+    
   ],
   imports: [
     BrowserModule,

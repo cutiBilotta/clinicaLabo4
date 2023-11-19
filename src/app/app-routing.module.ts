@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdministradorGuard } from './guards/administrador.guard';
 import { NotFoundComponent } from './components/not-found/not-found.component';
-import { CalificacionComponent } from './components/calificacion/calificacion.component';
 import { especialistaGuard } from './guards/especialista.guard';
 const routes: Routes = [
   {
@@ -58,7 +57,11 @@ const routes: Routes = [
     loadChildren: () => import('./modules/mis-turnos/mis-turnos.module')
     .then(mod => mod.MisTurnosModule),
   },
-
+  {
+    path: 'carga-historia-clinica',
+    loadChildren: () => import('./modules/carga-hist-clinica/carga-hist-clinica.module')
+    .then(mod => mod.CargaHistClinicaModule),
+  },
   {
     path: "**",
     component: NotFoundComponent

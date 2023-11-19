@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
   usuarios: any[] = [];
   mensajeError:string="";
   usuarioBD:any;
-  usuariosAcceso:any[]=['jmkeixwzrgmlvbkgxm@cazlv.com','dvzbjkhmoexktcouuj@cazlq.com','orkjqizsbgtagpdena@cazlq.com', 'haazgxzjipavfpigda@cazlv.com', 'aadxlldlzqamkjrpsx@cwmxc.com' , 'hokiocithgxwlwybri@cazlg.com' ];
+  usuariosAcceso:any[]=['jmkeixwzrgmlvbkgxm@cazlv.com','dvzbjkhmoexktcouuj@cazlq.com','orkjqizsbgtagpdena@cazlq.com', 'haazgxzjipavfpigda@cazlv.com', 'aadxlldlzqamkjrpsx@cwmxc.com' , 'hokiocithgxwlwybri@cazlg.com', 'agus.bilotta@gmail.com' ];
   imagenURL:any;
   spinner:boolean= true;
   
@@ -37,29 +37,22 @@ export class LoginComponent implements OnInit {
       for (const usuario of this.usuarios) {
         if (usuario.imgPerfil && usuario.imgPerfil.length > 0) {
           const nombreImagen = usuario.imgPerfil[0];
-          const url = await this.storageService.obtenerImagen(nombreImagen);
+          const url = await this.storageService.obtenerImagen("users",nombreImagen);
           usuario.imagenURL = url;
         }
       }
   
       this.usuariosAcceso = this.usuarios.map(usuario => {
         if (this.usuariosAcceso.includes(usuario.email)) {
-          if (usuario.perfil === 'Especialista') {
-            return {
-              nombre: usuario.nombre,
-              email:usuario.email,
-              perfil: usuario.perfil,
-              password: usuario.password
-            };
-          } else {
+           
             return {
               nombre: usuario.nombre,
               email:usuario.email,
               perfil: usuario.perfil,
               password: usuario.password,
-              imagenURL: usuario.perfil === 'Paciente' || usuario.perfil === 'Administrador' ? usuario.imagenURL : null
+              imagenURL: usuario.imagenURL
             };
-          }
+          
         }
         return null;
       }).filter(usuario => usuario !== null);

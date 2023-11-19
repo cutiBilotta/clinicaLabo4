@@ -81,14 +81,22 @@ especialistaSeleccionado: string = '';
         });
 
         this.resenias = [];
-        this.turnos.forEach((turno) => {   
-          this.turnosKeys = Object.keys(turno);
+        this.turnos.forEach((turno) => {
+
+
+          // Obtén las claves del turno actual
+          //const keys = Object.keys(turno);
+          // Filtra las claves que no son "id", "especialistaId" o "pacienteId"
+          //this.turnosKeys = keys.filter((key) => key !== "id" && key !== "especialistaId" && key !== "pacienteId");
+                    
           if((this.esPaciente && turno.pacienteId==this.usuarioActualId && turno.hasOwnProperty('reseñaCancelacion')) || (!this.esPaciente && turno.especialistaId == this.usuarioActualId &&  turno.hasOwnProperty('reseñaCancelacion'))){
             this.resenias.push({id: turno.id , resenia: turno.reseñaCancelacion, dia: turno.dia, horario:turno.horario, especialidad:turno.especialidad});
           }
 
         });
-  
+        this.turnosKeys.push("especialidad", "dia", "horario", "estado", "reseñaCancelacion")
+
+        console.log(this.turnosKeys);
         this.filtrarTurnos(); // Llama a la función para filtrar los turnos      
         console.log(this.resenias);
       });

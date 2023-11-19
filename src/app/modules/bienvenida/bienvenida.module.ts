@@ -11,6 +11,6 @@ import { BienvenidaComponent } from './bienvenida/bienvenida.component';
   imports: [
     CommonModule,
     BienvenidaRoutingModule
-  ]
+  ],
 })
 export class BienvenidaModule { }

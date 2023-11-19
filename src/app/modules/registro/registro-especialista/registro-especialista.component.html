@@ -77,10 +77,15 @@
             <p class="text-danger text-center" *ngIf="mensajeError.length>0">Campos inválidos: {{ mensajeError.join(', ') }}</p>
 
             <hr class="my-4">
+            
+            <div class="col-md-6 offset-md-3 text-center" *ngIf="form.get('edad')?.value !== '' && form.get('dni')?.value !== '' && form.get('nombre')?.value !== '' && form.get('apellido')?.value !== '' && form.get('mail')?.value !== ''" >
+                <h4 class="text-dark text-center">Imágen de Perfil</h4>
+                <input type="file" class="form-control" accept=".png, .jpg,.jpeg"  id="inputFile" (change)="onFileChange($event)">
+            </div>
 
             <p class="text-success" *ngIf="mensajeExito!='' ">{{mensajeExito}}</p>
 
-            <div *ngIf="form.get('edad')?.value !== '' && form.get('dni')?.value !== '' && form.get('especialidad')?.value !== '' && form.get('nombre')?.value !== '' && form.get('apellido')?.value !== '' && form.get('password')?.value !== '' " style="text-align: center;">
+            <div class="mt-4"*ngIf="form.get('edad')?.value !== '' && form.get('dni')?.value !== '' && form.get('especialidad')?.value !== '' && form.get('nombre')?.value !== '' && form.get('apellido')?.value !== '' && form.get('password')?.value !== '' " style="text-align: center;">
                 <button class="btn" (click)="aceptar()" style="background-color: #caff42;">Enviar Datos</button>
             </div>
 

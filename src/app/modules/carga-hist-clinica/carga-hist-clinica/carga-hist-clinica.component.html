@@ -1,0 +1,28 @@
+<body>
+    <div class="container">
+  
+        <app-navbar></app-navbar>
+        <br/><br/>
+        <h3 class="text-center text-dark">Tus Turnos</h3>
+        <br/>
+  
+        <table class="table table-bordered table-light table-striped"  >  
+            <thead>
+              <tr>
+                <th style="background-color: #49708a;" scope="col">#</th>
+                <th class="text-center" style="background-color: #49708a;" *ngFor="let key of turnosKeys" scope="col">{{ key }}</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="turnosFiltrados!= undefined ">
+              <tr *ngFor="let turno of turnosFiltrados; let i = index">
+                <td *ngFor="let key of turnosKeys" >
+                  <ng-container *ngIf="key">
+                    <b>{{ turno[key] }}</b>
+                  </ng-container>
+                 
+                </td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+</body>

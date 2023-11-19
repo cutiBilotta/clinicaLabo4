@@ -25,9 +25,9 @@ export class StorageService {
 
   }
 
-  async obtenerImagen(nombre: string) {
+  async obtenerImagen(carpeta:string, nombreImg: string) {
     try {
-      const url = await this.storageRef.child("users/" + nombre).getDownloadURL();
+      const url = await this.storageRef.child(carpeta +"/"+ nombreImg).getDownloadURL();
       return url;
     } catch (err) {
       console.log(err);

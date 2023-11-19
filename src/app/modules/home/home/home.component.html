@@ -1,7 +1,7 @@
 <body>
     
     <div class="container">
-
+     <app-navbar> </app-navbar> 
         <br/><br/>
         <h1 class="text-center">Menú Principal</h1><br/><br/>
 
@@ -48,7 +48,21 @@
             </div>
         </div>
 
+        <div class="row justify-content-center mt-2">
 
+          <div class="col-6 text-center">
+
+            <div class="card">
+              <h5 class="card-header">Historia Clinica</h5>
+              <div class="card-body">
+                <p class="card-text">En esta sección se cargará la historia clinica del Paciente</p>
+                <button routerLink="/carga-historia-clinica" class="btn" style="background-color: #caff42;">Ir a Hist.Clinica</button>
+              </div>
+            </div>
+  
+          </div>
+      </div>
+      <br/><br/><br/>
 
         <div class="adminIconContainer" routerLink="/seccion-usuarios" style="background-color: #88abc2;">
           <img src="../../../assets/img/admin.png" alt="" class="adminIcon" >

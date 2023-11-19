@@ -9,6 +9,7 @@ export class Especialista {
     perfil:string = "Especialista"
     habilitacion:boolean=false;
     disponibilidad=false;
+    imgPerfil:string= "";
   
     constructor(nombre:string, apellido: string, edad:number, dni: number, email: string, contraseña: string, especialidad:string[]) {
       this.email = email;
@@ -32,7 +33,9 @@ export class Especialista {
           password: this.contraseña,
           perfil: this.perfil,
           habilitacion:false,
-          disponibilidad:false
+          disponibilidad:false,
+          imgPerfil: this.imgPerfil
+
 
 
 

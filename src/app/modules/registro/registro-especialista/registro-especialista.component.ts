@@ -4,6 +4,7 @@ import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } 
 import { Especialista } from 'src/app/classes/especialista';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
+import { StorageService } from 'src/app/services/storage.service';
 @Component({
   selector: 'app-registro-especialista',
   templateUrl: './registro-especialista.component.html',
@@ -22,9 +23,12 @@ export class RegistroEspecialistaComponent implements OnInit{
   otra = "Otra";
   imagenIngresada:boolean = false;
   especialidadesSeleccionadas: string[] = [];
+mostrarCargaImg:Boolean=false;
+  mensajeErrorImg:string="";
+  imagenes:any[]=[];
 
 
-  constructor(private authService: AuthService, private database: DataBaseService, private formBuilder: FormBuilder, private router:Router){}
+  constructor(private storageService:StorageService, private authService: AuthService, private database: DataBaseService, private formBuilder: FormBuilder, private router:Router){}
 
   ngOnInit() {
     this.form = this.formBuilder.group({
@@ -65,6 +69,8 @@ export class RegistroEspecialistaComponent implements OnInit{
 
 
   aceptar() {
+    const inputFile = document.getElementById('inputFile') as HTMLInputElement;
+    const archivos = inputFile.files;
     this.mensajeError=[];
     console.log("Nombre" + this.form?.get('nombre')?.value);
     if (this.form?.invalid) {
@@ -92,11 +98,21 @@ export class RegistroEspecialistaComponent implements OnInit{
       }
   
       this.nuevoEspecialista = new Especialista(nombre, apellido, edad, dni, email, password, especialidad);
-      this.registrarse();
-      this.form.reset();
       this.nuevaEspecialidad = false;
-      this.router.navigateByUrl('/verificacion');
       this.especialidadesSeleccionadas = []; // Reinicia la lista de especialidades seleccionadas
+      if(this.registrarse() == null){
+        this.mostrarCargaImg=false;
+        console.log("retorno null Registrarse()")
+        }else{
+          console.log("entre al else porque no retorno null")
+          console.log(archivos);
+        if (archivos) {
+         this.cargarImagen(archivos);
+         this.router.navigateByUrl('/verificacion');
+
+        }
+  
+      }
     } else {
       console.log('Formulario Inválido');
   }
@@ -119,16 +135,21 @@ registrarse() {
 
         console.log(nuevoEspecialistaJSON);
         this.database.crear('usuarios', nuevoEspecialistaJSON);
+        return true;
 
       } else {
         console.log("Error. Ingrese datos válidos");
+        return null;
       }
     }).catch(err => {
       console.log(err);
+      return null;
     });
   } else {
     this.mensajeError.push("El usuario ya se encuentra registrado");
+    return null;
   }
+  return true;
 }
 
 
@@ -157,6 +178,81 @@ selectChange(event: any) {
   console.log(this.especialidadesSeleccionadas);
 }
 
+cargarImagen(archivos: any) {
+  //this.spinner=true;
+  let id: any;
+  console.log(archivos);
+
+  if (archivos.length > 1) {
+    this.mensajeErrorImg = 'Se ha excedido el límite de imágenes';
+    return;
+  }
+
+  setTimeout(() => {
+    id = this.buscarUsuarioPorDNI();
+
+    console.log(id);
+    if (id) {
+      const nombresArchivos: string[] = []; // Array to store file names
+
+      for (let i = 0; i < archivos.length; i++) {
+        const reader = new FileReader();
+        const nombreArchivo =
+          this.form.get('nombre')?.value +
+          this.form.get('apellido')?.value +
+          '_' +
+          Date.now() +
+          '_' +
+          i;
+
+        reader.readAsDataURL(archivos[i]);
+        reader.onloadend = () => {
+          
+          this.imagenes.push(reader.result);
+          // Upload the image to Firebase Storage
+          this.storageService.subirImagen(nombreArchivo, reader.result).then((urlImagen) => {
+            nombresArchivos.push(nombreArchivo); // Store the file name
+            console.log(nombreArchivo);
+            console.log(nombresArchivos.length)
+            console.log(archivos.length);
+            if (nombresArchivos.length === archivos.length) {
+              // Update the 'imgPerfil' field in nuevoPaciente with the array of file names
+              this.nuevoEspecialista.imgPerfil = nombresArchivos;
+
+              console.log(this.nuevoEspecialista.imgPerfil);
+              const nuevoPacienteJSON = this.nuevoEspecialista.toJSON();
+              // Update the user's data in the Firestore database
+              this.database.actualizar('usuarios', nuevoPacienteJSON, id);
+              console.log('se actualizo el database');
+
+              this.router.navigateByUrl('/verificacion');
+            }
+          });
+        }
+      }
+    } else {
+      // Handle the case where the user is not found
+    }
+  }, 5000); // Agregamos un retraso de 1 segundo
+}
+ buscarUsuarioPorDNI() {
+  const dniToFind = this.nuevoEspecialista.dni; // DNI to search for
+
+  const matchingUser = this.usuarios.find(user => user.dni === dniToFind);
+
+  if (matchingUser) {
+    const userId = matchingUser.id;
+    // userId is the ID of the user with the matching DNI
+    return userId;
+  } else {
+    // User not found
+    return null;
+  }
+}
+onFileChange(event: any) {
+  // Verifica si se seleccionó algún archivo
+  this.imagenIngresada = event.target.files && event.target.files.length > 0;
+}
 }
 
 
