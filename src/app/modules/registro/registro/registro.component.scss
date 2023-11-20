@@ -1,5 +1,16 @@
-body{
-    height: 100vh;
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    background-color:#ebf7f8
+    height: 100%;
+    background-image: url(../../../../assets/img/back3.jpg);
+    background-size: 100%;
+    opacity: 0.6;
+    z-index: -1; 
+}
+
+body {
+    background: none; 
 }

@@ -1,19 +1,19 @@
 <div class = "container">
 
-    <nav class="navbar navbar-light" style="background-color: #eee;">
-        <a *ngIf="usuarioActual!=undefined" class="navbar-brand" href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <nav class="navbar navbar-light" style="background-color: #397c9e;">
+        <a *ngIf="usuarioActual!=undefined" class="navbar-brand text-light" href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           
             <img *ngIf="perfilActual!= undefined && perfilActual.toLowerCase()=='paciente' " src="../../../assets/img/paciente.png" width="30" height="30" class="d-inline-block align-top" alt="">
 
             <img *ngIf="perfilActual!= undefined && perfilActual.toLowerCase()=='especialista' " src="../../../assets/img/doctor.png" width="30" height="30" class="d-inline-block align-top" alt="">
             <img *ngIf="perfilActual!= undefined && perfilActual.toLowerCase()=='administrador' " src="../../../assets/img/admin.png" width="30" height="30" class="d-inline-block align-top" alt="">
-          Bienvenido, {{usuarioActual.nombre}} - {{perfilActual}}
+          Bienvenido/a, {{usuarioActual.nombre}} - {{perfilActual}}
         </a>
 
         <div class="ml-auto">
-            <button type="button" class="btn  mx-4 my-2" style="background-color: #afc2ce;" routerLink="/solicitar-turno">Solicitar Turno</button>
-            <button type="button" class="btn mx-4 my-2" style="background-color: #afc2ce;" routerLink="/mis-turnos">Mis Turnos</button>
-            <button type="button" class="btn  mx-4 my-2 " style="background-color: #afc2ce;" routerLink="/mi-perfil">Mi Perfil</button>
+            <button type="button" class="btn  mx-4 my-2" style="background-color: #eee;" routerLink="/solicitar-turno">Solicitar Turno</button>
+            <button type="button" class="btn mx-4 my-2" style="background-color: #eee;" routerLink="/mis-turnos">Mis Turnos</button>
+            <button type="button" class="btn  mx-4 my-2 " style="background-color: #eee;" routerLink="/mi-perfil">Mi Perfil</button>
 
         </div>
 

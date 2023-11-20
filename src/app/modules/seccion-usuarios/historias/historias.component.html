@@ -1,0 +1,45 @@
+<body>
+    <div class="container">
+
+        <h1>Historias clinicas</h1>
+
+        <table class="table table-bordered table-light table-striped">
+          <thead>
+            <tr>
+              <th style="background-color: #49708a;" scope="col">#</th>
+              <th class="text-center" style="background-color: #49708a;" *ngFor="let key of usuariosKeys" scope="col">{{ key }}</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="pacientes !== undefined && pacientes.length > 0">
+            <tr *ngFor="let usuario of pacientes; let i = index">
+              <th scope="row">{{ i + 1 }}</th>
+              <td *ngFor="let key of usuariosKeys">
+                <ng-container *ngIf="key === 'historiaClinica'">
+                  <!-- Si la clave es 'historiaClinica', mostrar todos los índices -->
+                  <div *ngIf="usuario[key] && usuario[key].length > 0">
+                    <ul *ngFor="let historia of usuario[key]">
+                      <li>Altura: {{ historia.altura }}</li>
+                      <li>Peso: {{ historia.peso }}</li>
+                      <li>Presión: {{ historia.presion }}</li>
+                      <li>Temperatura: {{ historia.temperatura }}</li>
+                      <!-- Puedes agregar más campos según sea necesario -->
+                      <li *ngFor="let detalle of historia.detalles">
+                        {{ detalle.dato }} - {{ detalle.descripcion }}
+                      </li>
+                      <li>-----------------------------------</li>
+
+                    </ul>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="key !== 'historiaClinica'">
+                  <!-- Si la clave no es 'historiaClinica', mostrar el valor directamente -->
+                  {{ usuario[key] }}
+                </ng-container>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+
+    </div>
+</body>

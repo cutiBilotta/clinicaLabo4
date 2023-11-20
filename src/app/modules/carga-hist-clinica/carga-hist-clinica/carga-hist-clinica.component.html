@@ -1,28 +1,146 @@
 <body>
-    <div class="container">
+  <div class="container">
+      <app-navbar></app-navbar>
+
+      <h3 class="text-center text-dark">Tus Turnos</h3>
+      <table class="table table-bordered table-light table-striped">
+        <thead>
+          <tr>
+            <th style="background-color: #49708a;" scope="col">#</th>
+            <th class="text-center" style="background-color: #49708a;" *ngFor="let key of turnosKeys" scope="col">{{ key }}</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="turnosFiltrados !== undefined && turnosFiltrados.length > 0">
+          <tr *ngFor="let turno of turnosFiltrados; let i = index" (click)="seleccionarTurno(turno)">
+            <th scope="row">{{ i + 1 }}</th>
+            <td *ngFor="let key of turnosKeys">
+              <ng-container *ngIf="key == 'estado'">
+                <b>{{ turno[key] }}</b>
+              </ng-container>
+              <ng-container *ngIf="key === 'nombre'">
+                {{ obtenerNombrePaciente(turno.pacienteId) }}
+              </ng-container>
+              <ng-container *ngIf="key === 'apellido'">
+                {{ obtenerApellidoPaciente(turno.pacienteId) }}
+              </ng-container>
+              <ng-container *ngIf="key !== 'estado' && key !== 'nombre' && key !== 'apellido'">
+                {{ turno[key] }}
+              </ng-container>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div  style="background-color: #ddd;" class="px-3 py-3">
+        <h3 class="text-center">Datos Personales</h3>
+        
+        <p class="text-danger"><b>{{mensajeError}}</b></p>
+      </div>
+      <div style="background-color: #bbb;" class="px-5 py-5">          
+          
+          <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="reseña" style="background-color: #88abc2;"><b>Altura - centímetros: </b></span>
+            </div>
+            <input type="text" class="form-control pr-5" [(ngModel)]="altura" placeholder="altura" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="reseña" style="background-color: #88abc2;"><b>Peso - kilos: </b></span>
+            </div>
+            <input type="text" class="form-control" [(ngModel)]="peso"  placeholder="peso" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+          
+          </div>
+          
+          <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="reseña" style="background-color: #88abc2;"><b>Temperatura - grados: </b></span>
+            </div>
+            <input type="text" class="form-control" [(ngModel)]="temperatura"   placeholder="temperatura" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+          
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="reseña" style="background-color: #88abc2;"><b>Presión - XX/YY: </b></span>
+            </div>
+            <input type="text" class="form-control" [(ngModel)]="presion"  placeholder="presion" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+          </div>
+          
+        </div>
+
+          <hr>
+
+        <div  style="background-color: #ddd;" class="px-3 py-3">
+          <h3 class="text-center">Ingreso de Historia clinica</h3>
+          <button [disabled]="camposVisibles === 3" class="btn btn-sm btn-success mx-3 mb-3" (click)="agregarCampo()">+ Agregar Campo</button>
+          <button [disabled]="camposVisibles === 1" class="btn btn-sm btn-danger mb-3" (click)="eliminarCampo()">- Eliminar Campo</button>
+          <p class="text-danger"><b>{{mensajeErrorHist}}</b></p>
+        </div>
+        
+          <div style="background-color: #bbb;" class="px-3 py-3">          
+          
+            <div class="input-group input-group-sm mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="reseña" style="background-color: #88abc2;"><b>Dato</b></span>
+              </div>
+              <input type="text" class="form-control" [(ngModel)]="datoUno" placeholder="caries" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+            
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="reseña" style="background-color: #88abc2;"><b>Descripcion</b></span>
+              </div>
+              <input type="text" class="form-control" [(ngModel)]="descUno" placeholder="4" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+            </div>
+
+      
+
+     
+        </div>
+
+
+
+
+      <div style="background-color: #bbb;" class="px-3 py-3" *ngIf="camposVisibles >= 2">                
+        <hr>
+
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="reseña" style="background-color: #88abc2;"><b>Dato</b></span>
+          </div>
+          <input type="text" class="form-control" [(ngModel)]="datoDos" placeholder="hipertension" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+        
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="reseña" style="background-color: #88abc2;"><b>Descripcion</b></span>
+          </div>
+          <input type="text" class="form-control" [(ngModel)]="descDos" placeholder="controlada" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+        </div>
+
+
   
-        <app-navbar></app-navbar>
-        <br/><br/>
-        <h3 class="text-center text-dark">Tus Turnos</h3>
-        <br/>
-  
-        <table class="table table-bordered table-light table-striped"  >  
-            <thead>
-              <tr>
-                <th style="background-color: #49708a;" scope="col">#</th>
-                <th class="text-center" style="background-color: #49708a;" *ngFor="let key of turnosKeys" scope="col">{{ key }}</th>
-              </tr>
-            </thead>
-            <tbody *ngIf="turnosFiltrados!= undefined ">
-              <tr *ngFor="let turno of turnosFiltrados; let i = index">
-                <td *ngFor="let key of turnosKeys" >
-                  <ng-container *ngIf="key">
-                    <b>{{ turno[key] }}</b>
-                  </ng-container>
-                 
-                </td>
-              </tr>
-            </tbody>
-          </table>
-    </div>
+      </div>
+
+
+      <div style="background-color: #bbb;" class="px-3 py-3" *ngIf="camposVisibles >= 3">          
+      
+        <hr>
+
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="reseña" style="background-color: #88abc2;"><b>Dato</b></span>
+          </div>
+          <input type="text" class="form-control" [(ngModel)]="datoTres" placeholder="migraña" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+        
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="reseña" style="background-color: #88abc2;"><b>Descripcion</b></span>
+          </div>
+          <input type="text" class="form-control" [(ngModel)]="descTres" placeholder="grave" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+        </div>
+
+
+ 
+      </div>
+
+
+        <div class="mt-3 mb-5" style="text-align: center;">
+        <button class="btn btn-lg btn-success" (click)="enviarHistoriaClinica()">Enviar Historia Clinica</button>
+        </div>
+
+
+  </div>
 </body>

@@ -25,7 +25,8 @@ export class MiPerfilComponent implements OnInit{
   usuarios:any[]=[];
   form!: FormGroup;
   especialidadesSelect:any;
-
+mostrarHistoriaClinica:boolean=false;
+historiaClinica:any;
   ngOnInit(): void {
 
 
@@ -57,6 +58,11 @@ export class MiPerfilComponent implements OnInit{
                 this.imagenUrl = url;
                 console.log(this.imagenUrl);
               });
+
+              this.mostrarHistoriaClinica=true;
+              this.historiaClinica = this.usuarioBD.historiaClinica;
+              console.log(this.historiaClinica);
+
             } else if (this.usuarioBD.perfil.toLowerCase() == "administrador") {
               const nombreImagen = this.usuarioBD.imgPerfil;
               this.storageService.obtenerImagen("users",nombreImagen).then((url) => {

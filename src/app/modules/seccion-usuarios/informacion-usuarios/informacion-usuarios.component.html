@@ -9,20 +9,30 @@
         <br/>
         <!-- Tabla de Pacientes -->
         <div class="table-responsive">
-        <table class="table table-bordered table-light" >
+          <table class="table table-bordered table-light">
             <thead>
-            <tr >
+              <tr>
                 <th style="background-color: #49708a;" scope="col">#</th>
-                <th  style="background-color: #caff42;" *ngFor="let key of keysPacientes" scope="col">{{ key }}</th>
-            </tr>
+                <ng-container *ngFor="let key of keysPacientes">
+                  <!-- Verificar si la key no está en la lista de keys a ocultar -->
+                  <ng-container *ngIf="!['imgPerfil', 'id', 'password', 'perfil'].includes(key)">
+                    <th style="background-color: #397c9e;" scope="col" class="text-light">{{ key }}</th>
+                  </ng-container>
+                </ng-container>
+              </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let paciente of pacientes; let i = index">
+              <tr *ngFor="let paciente of pacientes; let i = index">
                 <th scope="row">{{ i + 1 }}</th>
-                <td *ngFor="let key of keysPacientes">{{ paciente[key] }}</td>
-            </tr>
+                <ng-container *ngFor="let key of keysPacientes">
+                  <!-- Verificar si la key no está en la lista de keys a ocultar -->
+                  <ng-container *ngIf="!['imgPerfil', 'id', 'password', 'perfil'].includes(key)">
+                    <td>{{ paciente[key] }}</td>
+                  </ng-container>
+                </ng-container>
+              </tr>
             </tbody>
-        </table>
+          </table>
     </div>
         
         <hr class="my-4">
@@ -32,34 +42,34 @@
         <br/>
 
         <div class="table-responsive">
-            <table class="table table-bordered table-light">
-              <thead>
-                <tr>
-                  <th style="background-color: #49708a;" scope="col">#</th>
-                  <ng-container *ngFor="let key of keysEspecialistas">
-                    <ng-container *ngIf="key !== 'disponibilidad'">
-                      <th style="background-color: #caff42;" scope="col">{{ key }}</th>
-                    </ng-container>
+          <table class="table table-bordered table-light">
+            <thead>
+              <tr>
+                <th style="background-color: #49708a;" scope="col">#</th>
+                <ng-container *ngFor="let key of keysEspecialistas">
+                  <ng-container *ngIf="key !== 'disponibilidad' && key !== 'perfil' && key !== 'password' && key !== 'imgPerfil' && key !== 'id'">
+                    <th style="background-color: #397c9e;" scope="col" class="text-light">{{ key }}</th>
                   </ng-container>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let especialista of especialistas; let i = index" (click)="seleccionarEspecialista(especialista)">
-                  <th scope="row">{{ i + 1 }}</th>
-                  <ng-container *ngFor="let key of keysEspecialistas">
-                    <ng-container *ngIf="key !== 'disponibilidad'">
-                      <td *ngIf="key !== 'habilitacion'">
-                        {{ especialista[key] }}
-                      </td>
-                      <td *ngIf="key === 'habilitacion'">
-                        <ng-container *ngIf="especialista[key]">si</ng-container>
-                        <ng-container *ngIf="!especialista[key]">no</ng-container>
-                      </td>
-                    </ng-container>
+                </ng-container>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let especialista of especialistas; let i = index" (click)="seleccionarEspecialista(especialista)">
+                <th scope="row">{{ i + 1 }}</th>
+                <ng-container *ngFor="let key of keysEspecialistas">
+                  <ng-container *ngIf="key !== 'disponibilidad' && key !== 'perfil' && key !== 'password' && key !== 'imgPerfil' && key !== 'id'">
+                    <td *ngIf="key !== 'habilitacion'">
+                      {{ especialista[key] }}
+                    </td>
+                    <td *ngIf="key === 'habilitacion'">
+                      <ng-container *ngIf="especialista[key]">si</ng-container>
+                      <ng-container *ngIf="!especialista[key]">no</ng-container>
+                    </td>
                   </ng-container>
-                </tr>
-              </tbody>
-            </table>
+                </ng-container>
+              </tr>
+            </tbody>
+          </table>
           </div>
         <br/>
         
@@ -81,25 +91,34 @@
         <br/>
         
          <div class="table-responsive">
-            <table class="table table-bordered table-light">
-                <thead>
-                    <tr>
-                        <th style="background-color: #49708a;" scope="col">#</th>
-                        <th style="background-color: #caff42;" *ngFor="let key of keysAdministradores" scope="col">{{ key }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let administrador of administradores; let i = index">
-                        <th scope="row">{{ i + 1 }}</th>
-                        <td *ngFor="let key of keysAdministradores">{{ administrador[key] }}</td>
-                    </tr>
-                </tbody>
-            </table>
+          <table class="table table-bordered table-light">
+            <thead>
+              <tr>
+                <th style="background-color: #49708a;" scope="col">#</th>
+                <ng-container *ngFor="let key of keysAdministradores">
+                  <ng-container *ngIf="key !== 'id' && key !== 'password' && key !== 'imgPerfil' && key !== 'perfil'">
+                    <th style="background-color: #397c9e;" scope="col" class="text-light" >{{ key }}</th>
+                  </ng-container>
+                </ng-container>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let administrador of administradores; let i = index">
+                <th scope="row">{{ i + 1 }}</th>
+                <ng-container *ngFor="let key of keysAdministradores">
+                  <ng-container *ngIf="key !== 'id' && key !== 'password' && key !== 'imgPerfil' && key !== 'perfil'">
+                    <td>{{ administrador[key] }}</td>
+                  </ng-container>
+                </ng-container>
+              </tr>
+            </tbody>
+          </table>
           </div>
         <hr class="my-4">
 
 
-      
+        <button class="btn btn-xl btn-primary" (click)="exportExcel()">Exportar a Excel</button>
+
         
 
 

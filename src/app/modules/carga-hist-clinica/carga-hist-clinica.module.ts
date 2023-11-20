@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CargaHistClinicaRoutingModule } from './carga-hist-clinica-routing.module';
 import { CargaHistClinicaComponent } from './carga-hist-clinica/carga-hist-clinica.component';
 import { NavbarModule } from '../navbar/navbar.module';
-
+import { FormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     CargaHistClinicaComponent
@@ -12,7 +12,7 @@ import { NavbarModule } from '../navbar/navbar.module';
   imports: [
     CommonModule,
     CargaHistClinicaRoutingModule,
-    NavbarModule
+    NavbarModule, FormsModule
   ],
   exports:[NavbarModule]
 })

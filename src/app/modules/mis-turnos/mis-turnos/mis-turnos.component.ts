@@ -73,6 +73,7 @@ especialistaSeleccionado: string = '';
         console.log(this.especialidades);
         });
     
+        this.turnos=[];
       this.database.obtenerTodos("turnos").subscribe((turnosRef) => {
         this.turnos = turnosRef.map(turnoRef => {
           let turno: any = turnoRef.payload.doc.data();
@@ -94,7 +95,9 @@ especialistaSeleccionado: string = '';
           }
 
         });
-        this.turnosKeys.push("especialidad", "dia", "horario", "estado", "reseñaCancelacion")
+        if(this.turnosKeys.length==0){
+        this.turnosKeys.push("especialidad", "dia", "horario", "estado", "reseñaCancelacion");
+        }
 
         console.log(this.turnosKeys);
         this.filtrarTurnos(); // Llama a la función para filtrar los turnos      

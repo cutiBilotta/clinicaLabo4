@@ -134,6 +134,30 @@
              </div>
           </div>
 
+          <div *ngIf="mostrarHistoriaClinica">
+
+            <div class="row">
+              <div class="col-4"  *ngFor="let historia of historiaClinica">
+              
+                <div class="card mt-2">
+                  <h5 class="card-header" style="background-color: #397c9e;">Historia Clínica</h5>
+                  <div class="card-body" style="background-color: #ddd;">
+                    <ul class="card-text">
+                      <li>Altura: {{ historia.altura }}</li>
+                      <li>Peso: {{ historia.peso }}</li>
+                      <li>Presión: {{ historia.presion }}</li>
+                      <li>Temperatura: {{ historia.temperatura }}</li>
+                      <li *ngFor="let detalle of historia.detalles">
+                        {{ detalle.dato }} - {{ detalle.descripcion }}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          
+          </div>
+
 
 
 

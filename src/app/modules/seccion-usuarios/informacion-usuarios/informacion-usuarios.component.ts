@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { DataBaseService } from 'src/app/services/database.service';
+import * as XLSX from 'xlsx';
 
 interface Usuario {
   perfil: string;
@@ -106,6 +107,54 @@ export class InformacionUsuariosComponent {
     }
   
     console.log("Especialista Inhabilitado");
+  }
+
+
+  exportExcel(): void {
+    // Ordenar el array de usuarios por el campo 'perfil'
+    this.usuarios.sort((a, b) => (a.perfil > b.perfil ? 1 : -1));
+  
+    const usuarios = this.convertirArraysACadenas(this.usuarios);
+  
+    const wb: XLSX.WorkBook = { Sheets: {}, SheetNames: [] };
+    const pacientesWs: XLSX.WorkSheet = XLSX.utils.json_to_sheet(usuarios);
+  
+    // Ejemplo: Dar formato al primer objeto (cambiar 'A1' por la celda que desees)
+    pacientesWs['A1'].s = { fill: { fgColor: { rgb: 'FFFF00' } } }; // Color de fondo amarillo
+  
+    XLSX.utils.book_append_sheet(wb, pacientesWs, 'Usuarios');
+  
+    const arrayBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([arrayBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = 'usuarios_clinica.xlsx';
+    document.body.appendChild(a);
+    a.click();
+  
+    setTimeout(() => {
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(blobUrl);
+    }, 0);
+  }
+  
+  convertirArraysACadenas(data: any[]): any[] {
+    return data.map(item => {
+      const newItem: any = {};
+  
+      // Convertir los arrays a cadenas
+      Object.keys(item).forEach(key => {
+        if (Array.isArray(item[key])) {
+          newItem[key] = JSON.stringify(item[key]);
+        } else {
+          newItem[key] = item[key];
+        }
+      });
+  
+      return newItem;
+    });
   }
   
 }
