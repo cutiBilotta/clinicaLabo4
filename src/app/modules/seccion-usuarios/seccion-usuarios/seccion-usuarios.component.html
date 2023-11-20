@@ -35,7 +35,7 @@
                 <div class="card-body" style="background-color: #ccc;">
                   <h5 class="card-title">Registrar Paciente</h5>
                   <p class="card-text">Entra aqui para dar de alta a un nuevo Paciente</p>
-                  <button class="btn" (click)="paciente()" style="background-color:#88abc2">Registrar Paciente</button>
+                  <button [@openClose]="isOpen ? 'open' : 'closed'" type="button" class="btn" (click)="paciente()" style="background-color:#88abc2">Registrar Paciente</button>
                 </div>
               </div>
             </div>
@@ -72,6 +72,8 @@
             </div>
             
           </div>
+
+
         </div>
 
         <div *ngIf="registrarEspecialista">
@@ -81,7 +83,7 @@
         </div>
 
         <div *ngIf="registrarPaciente">
-            <app-registro-paciente></app-registro-paciente>
+          <app-registro-paciente [@openClose]="registrarPaciente ? 'open' : 'closed'"></app-registro-paciente>
         </div>
 
         <div *ngIf="mostrarUsuarios">

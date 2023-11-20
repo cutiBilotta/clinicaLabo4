@@ -7,6 +7,7 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
 const firebaseConfig = {
   apiKey: "AIzaSyDhMeOKg3NlfID1yZj0pWK3C0XIT-dM9gU",
@@ -28,7 +29,7 @@ const firebaseConfig = {
     AppRoutingModule,
     AngularFireModule.initializeApp(firebaseConfig),
     NgbModule,
-    FormsModule,
+    FormsModule,BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

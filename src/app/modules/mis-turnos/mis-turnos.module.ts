@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MisTurnosRoutingModule } from './mis-turnos-routing.module';
 import { MisTurnosComponent } from './mis-turnos/mis-turnos.component';
 import { NavbarModule } from '../navbar/navbar.module';
+import { FormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     MisTurnosComponent, 
@@ -11,7 +12,8 @@ import { NavbarModule } from '../navbar/navbar.module';
   imports: [
     CommonModule,
     MisTurnosRoutingModule,
-    NavbarModule
+    NavbarModule,
+    FormsModule
   ],
   exports:[NavbarModule]
 

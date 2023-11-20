@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
+
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',

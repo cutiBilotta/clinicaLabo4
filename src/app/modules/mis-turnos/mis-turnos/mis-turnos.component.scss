@@ -4,3 +4,11 @@ body {
     width: 100vw;
     background-color: #d0e0eb; /* Cambia #f0f0f0 por el color de fondo que desees */
 }
+
+.radio-buttons-container {
+    display: flex;
+  }
+  
+  .radio-buttons-container div {
+    margin-right: 10px;  /* Ajusta el espacio entre los radio buttons según tus preferencias */
+  }

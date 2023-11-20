@@ -1,12 +1,37 @@
 import { Component } from '@angular/core';
+import { keyframes, state, style, trigger, transition, animate } from '@angular/animations';
+
 
 @Component({
   selector: 'app-seccion-usuarios',
   templateUrl: './seccion-usuarios.component.html',
-  styleUrls: ['./seccion-usuarios.component.scss']
+  styleUrls: ['./seccion-usuarios.component.scss'],
+  animations: [
+    trigger('openClose', [
+      state('open', style({
+        opacity: 1,
+      })),
+      state('closed', style({
+        opacity: 0.8,
+      })),
+      transition('open => closed', [
+        animate('1s', keyframes([
+          style({ transform: 'scale(1) rotateX(0)', offset: 0 }), // Estado inicial
+          style({ transform: 'scale(2.5) rotateX(-90deg)', offset: 1 }) // Final de la animación
+        ]))
+      ]),
+      transition('closed => open', [
+        animate('0.5s', keyframes([
+          style({ transform: 'scale(1) rotateX(0)', offset: 0 }), // Estado inicial
+          style({ transform: 'scale(2.5) rotateX(-90deg)', offset: 1 }) // Final de la animación
+        ]))
+      ]),
+    ]),
+  ],
 })
 export class SeccionUsuariosComponent {
 
+  isOpen=true;
   constructor(){}
 
   registrarPaciente:boolean=false;
@@ -16,15 +41,19 @@ export class SeccionUsuariosComponent {
   mostrarHistorias:boolean=false;
   mostrarUsuarios:boolean=false;
   mostrarCuerpo:boolean=true;
-
-  paciente(){
-    this.registrarPaciente=true;
-    this.registrarEspecialista=false;
-    this.registrarAdministrador=false;
-    this.mostrarUsuarios=false;
-    this.mostrarCuerpo=false;
-    this.mostrarTurnos=false;
-    this.mostrarHistorias=false;
+ 
+  paciente() {
+    this.isOpen = !this.isOpen;
+  
+    setTimeout(() => {
+      this.registrarPaciente = true;
+      this.registrarEspecialista = false;
+      this.registrarAdministrador = false;
+      this.mostrarUsuarios = false;
+      this.mostrarCuerpo = false;
+      this.mostrarTurnos = false;
+      this.mostrarHistorias = false;
+    }, 1500); // Establece el tiempo de retraso en milisegundos (0.5 segundos en este ejemplo)
   }
 
   especialista(){

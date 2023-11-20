@@ -4,11 +4,35 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { Router } from '@angular/router';
 import { Usuario } from 'src/app/classes/usuario';
 import { StorageService } from 'src/app/services/storage.service';
+import { keyframes, state, style, trigger, transition, animate } from '@angular/animations';
+
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  animations: [
+    trigger('openClose', [
+      state('open', style({
+        opacity: 1,
+      })),
+      state('closed', style({
+        opacity: 0.8,
+      })),
+      transition('open => closed', [
+        animate('1s', keyframes([
+          style({ transform: 'scale(1) rotateX(0)', offset: 0 }), // Estado inicial
+          style({ transform: 'scale(2.5) rotateX(-90deg)', offset: 1 }) // Final de la animación
+        ]))
+      ]),
+      transition('closed => open', [
+        animate('0.5s', keyframes([
+          style({ transform: 'scale(1) rotateX(0)', offset: 0 }), // Estado inicial
+          style({ transform: 'scale(2.5) rotateX(-90deg)', offset: 1 }) // Final de la animación
+        ]))
+      ]),
+    ]),
+  ],
 })
 export class LoginComponent implements OnInit {
   
@@ -24,7 +48,7 @@ export class LoginComponent implements OnInit {
   usuariosAcceso:any[]=['jmkeixwzrgmlvbkgxm@cazlv.com','dvzbjkhmoexktcouuj@cazlq.com','orkjqizsbgtagpdena@cazlq.com', 'haazgxzjipavfpigda@cazlv.com', 'aadxlldlzqamkjrpsx@cwmxc.com' , 'hokiocithgxwlwybri@cazlg.com', 'agus.bilotta@gmail.com' ];
   imagenURL:any;
   spinner:boolean= true;
-  
+  isOpen=true ;
   ngOnInit() {
     this.database.obtenerTodos("usuarios").subscribe(async (usuariosRef) => {
       this.usuarios = usuariosRef.map(userRef => {
@@ -70,10 +94,14 @@ export class LoginComponent implements OnInit {
 
 
   ingresar() {
+
+    this.isOpen = !this.isOpen;
     this.user = new Usuario(this.email, this.password, "indefinido");
   
     let usuarioEncontrado = this.usuarios.find(u => u.email == this.email);
   
+    setTimeout(() => {
+
     if (usuarioEncontrado) {
       this.perfil = usuarioEncontrado.perfil;
       if(this.perfil.toLocaleLowerCase() == "especialista" && usuarioEncontrado.habilitacion == false) {
@@ -99,6 +127,8 @@ export class LoginComponent implements OnInit {
 
         }
       }
+    },1500);
+    
        
   }
 
