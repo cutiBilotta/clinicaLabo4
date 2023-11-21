@@ -8,22 +8,90 @@
 
 
       <div class="row mb-4">
-        <div class="col-10" style="text-align: center;">
+        <div class="col-12" style="text-align: center;">
           <div class="card">
             <h5 class="card-header text-center" style="background-color: #397c9e;">Filtrar Tabla</h5>
             <div class="card-body" style="background-color: #eee;">
-              <div class="radio-buttons-container">
-                <div *ngFor="let filtro of filtros">
-                  <input type="radio" name="turnoOption" [value]="filtro" [(ngModel)]="opcionFiltro" (change)="filtrarTabla()">
-                  <label>{{ filtro }}</label>
+
+              <div class="row">
+              <div class="col-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Estado</h5>
+                    
+                      <div class="radio-buttons-container" *ngFor="let estado of estadosFiltro">
+                      <input name="filtro" type="radio" [value]="estado" [(ngModel)]="opcionFiltro" (change)="filtrarTabla('estado')"> {{    estado }} <br />
+
+                  </div>
+                  </div>
                 </div>
               </div>
-              <button class="btn btn-sm btn-primary mt-3 mb-2" (click)="eliminarFiltro()">Eliminar Filtros</button>
+              
+
+              <div class="col-3">
+
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Especialidad</h5>
+                      <div *ngIf="especialidades != undefined && especialidades.length > 0" id="especialidad">
+                        <ng-container *ngFor="let especialidad of especialidades">
+                          <ng-container *ngFor="let item of especialidad.especialidades">
+                            <input name="filtro" type="radio" [value]="item" [(ngModel)]="opcionFiltro" (change)="filtrarTabla('especialidad')"> {{ item }} <br />
+                          </ng-container>
+                        </ng-container>
+                      </div>
+                  </div>
+                </div>
+              </div>  
+
+              <div class="col-3">
+
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Dia</h5>
+                    <input name="filtro" type="text" [(ngModel)]="opcionFiltro" (change)="filtrarTabla('dia')">  <br />
+
+                  </div>
+                </div>
+
+                <div class="card mt-2">
+                  <div class="card-body">
+                    <h5 class="card-title">Horario</h5>
+                    <input name="filtro" type="text" [(ngModel)]="opcionFiltro" (change)="filtrarTabla('horario')">  <br />
+
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="col-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Historia Clinica</h5>
+                    <label for="alturaFiltro">Altura</label>
+                    <input name="alturaFiltro" type="text" [(ngModel)]="alturaFiltro" (change)="filtrarTabla('altura')"> <br />
+              
+                    <label for="pesoFiltro">Peso</label>
+                    <input name="pesoFiltro" type="text" [(ngModel)]="pesoFiltro" (change)="filtrarTabla('peso')"> <br />
+              
+                    <label for="presionFiltro">Presión</label>
+                    <input name="presionFiltro" type="text" [(ngModel)]="presionFiltro" (change)="filtrarTabla('presion')"> <br />
+              
+                    <label for="detalleFiltro">Detalle</label>
+                    <input name="detalleFiltro" type="text" [(ngModel)]="detalleFiltro" (change)="filtrarTabla('detalle')"> <br />
+                  </div>
+                </div>
+              </div>
+
+
+              </div>
+              <button class="btn btn-sm btn-danger mt-3 mb-2" (click)="eliminarFiltro()">Eliminar Filtros</button>
 
             </div>
 
           </div>
         </div>
+
 
       </div>
 

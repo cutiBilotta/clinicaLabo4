@@ -37,6 +37,13 @@ tablaCompleta:any[]=[];
   especialidadSeleccionada: string = '';
 especialistaSeleccionado: string = '';
 opcionFiltro:any;
+
+alturaFiltro: any;
+pesoFiltro: any;
+presionFiltro: any;
+detalleFiltro: any;
+
+estadosFiltro:string[]= ["solicitado", "aceptado", "rechazado", "finalizado"];
     ngOnInit() {
       this.afauth.getAuthState().subscribe(user => {
   
@@ -224,17 +231,35 @@ finalizarTurno(resenia:string, diagnostico:string){
 
 
 }
+filtrarTabla(campo: string) {
+  console.log(this.opcionFiltro);
+  console.log(campo);
 
-filtrarTabla() {
-  this.tablaFiltrada=this.tablaCompleta;
-  if (this.opcionFiltro) {
-    // Filtra la tabla en base a la opción seleccionada
-    this.tablaFiltrada = this.tablaFiltrada.map(item => ({ [this.opcionFiltro]: item[this.opcionFiltro] }));
-  } else {
-    // Si no hay opción seleccionada, muestra la tabla original
-    this.tablaFiltrada = [...this.tablaFiltrada];
+  // Limpiar la tabla filtrada al inicio de cada filtrado
+  this.tablaFiltrada = [...this.tablaCompleta];
+
+  // Aplicar los filtros según la opción seleccionada
+  if (campo === 'estado') {
+    this.tablaFiltrada = this.tablaFiltrada.filter(turno => turno.estado === this.opcionFiltro);
+  } else if (campo === 'especialidad') {
+    this.tablaFiltrada = this.tablaFiltrada.filter(turno => turno.especialidad === this.opcionFiltro);
+  } else if (campo === 'dia') {
+    this.tablaFiltrada = this.tablaFiltrada.filter(turno => turno.dia.includes(this.opcionFiltro));
+  } else if (campo === 'horario') {
+    this.tablaFiltrada = this.tablaFiltrada.filter(turno => turno.horario.includes(this.opcionFiltro));
+  } else if (campo === 'altura' || campo === 'peso' || campo === 'presion' || campo === 'detalle') {
+    // Filtrar por campos de la Historia Clínica
+    this.tablaFiltrada = this.tablaFiltrada.filter(turno => {
+      const historia = this.encontrarUsuario(turno.pacienteId)?.historiaClinica;
+      if (historia) {
+        // Usar indexación de cadena para acceder a propiedades dinámicamente
+        return historia.some((detalle: any) => detalle[campo] && detalle[campo].includes(this.opcionFiltro));
+      }
+      return false;
+    });
   }
 }
+
 
 eliminarFiltro(){
   this.opcionFiltro="";
