@@ -41,9 +41,13 @@ opcionFiltro:any;
 alturaFiltro: any;
 pesoFiltro: any;
 presionFiltro: any;
+temperaturaFiltro: any;
+
 detalleFiltro: any;
 
 estadosFiltro:string[]= ["solicitado", "aceptado", "rechazado", "finalizado"];
+
+campoSeleccionado: string = '';
     ngOnInit() {
       this.afauth.getAuthState().subscribe(user => {
   
@@ -234,6 +238,7 @@ finalizarTurno(resenia:string, diagnostico:string){
 filtrarTabla(campo: string) {
   console.log(this.opcionFiltro);
   console.log(campo);
+  this.campoSeleccionado = campo; // Asigna el valor de campo a la propiedad
 
   // Limpiar la tabla filtrada al inicio de cada filtrado
   this.tablaFiltrada = [...this.tablaCompleta];
@@ -247,18 +252,31 @@ filtrarTabla(campo: string) {
     this.tablaFiltrada = this.tablaFiltrada.filter(turno => turno.dia.includes(this.opcionFiltro));
   } else if (campo === 'horario') {
     this.tablaFiltrada = this.tablaFiltrada.filter(turno => turno.horario.includes(this.opcionFiltro));
-  } else if (campo === 'altura' || campo === 'peso' || campo === 'presion' || campo === 'detalle') {
-    // Filtrar por campos de la Historia Clínica
-    this.tablaFiltrada = this.tablaFiltrada.filter(turno => {
-      const historia = this.encontrarUsuario(turno.pacienteId)?.historiaClinica;
-      if (historia) {
-        // Usar indexación de cadena para acceder a propiedades dinámicamente
-        return historia.some((detalle: any) => detalle[campo] && detalle[campo].includes(this.opcionFiltro));
-      }
-      return false;
-    });
+
+  }else  if (campo === 'historiaClinica') {
+    if (this.opcionFiltro === 'altura' || this.opcionFiltro === 'peso' || this.opcionFiltro === 'presion' || this.opcionFiltro === 'detalle') {
+      // Filtrar por campos de la Historia Clínica
+      this.tablaFiltrada = this.tablaFiltrada.filter(turno => {
+        const historia = this.encontrarUsuario(turno.pacienteId)?.historiaClinica;
+        if (historia) {
+          return historia.some((detalle: any) => {
+            if (this.opcionFiltro === 'detalle') {
+              // Filtrar por detalles
+              return detalle.detalles.some((subdetalle: any) =>
+                subdetalle.dato.includes(this.detalleFiltro)
+              );
+            } else {
+              // Filtrar por otros campos de la historia clínica
+              return detalle[this.opcionFiltro] && detalle[this.opcionFiltro].toString().includes(this.detalleFiltro);
+            }
+          });
+        }
+        return false;
+      });
+    }
   }
 }
+
 
 
 eliminarFiltro(){
