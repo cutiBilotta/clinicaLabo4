@@ -35,5 +35,30 @@ export class StorageService {
     }
   }
 
-}
 
+  async obtenerImagenRandomEnCarpeta(carpeta: string): Promise<string> {
+    try {
+      // Obtener la lista de imágenes en la carpeta
+      const listaImagenes = await this.storageRef.child(carpeta).listAll();
+      
+      // Seleccionar una imagen aleatoria
+      const imagenAleatoria = this.obtenerElementoAleatorio(listaImagenes.items);
+
+      // Obtener la URL de la imagen aleatoria
+      if (imagenAleatoria) {
+        const url = await imagenAleatoria.getDownloadURL();
+        return url;
+      } else {
+        throw new Error('No se encontraron imágenes en la carpeta.');
+      }
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  private obtenerElementoAleatorio<T>(array: T[]): T | undefined {
+    const indiceAleatorio = Math.floor(Math.random() * array.length);
+    return array[indiceAleatorio];
+  }
+}

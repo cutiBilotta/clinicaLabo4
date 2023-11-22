@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
   usuarios: any[] = [];
   mensajeError:string="";
   usuarioBD:any;
-  usuariosAcceso:any[]=['jmkeixwzrgmlvbkgxm@cazlv.com','dvzbjkhmoexktcouuj@cazlq.com','orkjqizsbgtagpdena@cazlq.com', 'haazgxzjipavfpigda@cazlv.com', 'aadxlldlzqamkjrpsx@cwmxc.com' , 'hokiocithgxwlwybri@cazlg.com', 'agus.bilotta@gmail.com' ];
+  usuariosAcceso:any[]=['jmkeixwzrgmlvbkgxm@cazlv.com','dvzbjkhmoexktcouuj@cazlq.com', 'haazgxzjipavfpigda@cazlv.com',  'agus.bilotta@gmail.com', 'july.bilotta@gmail.com', 'cavvurxgzmyqtgrmbc@cwmxc.com' ];
   imagenURL:any;
   spinner:boolean= true;
   isOpen=true ;

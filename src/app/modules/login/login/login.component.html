@@ -23,7 +23,7 @@
                <p class="text-danger text-center"><b>{{mensajeError}}</b></p>
 
                 <div style="text-align: center;">
-                <button  [@openClose]="isOpen ? 'open' : 'closed'" type="button" style="background-color:#88abc2;" class="btn m-2" (click)="ingresar()"><b>Ingresar</b></button>
+                <button  [@openClose]="isOpen ? 'open' : 'closed'" type="button" style="background-color:#88abc2;" class="btn m-2"  (click)="ingresar()"><b>Ingresar</b></button>
                 </div>
 
 
@@ -38,13 +38,13 @@
 
           <div class="card">
               <h5 class="card-header text-center">Elige el perfil</h5>
-              <div class="card-body" style="text-align: center;">
+              <div class="card-body scroll" style="text-align: center;">
              <div *ngIf="!spinner">
 
                 <div *ngFor="let usuario of usuariosAcceso">
-                  <button type="button" class="btn m-2 btn-lg" style="background-color: #88abc2;" (click)="autocompletar(usuario)">
-                    {{ usuario.nombre }} - {{usuario.perfil}}
-                    <img [src]="usuario.imagenURL" style="width: 40px; height: 40px; border-radius: 50%;">
+                  <button type="button" class="btn m-2 btn-lg" style="background-color: #88abc2; width: 150px; height: 150px; text-align: center;" (click)="autocompletar(usuario)">
+                     <small>{{usuario.perfil}}</small>
+                    <img [src]="usuario.imagenURL" style="width: 90px; height: 90px;">
                   </button><br/>
                 </div>     
             </div>
