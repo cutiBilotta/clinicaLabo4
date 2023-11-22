@@ -16,7 +16,7 @@
               <td *ngFor="let key of usuariosKeys">
                 <ng-container *ngIf="key === 'historiaClinica'">
                   <!-- Si la clave es 'historiaClinica', mostrar todos los índices -->
-                  <div *ngIf="usuario[key] && usuario[key].length > 0">
+                  <div *ngIf="usuario[key] && usuario[key].length > 0" class="historia-clinica-container">
                     <ul *ngFor="let historia of usuario[key]">
                       <li>Altura: {{ historia.altura }}</li>
                       <li>Peso: {{ historia.peso }}</li>
@@ -26,7 +26,7 @@
                       <li *ngFor="let detalle of historia.detalles">
                         {{ detalle.dato }} - {{ detalle.descripcion }}
                       </li>
-                      <li>-----------------------------------</li>
+                      <small>_________________________________</small>
 
                     </ul>
                   </div>

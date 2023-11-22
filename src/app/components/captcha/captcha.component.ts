@@ -61,6 +61,7 @@ export class CaptchaComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Aceptar',
       confirmButtonColor: '#caff42',
+      allowOutsideClick: false, 
       preConfirm: () => {
         return this.verificarCaptcha();
       }

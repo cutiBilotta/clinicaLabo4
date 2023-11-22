@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdministradorGuard } from './guards/administrador.guard';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { especialistaGuard } from './guards/especialista.guard';
+import { especialistaTrueGuard } from './guards/especialista-true.guard';
 const routes: Routes = [
   {
     path: '',
@@ -61,6 +62,8 @@ const routes: Routes = [
     path: 'carga-historia-clinica',
     loadChildren: () => import('./modules/carga-hist-clinica/carga-hist-clinica.module')
     .then(mod => mod.CargaHistClinicaModule),
+    canActivate : [especialistaTrueGuard]
+
   },
   {
     path: "**",

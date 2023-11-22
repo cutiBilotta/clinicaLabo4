@@ -7,9 +7,10 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgxCaptchaModule } from 'ngx-captcha';
 import { CaptchaComponent } from 'src/app/components/captcha/captcha.component';
+import { NavbarModule } from '../navbar/navbar.module';
 @NgModule({
   declarations: [
-    SolicitarTurnoComponent,CaptchaComponent
+    SolicitarTurnoComponent,CaptchaComponent, 
 
   ],
   imports: [
@@ -17,9 +18,10 @@ import { CaptchaComponent } from 'src/app/components/captcha/captcha.component';
     SolicitarTurnoRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-     NgxCaptchaModule
+     NgxCaptchaModule,NavbarModule
 
   ],
+  exports:[NavbarModule],
   providers:[{ provide: 'siteKey', useValue: 'gestionTurnos' }]
 })
 export class SolicitarTurnoModule { }

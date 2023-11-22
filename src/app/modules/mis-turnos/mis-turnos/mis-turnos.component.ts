@@ -44,7 +44,6 @@ presionFiltro: any;
 temperaturaFiltro: any;
 
 detalleFiltro: any;
-
 estadosFiltro:string[]= ["solicitado", "aceptado", "rechazado", "finalizado"];
 
 campoSeleccionado: string = '';
@@ -150,7 +149,6 @@ seleccionarTurno(turno:any){
   console.log(turno.estado);
   if((!this.esPaciente && this.turnoSeleccionado.estado.toLowerCase() == "aceptado") || (!this.esPaciente && this.turnoSeleccionado.estado.toLowerCase() == "solicitado")){
     this.mostrarDivEspecialista = true;
-    console.log("ACAAAAAAAA");
   }else if(((!this.esPaciente && this.turnoSeleccionado.estado.toLowerCase() != "aceptado") && (!this.esPaciente && this.turnoSeleccionado.estado.toLowerCase() != "solicitado"))|| this.turnoSeleccionado.estado.toLowerCase() == "cancelado"){
     this.mostrarDivEspecialista = false;
     this.mostrarCalificacion=false;
@@ -235,6 +233,18 @@ finalizarTurno(resenia:string, diagnostico:string){
 
 
 }
+
+onRadioChange(filtro: string) {
+  // Aquí puedes manejar lógica específica para los radio buttons, si es necesario
+  console.log('Cambio en radio button:', filtro);
+  this.filtrarTabla(filtro); // Puedes llamar a la función de filtrado aquí si es necesario
+}
+
+onTextoChange() {
+  // Aquí puedes manejar lógica específica para el campo de texto
+  console.log('Cambio en el campo de texto');
+  // No es necesario llamar a filtrarTabla aquí, ya que el filtrado se hace en onRadioChange
+}
 filtrarTabla(campo: string) {
   console.log(this.opcionFiltro);
   console.log(campo);
@@ -242,42 +252,41 @@ filtrarTabla(campo: string) {
 
   // Limpiar la tabla filtrada al inicio de cada filtrado
   this.tablaFiltrada = [...this.tablaCompleta];
-
+  if (this.detalleFiltro.trim() !== '') {
+    this.campoSeleccionado = campo;
+  }
   // Aplicar los filtros según la opción seleccionada
   if (campo === 'estado') {
     this.tablaFiltrada = this.tablaFiltrada.filter(turno => turno.estado === this.opcionFiltro);
   } else if (campo === 'especialidad') {
     this.tablaFiltrada = this.tablaFiltrada.filter(turno => turno.especialidad === this.opcionFiltro);
-  } else if (campo === 'dia') {
-    this.tablaFiltrada = this.tablaFiltrada.filter(turno => turno.dia.includes(this.opcionFiltro));
+  }if (campo === 'dia') {
+      this.tablaFiltrada = this.tablaFiltrada.filter(turno => turno.dia.includes(this.detalleFiltro));
   } else if (campo === 'horario') {
-    this.tablaFiltrada = this.tablaFiltrada.filter(turno => turno.horario.includes(this.opcionFiltro));
-
-  }else  if (campo === 'historiaClinica') {
-    if (this.opcionFiltro === 'altura' || this.opcionFiltro === 'peso' || this.opcionFiltro === 'presion' || this.opcionFiltro === 'detalle') {
-      // Filtrar por campos de la Historia Clínica
-      this.tablaFiltrada = this.tablaFiltrada.filter(turno => {
-        const historia = this.encontrarUsuario(turno.pacienteId)?.historiaClinica;
-        if (historia) {
-          return historia.some((detalle: any) => {
-            if (this.opcionFiltro === 'detalle') {
-              // Filtrar por detalles
-              return detalle.detalles.some((subdetalle: any) =>
-                subdetalle.dato.includes(this.detalleFiltro)
-              );
-            } else {
-              // Filtrar por otros campos de la historia clínica
-              return detalle[this.opcionFiltro] && detalle[this.opcionFiltro].toString().includes(this.detalleFiltro);
+      this.tablaFiltrada = this.tablaFiltrada.filter(turno => turno.horario.includes(this.detalleFiltro));
+  }if (this.opcionFiltro === 'altura' || this.opcionFiltro === 'peso' || this.opcionFiltro === 'presion' || this.opcionFiltro === 'detalle') {
+          // Filtrar por campos de la Historia Clínica
+          this.tablaFiltrada = this.tablaFiltrada.filter(turno => {
+            const historia = this.encontrarUsuario(turno.pacienteId)?.historiaClinica;
+            console.log(historia);
+            if (historia) {
+              return historia.some((detalle: any) => {
+                if (this.opcionFiltro === 'detalle') {
+                  // Filtrar por detalles
+                  return detalle.detalles.some((subdetalle: any) =>
+                    subdetalle.dato.includes(this.detalleFiltro)
+                  );
+                } else {
+                  // Filtrar por otros campos de la historia clínica
+                  return detalle[this.opcionFiltro] && detalle[this.opcionFiltro].toString().includes(this.detalleFiltro);
+                }
+              });
             }
+            return false;
           });
         }
-        return false;
-      });
-    }
-  }
-}
-
-
+      }
+    
 
 eliminarFiltro(){
   this.opcionFiltro="";

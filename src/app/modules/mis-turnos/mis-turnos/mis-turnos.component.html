@@ -14,20 +14,20 @@
             <div class="card-body" style="background-color: #eee;">
 
               <div class="row">
-              <div class="col-3">
+              <div class="col-4">
                 <div class="card">
                   <div class="card-body">
                     <h5 class="card-title">Estado</h5>
                     
-                      <div class="radio-buttons-container" *ngFor="let estado of estadosFiltro">
-                      <input name="filtro" type="radio" [value]="estado" [(ngModel)]="opcionFiltro" (change)="filtrarTabla('estado')"> {{    estado }} <br />
+                      <div class="radio-buttons-container mb-1" *ngFor="let estado of estadosFiltro">
+                      <input class="mx-2" name="filtro" type="radio" [value]="estado" [(ngModel)]="opcionFiltro" (change)="filtrarTabla('estado')"> {{    estado }} <br />
                       </div>
                   </div>
                 </div>
               </div>
               
 
-              <div class="col-3">
+              <div class="col-4">
 
                 <div class="card">
                   <div class="card-body">
@@ -35,63 +35,31 @@
                       <div *ngIf="especialidades != undefined && especialidades.length > 0" id="especialidad">
                         <ng-container *ngFor="let especialidad of especialidades">
                           <ng-container *ngFor="let item of especialidad.especialidades">
-                            <input name="filtro" type="radio" [value]="item" [(ngModel)]="opcionFiltro" (change)="filtrarTabla('especialidad')"> {{ item }} <br />
-                          </ng-container>
+                            <div class="radio-buttons-container mb-1" >
+                            
+                             <input class="mx-2" name="filtro" type="radio" [value]="item" [(ngModel)]="opcionFiltro" (change)="filtrarTabla('especialidad')"> {{ item }} <br />
+                            
+                            </div>
+                            </ng-container>
                         </ng-container>
                       </div>
                   </div>
                 </div>
               </div>  
 
-              <div class="col-3">
-
+              <div class="col-4">
                 <div class="card">
                   <div class="card-body">
-                    <h5 class="card-title">Dia</h5>
-                    <input name="filtro" type="text" [(ngModel)]="opcionFiltro" (change)="filtrarTabla('dia')">  <br />
-
+                    <h5 class="card-title">Dia - Horario - Hist. Clinica</h5>
+                    <ng-container *ngFor="let filtro of ['presion', 'altura', 'temperatura', 'detalle', 'dia', 'horario']">
+                      <div class="radio-buttons-container mb-1">
+                        <input class="mx-2" name="filtro" type="radio" [value]="filtro" [(ngModel)]="opcionFiltro"> {{ filtro }}
+                      </div>
+                    </ng-container>
+                    <input class="form-control mt-2" name="detalleFiltro" type="text" [(ngModel)]="detalleFiltro" (keyup.enter)="filtrarTabla(opcionFiltro)">
                   </div>
                 </div>
-
-                <div class="card mt-2">
-                  <div class="card-body">
-                    <h5 class="card-title">Horario</h5>
-                    <input name="filtro" type="text" [(ngModel)]="opcionFiltro" (change)="filtrarTabla('horario')">  <br />
-
-                  </div>
-                </div>
-
               </div>
-
-
-              <div class="col-3">
-
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Historia Clinica</h5>
-                    <div class="radio-buttons-container">
-                      <label>
-                        
-                        <input name="filtro" type="radio" value="altura" [(ngModel)]="opcionFiltro"> Altura <br/>
-                      </label>
-                      <label>
-                        <input name="filtro" type="radio" value="peso" [(ngModel)]="opcionFiltro"> Peso <br/>
-                      </label>
-                      <label>
-                        <input name="filtro" type="radio" value="presion" [(ngModel)]="opcionFiltro"> Presion <br/>
-                      </label>
-                      <label>
-                        <input name="filtro" type="radio" value="detalle" [(ngModel)]="opcionFiltro"> Detalle <br/>
-                      </label>
-                    </div>
-                      <input name="detalleFiltro" type="text" [(ngModel)]="detalleFiltro" (change)="filtrarTabla('historiaClinica')">
-                  
-
-                  </div>
-                </div>
-
-              </div>
-
 
 
            
@@ -130,17 +98,19 @@
             </td>
             <td>
               <ng-container *ngIf="mostrarHistoriaClinica(turno)">
-                <ul *ngFor="let historia of encontrarUsuario(turno.pacienteId).historiaClinica">
-                  <li>Altura: {{ historia.altura }}</li>
-                  <li>Peso: {{ historia.peso }}</li>
-                  <li>Presión: {{ historia.presion }}</li>
-                  <li>Temperatura: {{ historia.temperatura }}</li>
-                  <!-- Agregar más campos según sea necesario -->
-                  <li *ngFor="let detalle of historia.detalles">
-                    {{ detalle.dato }} - {{ detalle.descripcion }}
-                  </li>
-                  <li>-----------------------------------</li>
-                </ul>
+                <div class="historia-clinica-container">
+                  <ul *ngFor="let historia of encontrarUsuario(turno.pacienteId).historiaClinica">
+                    <li>Altura: {{ historia.altura }}</li>
+                    <li>Peso: {{ historia.peso }}</li>
+                    <li>Presión: {{ historia.presion }}</li>
+                    <li>Temperatura: {{ historia.temperatura }}</li>
+                    <!-- Agregar más campos según sea necesario -->
+                    <li *ngFor="let detalle of historia.detalles">
+                      {{ detalle.dato }} - {{ detalle.descripcion }}
+                    </li>
+                    <p class="text-center text-muted">________________________</p>
+                  </ul>
+                </div>
               </ng-container>
             </td>
           </tr>
@@ -156,13 +126,32 @@
               <input type="text" class="form-control" #reseniaInput aria-label="Small" aria-describedby="inputGroup-sizing-sm">
           </div>
 
-          <button *ngIf="turnoSeleccionado.estado== 'solicitado'" class="btn mx-2" style="background-color: #caff42;" (click)="cancelarTurno(reseniaInput.value)">Cancelar</button>
-
+          <div style="text-align: center;">
+          <button *ngIf="turnoSeleccionado.estado== 'solicitado'" class="btn btn-danger mx-2 btn-lg"  (click)="cancelarTurno(reseniaInput.value)">Cancelar</button>
+        </div>
       </div>
 
       
 
-      <div *ngIf="mostrarDivEspecialista">
+      <div *ngIf=" turnoSeleccionado!= undefined && !esPaciente && turnoSeleccionado.estado.toLowerCase()== 'solicitado'">
+        
+        <div class="input-group input-group-sm mb-3"  >
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="reseña" style="background-color: #ddd;">Reseña  </span>
+          </div>
+          <input type="text" class="form-control" #reseniaInput aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+
+        </div>
+
+          <p class="text-danger"><b>{{mensajeError}}</b></p>
+          <div style="text-align: center;">
+            <button  class="btn mx-2 btn-success btn-lg"  (click)="aceptarTurno()">Aceptar</button>
+            <button class="btn mx-2 btn-danger  btn-lg" (click)="rechazarTurno(reseniaInput.value)">Rechazar</button>
+          </div>  
+      </div>
+
+
+      <div *ngIf="  turnoSeleccionado!= undefined  && !esPaciente &&  turnoSeleccionado.estado.toLowerCase()== 'aceptado'">
           <div class="input-group input-group-sm mb-3"  >
             <div class="input-group-prepend">
               <span class="input-group-text" id="reseña" style="background-color: #ddd;">Reseña  </span>
@@ -179,17 +168,16 @@
 
           </div>
 
-          <button *ngIf="turnoSeleccionado.estado.toLowerCase()== 'solicitado'" class="btn mx-2" style="background-color: #caff42;" (click)="cancelarTurno(reseniaInput.value)">Cancelar</button>
-          <button *ngIf="turnoSeleccionado.estado.toLowerCase()== 'solicitado'" class="btn mx-2" style="background-color: #caff42;" (click)="rechazarTurno(reseniaInput.value)">Rechazar</button>
-          <button  *ngIf="turnoSeleccionado.estado.toLowerCase()== 'aceptado'" class="btn mx-2" style="background-color: #caff42;" (click)="finalizarTurno(reseniaInput.value, diagnosticoInput.value)">Finalizar</button>
-          <button *ngIf="turnoSeleccionado.estado.toLowerCase()== 'solicitado'" class="btn mx-2" style="background-color: #caff42;" (click)="aceptarTurno()">Aceptar</button>
+          <p class="text-danger"><b>{{mensajeError}}</b></p>
 
-          <p class="text-danger" *ngIf="mensajeError!=''"><b>{{mensajeError}}</b></p>
-        
-          
-
-
+          <div style="text-align: center;">
+            <button  *ngIf="turnoSeleccionado.estado.toLowerCase()== 'aceptado'" class="btn mx-2 btn-primary btn-lg" (click)="finalizarTurno(reseniaInput.value, diagnosticoInput.value)">Finalizar</button>
+            <button *ngIf="turnoSeleccionado.estado.toLowerCase()== 'aceptado'" class="btn mx-2 btn-danger  btn-lg"  (click)="cancelarTurno(reseniaInput.value)">Cancelar</button>
+          </div>  
       </div>
+
+
+     
 
       <div *ngIf="mostrarCalificacion && esPaciente" class="card" style="text-align: center; background-color: #88abc2;" >
           

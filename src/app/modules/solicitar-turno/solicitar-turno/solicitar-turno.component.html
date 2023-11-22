@@ -1,8 +1,9 @@
 <body>
   <div class="container">
     
-    <br/><br/>
-    <h1 class="text-center">Solicitar Turnos</h1>
+   
+    <app-navbar></app-navbar>
+    <h1 class="text-center mt-4">Solicitar Turnos</h1>
 
 
     <div class="card mt-5 text-center">
@@ -15,7 +16,7 @@
 
             <br/>
               
-              <label for="especialidad"><b>Especialistas</b></label><br/><br/>
+              <label for="especialidad"><h5>Especialistas</h5></label><br/><br/>
               
               <div>
                <div *ngIf="!spinner">
@@ -38,7 +39,7 @@
 
             <div *ngIf="especialidadesDelEspecialista!=undefined && especialidadesDelEspecialista.length > 0">
               <hr>
-              <label for="especialidad"><b>Especialidad</b></label> <br/><br/>
+              <label for="especialidad"><h5>Especialidad</h5></label> <br/><br/>
               <div class="row">
 
               <ng-container *ngFor="let especialidad of especialidadesDelEspecialista">
@@ -68,7 +69,7 @@
               <hr>
               <br/>
 
-              <label for="fechaElegida"><b>Turnos Disponibles</b></label><br/><br/>
+              <label for="fechaElegida"><h5>Turnos Disponibles</h5></label><br/><br/>
 
 
               <div *ngIf="fechasGeneradas !== undefined && especialidadSeleccionada != undefined">
@@ -78,7 +79,7 @@
                   <div *ngFor="let fecha of fechasGeneradas">
                     <ng-container *ngIf="calcularHorariosDisponibles(fecha).length > 0">
                         <button class="btn mx-2 my-2" style="background-color: #cff07b;" (click)="seleccionarFechaHora(fecha, hora)" *ngFor="let hora of calcularHorariosDisponibles(fecha)">
-                          {{ fecha.dia }}/{{ fecha.mes }} {{ hora }}
+                          {{fecha.anio}}-{{ fecha.mes }}-{{ fecha.dia }} <span class="text-primary">{{ hora }}</span> 
                         </button>
                     </ng-container>
                     <p *ngIf="calcularHorariosDisponibles(fecha).length === 0" class="text-danger">
@@ -93,7 +94,7 @@
                 <br/>
                 <hr>
                 <br/>
-                <label for="paciente"><b>Paciente</b></label><br/><br/>
+                <label for="paciente"><h5>Paciente</h5></label><br/><br/>
 
                 <select   class="form-select" name="paciente" id="paciente" (change)="seleccionarPaciente($event)">
                   <option value="">Selecciona un Paciente</option>
@@ -107,15 +108,15 @@
                 <br/>
 
               <div style="text-align: center;">
-              <button class="btn btn-lg btn-success"  (click)="aceptar(); turnoForm.resetForm()">Aceptar</button>
+                <p class="text-center text-primary"><b>{{mensajeConfirmacion}}</b></p>
+              <button *ngIf="mensajeConfirmacion!=''" class="btn btn-lg btn-success"  (click)="aceptar(); turnoForm.resetForm()">Aceptar</button>
               </div>
               <br/><br/>
 
               <div *ngIf="mostrarCaptcha">
-
                 <app-captcha (captchaStatusChange)="manejarCaptcha($event)"></app-captcha>
-                
               </div>
+
             </div>
         
           <div class="col"></div>

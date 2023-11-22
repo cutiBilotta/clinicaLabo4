@@ -40,6 +40,12 @@ especialidadesDelEspecialista:any[]=[];
   mostrarCaptcha:boolean=false;
 
   disponibilidadEspecialista:any;
+
+  mensajeConfirmacion:string="";
+
+  fechaFinal:any;
+  horarioFinal:any;
+
   ngOnInit() {
     this.afauth.getAuthState().subscribe(user => {
 
@@ -149,6 +155,7 @@ especialidadesDelEspecialista:any[]=[];
 
       
   }
+  
   
   seleccionarEspecialista(especialista: any) {
     this.especialistaId= especialista.id;
@@ -260,7 +267,8 @@ calcularFechas(disponibilidadEspecialista: any) {
     if (diasDisponibles.includes(this.obtenerNombreDia(diaSemana))) {
       const dia = fecha.getDate();
       const mes = fecha.getMonth() + 1;
-      this.fechasGeneradas.push({ dia, mes });
+      const anio = fecha.getFullYear()
+      this.fechasGeneradas.push({ dia, mes, anio });
     }
   }
 
@@ -383,14 +391,14 @@ manejarCaptcha(estadoCaptcha: string) {
     console.log('Captcha válido');
     if(this.usuarioActualId && !this.esAdmin){
         
-      let turno = new Turno(this.usuarioActualId, this.especialistaId, this.especialidadSeleccionada, this.fechaSeleccionada.toLocaleDateString('en-GB'), this.horarioSeleccionado);
+      let turno = new Turno(this.usuarioActualId, this.especialistaId, this.especialidadSeleccionada, this.fechaFinal, this.horarioFinal);
       let turnoJSON = turno.toJSON();
       this.database.crear("turnos", turnoJSON);
   
   
   }else if(this.esAdmin && this.usuarioSeleccionadoId!=undefined){
     
-    let turno = new Turno(this.usuarioSeleccionadoId, this.especialistaId, this.especialidadSeleccionada, this.fechaSeleccionada.toLocaleDateString('en-GB'), this.horarioSeleccionado);
+    let turno = new Turno(this.usuarioSeleccionadoId, this.especialistaId, this.especialidadSeleccionada, this.fechaFinal, this.horarioFinal);
     let turnoJSON = turno.toJSON();
     this.database.crear("turnos", turnoJSON);
   }
@@ -401,8 +409,12 @@ manejarCaptcha(estadoCaptcha: string) {
 }
 
 
-seleccionarFechaHora(fecha:any, hora:any){
+seleccionarFechaHora(fecha: any, hora: any) {
+  this.fechaFinal = fecha.dia + "/" + fecha.mes + "/" + fecha.anio;
+  this.horarioFinal=hora;
+  console.log(this.horarioFinal);
 
+  this.mensajeConfirmacion= "Turno seleccionado: " + this.especialidadSeleccionada + "  |  " +this.fechaFinal + "  |  " + this.especialistaSeleccionado.nombre + this.especialistaSeleccionado.apellido;
 
 }
 

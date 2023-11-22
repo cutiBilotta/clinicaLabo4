@@ -12,3 +12,8 @@ body {
   .radio-buttons-container div {
     margin-right: 10px;  /* Ajusta el espacio entre los radio buttons según tus preferencias */
   }
+
+  .historia-clinica-container {
+    max-height: 150px; /* Establece la altura máxima que desees */
+    overflow-y: auto;  /* Agrega una barra de desplazamiento vertical si es necesario */
+  }

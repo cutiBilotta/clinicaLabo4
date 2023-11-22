@@ -52,6 +52,7 @@ historiaClinica:any;
             console.log('Usuario encontrado en el array de usuarios:', this.usuarioBD);
   
    
+            
             if (this.usuarioBD.perfil.toLowerCase() == "paciente") {
               const nombreImagen = this.usuarioBD.imgPerfil[0];
               this.storageService.obtenerImagen("users",nombreImagen).then((url) => {
@@ -72,6 +73,12 @@ historiaClinica:any;
 
 
             }else if(this.usuarioBD.perfil.toLowerCase() == "especialista") {
+              const nombreImagen = this.usuarioBD.imgPerfil;
+              this.storageService.obtenerImagen("users",nombreImagen).then((url) => {
+                this.imagenUrl = url;
+                console.log(this.imagenUrl);
+              });
+              
                   const especialidadesEspecialista = this.usuarioBD.especialidad; // Obtén las especialidades del especialista
           console.log(especialidadesEspecialista);
                   console.log(this.usuarioBD);
