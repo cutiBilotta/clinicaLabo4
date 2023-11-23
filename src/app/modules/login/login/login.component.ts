@@ -127,7 +127,7 @@ export class LoginComponent implements OnInit {
 
         }
       }
-    },1500);
+    },1000);
     
        
   }

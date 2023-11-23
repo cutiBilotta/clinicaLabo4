@@ -77,7 +77,7 @@
       </div>
 
 
-      <table class="table table-bordered table-light table-striped">
+      <table class="table table-bordered table-light table-striped table-responsive">
         <thead>
           <tr>
             <th style="background-color: #49708a;" scope="col">#</th>
@@ -89,22 +89,27 @@
           <tr *ngFor="let turno of tablaFiltrada; let i = index">
             <th scope="row">{{ i + 1 }}</th>
             <td *ngFor="let key of turnosKeys" (click)="seleccionarTurno(turno)">
-              <ng-container *ngIf="key == 'estado'">
-                <b>{{ turno[key] }}</b>
+              <ng-container *ngIf="key == 'reseñaCancelacion'; else otherContent">
+                <p class="text-danger">{{ turno[key] }}</p>
               </ng-container>
-              <ng-container *ngIf="key !== 'estado'">
-                {{ turno[key] }}
-              </ng-container>
+              <ng-template #otherContent>
+                <ng-container *ngIf="key == 'estado'">
+                  <b>{{ turno[key] }}</b>
+                </ng-container>
+                <ng-container *ngIf="key !== 'estado' && key !== 'reseniasCancelacion'">
+                  {{ turno[key] }}
+                </ng-container>
+              </ng-template>
             </td>
             <td>
               <ng-container *ngIf="mostrarHistoriaClinica(turno)">
                 <div class="historia-clinica-container">
                   <ul *ngFor="let historia of encontrarUsuario(turno.pacienteId).historiaClinica">
+                    <!-- Detalles de la historia clínica -->
                     <li>Altura: {{ historia.altura }}</li>
                     <li>Peso: {{ historia.peso }}</li>
                     <li>Presión: {{ historia.presion }}</li>
                     <li>Temperatura: {{ historia.temperatura }}</li>
-                    <!-- Agregar más campos según sea necesario -->
                     <li *ngFor="let detalle of historia.detalles">
                       {{ detalle.dato }} - {{ detalle.descripcion }}
                     </li>
@@ -199,7 +204,7 @@
 
 
           <div style="text-align: center;">
-          <button  class="btn mx-2" style="background-color: #caff42; width: 100px;" (click)="aceptar(reseniaInput.value)">Aceptar</button>
+          <button  class="btn mx-2 btn-success" style="width: 100px;" (click)="aceptar(reseniaInput.value)">Aceptar</button>
           </div>
           <br/><br/>
       </div>
@@ -208,14 +213,7 @@
       <div *ngIf=""></div>
 
 
-      <div *ngIf="resenias!=undefined && resenias.length>0">
-        <hr>
-
-          <h4 class="text-center">Turnos Cancelados: </h4>
-          <div *ngFor="let item of resenias">
-              <p>{{item.dia}} {{item.horario}} - {{item.especialidad}} - Comentario: <b class="text-danger">{{item.resenia}}</b></p>
-          </div>
-      </div>
+    
 
 
       <br/>

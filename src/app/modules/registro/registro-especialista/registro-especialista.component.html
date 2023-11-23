@@ -86,11 +86,10 @@
             <p class="text-success" *ngIf="mensajeExito!='' ">{{mensajeExito}}</p>
 
             <div class="mt-4"*ngIf="form.get('edad')?.value !== '' && form.get('dni')?.value !== '' && form.get('especialidad')?.value !== '' && form.get('nombre')?.value !== '' && form.get('apellido')?.value !== '' && form.get('password')?.value !== '' " style="text-align: center;">
-                <button class="btn" (click)="aceptar()" style="background-color: #caff42;">Enviar Datos</button>
+                <button class="btn btn-lg btn-success" (click)="aceptar()" >Enviar Datos</button>
             </div>
 
-
-            <br /><br />
+            <br/><br/><br/>
         </form>
     </div>
 </body>

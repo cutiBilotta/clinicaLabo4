@@ -16,14 +16,14 @@ export class CargaHistClinicaComponent implements OnInit {
   usuarios: any[]=[];
   especialistas: any[]=[];
   pacientes: any[]=[];
-usuarioActualBd:any;
-turnos: any[]=[];
-turnosFiltrados:any[]=[];
-turnosKeys:any[] =[];
-turnoSeleccionado:any;
-pacienteSeleccionado:any;
+  usuarioActualBd:any;
+  turnos: any[]=[];
+  turnosFiltrados:any[]=[];
+  turnosKeys:any[] =[];
+  turnoSeleccionado:any;
+  pacienteSeleccionado:any;
   
-altura: any;
+  altura: any;
   peso: any;
   temperatura: any;
   presion: any;
