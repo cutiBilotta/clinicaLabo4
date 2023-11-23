@@ -11,7 +11,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TurnosComponent } from './turnos/turnos.component';
 import { NavbarModule } from '../navbar/navbar.module';
 import { HistoriasComponent } from './historias/historias.component';
-
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -25,6 +25,7 @@ import { HistoriasComponent } from './historias/historias.component';
     CommonModule,
     SeccionUsuariosRoutingModule,
     RegistroModule,ReactiveFormsModule, NavbarModule,
+    FormsModule
     
   ],
   exports:[NavbarModule]

@@ -44,7 +44,7 @@ presionFiltro: any;
 temperaturaFiltro: any;
 
 detalleFiltro: any;
-estadosFiltro:string[]= ["solicitado", "aceptado", "rechazado", "finalizado"];
+estadosFiltro:string[]= ["solicitado", "aceptado", "rechazado","cancelado", "finalizado"];
 
 campoSeleccionado: string = '';
     ngOnInit() {
@@ -181,7 +181,7 @@ aceptar(resenia:string){
 cancelarTurno(resenia:string){
 
   if (resenia.trim() !== '' && this.turnoSeleccionado.estado.toLowerCase() == "solicitado") {
-    this.turnoSeleccionado.estado = "Cancelado";
+    this.turnoSeleccionado.estado = "cancelado";
     this.turnoSeleccionado.reseñaCancelacion = resenia; // Asigna el valor del campo de reseña al objeto
     this.database.actualizar("turnos", this.turnoSeleccionado, this.turnoSeleccionado.id);
   } else {
@@ -196,7 +196,7 @@ aceptarTurno(){
 
 
   if (this.turnoSeleccionado.estado.toLowerCase() == "solicitado") {
-    this.turnoSeleccionado.estado = "Aceptado";
+    this.turnoSeleccionado.estado = "aceptado";
     this.database.actualizar("turnos", this.turnoSeleccionado, this.turnoSeleccionado.id);
   }
 
@@ -206,7 +206,7 @@ aceptarTurno(){
 rechazarTurno(resenia:string){
 
   if (resenia.trim() !== '') {
-    this.turnoSeleccionado.estado = "Rechazado";
+    this.turnoSeleccionado.estado = "rechazado";
     this.turnoSeleccionado.reseñaCancelacion = resenia; 
     this.database.actualizar("turnos", this.turnoSeleccionado, this.turnoSeleccionado.id);
   } else {
@@ -221,7 +221,7 @@ finalizarTurno(resenia:string, diagnostico:string){
   this.mostrarDivDiagnostico=true;
 
   if (resenia.trim() !== '' && diagnostico.trim() !== ''  && this.turnoSeleccionado.estado.toLowerCase() == "aceptado") {
-    this.turnoSeleccionado.estado = "Finalizado";
+    this.turnoSeleccionado.estado = "finalizado";
     this.turnoSeleccionado.reseñaFinalizacion = resenia; // Asigna el valor del campo de reseña al objeto
     this.turnoSeleccionado.diagnostico = diagnostico
 

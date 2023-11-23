@@ -22,6 +22,12 @@ export class TurnosComponent implements OnInit {
   
   tablaFiltrada:any[]=[];
 
+  detalleFiltro: string = '';
+  opcionFiltro:any;
+  tablaCompleta:any[]=[];
+  campoSeleccionado:any;
+  usuarios:any[]=[];
+  estadosFiltro=["solicitado", "aceptado", "rechazado","cancelado", "finalizado"];
   constructor(private database: DataBaseService) {}
 
   ngOnInit() {
@@ -39,16 +45,20 @@ export class TurnosComponent implements OnInit {
           console.log("turnoData no es un objeto válido:", turnoData);
         }
       });
+
+      this.database.obtenerTodos("usuarios").subscribe((usuariosRef) => {
+        this.usuarios = usuariosRef.map(userRef => {
+          let usuario: any = userRef.payload.doc.data();
+          usuario['id'] = userRef.payload.doc.id;
+          return usuario;
+        })
   
       // Ahora puedes acceder al ID del documento en cada objeto turno en this.turnos.
    
 
-      this.turnos.forEach((turno) => {   
-        this.turnosKeys = Object.keys(turno);      
-      });
-
-      //console.log(this.turnosKeys);
-     // console.log(this.turnos);
+      if(this.turnosKeys){
+          this.turnosKeys.push("especialidad", "dia", "horario", "estado")   
+      }
 
       this.database.obtenerTodos("especialidades").subscribe((espRef) => {
         this.especialidades = [];
@@ -64,10 +74,7 @@ export class TurnosComponent implements OnInit {
      this.tablaFiltrada=this.turnos;
 
 
-    });
-
-
-    this.database.obtenerTodos("usuarios").subscribe((usuariosRef) => {
+     this.database.obtenerTodos("usuarios").subscribe((usuariosRef) => {
       this.especialistas = usuariosRef
         .map((usuario: any) => usuario.payload.doc.data()) // Añade ": any" para indicar que es un objeto de tipo desconocido
         .filter((usuario: any) => {
@@ -75,10 +82,17 @@ export class TurnosComponent implements OnInit {
           return perfil && (perfil.toLowerCase() == 'especialista');
         });
     
-      //console.log(this.especialistas);
+        this.tablaCompleta=this.tablaFiltrada;
+
     });
 
+    });
+
+
+   
+
   
+    });
   }
 
  /* seleccionarTurno(turno: any) {
@@ -113,60 +127,71 @@ export class TurnosComponent implements OnInit {
     }
   }
 
-  filtrarTabla(especialidadSeleccionada: string) {
-    
-    const radiosB  = document.getElementsByName('especialistaRadio') as NodeListOf<HTMLInputElement>;
-    for (let i = 0; i < radiosB.length; i++) {
-      radiosB[i].checked = false;
-    }
-
-    const filtroSeleccionado = especialidadSeleccionada;
-    console.log(filtroSeleccionado);
-
-    this.tablaFiltrada = this.turnos.filter((turno: any) => turno.especialidad == filtroSeleccionado);
-
-
-
-    
+  onTextoChange() {
+    // Aquí puedes manejar lógica específica para el campo de texto
+    console.log('Cambio en el campo de texto');
+    // No es necesario llamar a filtrarTabla aquí, ya que el filtrado se hace en onRadioChange
   }
 
-  filtrarTablaEspecialista(especialistaSeleccionado: string) {
-
-    const radiosB  = document.getElementsByName('especialidadRadio') as NodeListOf<HTMLInputElement>;
-    for (let i = 0; i < radiosB.length; i++) {
-      radiosB[i].checked = false;
+  filtrarTabla(campo: string) {
+    console.log(this.opcionFiltro);
+    console.log(campo);
+    this.campoSeleccionado = campo; // Asigna el valor de campo a la propiedad
+  
+    // Limpiar la tabla filtrada al inicio de cada filtrado
+    this.tablaFiltrada = [...this.tablaCompleta];
+    if (this.detalleFiltro.trim() !== '') {
+      this.campoSeleccionado = campo;
     }
-    
-
-    const filtroSeleccionado = especialistaSeleccionado;
-    console.log(filtroSeleccionado);
-
-    this.tablaFiltrada = this.turnos.filter((turno: any) => turno.especialistaId == filtroSeleccionado);
-
-
-
-    
+    // Aplicar los filtros según la opción seleccionada
+    if (campo === 'estado') {
+      this.tablaFiltrada = this.tablaFiltrada.filter(turno => turno.estado === this.opcionFiltro);
+    } else if (campo === 'especialidad') {
+      this.tablaFiltrada = this.tablaFiltrada.filter(turno => turno.especialidad === this.opcionFiltro);
+    }if (campo === 'dia') {
+        this.tablaFiltrada = this.tablaFiltrada.filter(turno => turno.dia.includes(this.detalleFiltro));
+    } else if (campo === 'horario') {
+        this.tablaFiltrada = this.tablaFiltrada.filter(turno => turno.horario.includes(this.detalleFiltro));
+    }if (this.opcionFiltro === 'altura' || this.opcionFiltro === 'peso' || this.opcionFiltro === 'presion' || this.opcionFiltro === 'detalle') {
+            // Filtrar por campos de la Historia Clínica
+            this.tablaFiltrada = this.tablaFiltrada.filter(turno => {
+              const historia = this.encontrarUsuario(turno.pacienteId)?.historiaClinica;
+              console.log(historia);
+              if (historia) {
+                return historia.some((detalle: any) => {
+                  if (this.opcionFiltro === 'detalle') {
+                    // Filtrar por detalles
+                    return detalle.detalles.some((subdetalle: any) =>
+                      subdetalle.dato.includes(this.detalleFiltro)
+                    );
+                  } else {
+                    // Filtrar por otros campos de la historia clínica
+                    return detalle[this.opcionFiltro] && detalle[this.opcionFiltro].toString().includes(this.detalleFiltro);
+                  }
+                });
+              }
+              return false;
+            });
+          }
   }
-
-  eliminarFiltros(){
-
-    const radiosA = document.getElementsByName('especialidadRadio') as NodeListOf<HTMLInputElement>;
-    const radiosB = document.getElementsByName('especialistaRadio') as NodeListOf<HTMLInputElement>;
+      
+      
   
-    for (let i = 0; i < radiosA.length; i++) {
-      radiosA[i].checked = false;
-    }
+  eliminarFiltro(){
+    this.opcionFiltro="";
+    this.tablaFiltrada=this.tablaCompleta;
   
-    for (let i = 0; i < radiosB.length; i++) {
-      radiosB[i].checked = false;
-    }
-  
-    
-    this.tablaFiltrada=this.turnos;
   }
   
 
-
+  encontrarUsuario(pacienteId: string) {
+    return this.usuarios.find(user => user.id === pacienteId) || {};
+  }
+  
+  mostrarHistoriaClinica(turno: any): boolean {
+    return turno.pacienteId && this.usuarios && this.usuarios.length > 0 && this.encontrarUsuario(turno.pacienteId).historiaClinica && this.encontrarUsuario(turno.pacienteId).historiaClinica.length > 0;
+  }
+  
 
 
 }

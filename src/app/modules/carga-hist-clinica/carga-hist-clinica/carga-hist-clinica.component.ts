@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import Swal from'sweetalert2';
 
 @Component({
   selector: 'app-carga-hist-clinica',
@@ -10,7 +12,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class CargaHistClinicaComponent implements OnInit {
 
-  constructor(private database: DataBaseService, private afauth: AuthService){}
+  constructor(private database: DataBaseService, private afauth: AuthService, private router: Router){}
   usuarios: any[]=[];
   especialistas: any[]=[];
   pacientes: any[]=[];
@@ -232,6 +234,15 @@ altura: any;
     console.log('Paciente con historia clínica:', this.pacienteSeleccionado);
     
     this.database.actualizar("usuarios", this.pacienteSeleccionado, this.pacienteSeleccionado.id);
+
+    Swal.fire({
+      title: "Historia Clinica cargada con éxito",
+      confirmButtonColor: '#caff42',
+      confirmButtonText: "Entendido"
+    }).then(() => {
+      // Redireccionar a '/home'
+      this.router.navigateByUrl('/home');
+    });
   }
 
 

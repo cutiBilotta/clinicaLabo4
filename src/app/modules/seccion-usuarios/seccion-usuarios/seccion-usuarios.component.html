@@ -4,22 +4,25 @@
       <app-navbar></app-navbar>
         <br/><br/><br/>
         <h1 class="text-dark ">Gestion de Sistema</h1>
+        <div class="adminIconContainer" (click)="volver()" style="background-color: #88abc2;">
+          <img src="../../../../assets/img/iconBack.png" alt="" class="adminIcon" >
+        </div>
 
 
         <div *ngIf="mostrarCuerpo">
         <div class="row mt-5">
             <div class="col-sm-6">
               <div class="card">
-                <div class="card-body" style="background-color: #ccc;">
+                <div class="card-body" style="background-color: #ddd;">
                   <h5 class="card-title">Ver Usuarios</h5>
-                  <p class="card-text">Entra aqui para ver los usuarios dados de alta y habilitar/inhabilitar a los Especialistas</p>
+                  <p class="card-text">Entra aqui para ver los usuarios y habilitar/inhabilitar a los Especialistas</p>
                   <button class="btn " (click)="usuarios()" style="background-color:#88abc2">Ver Usuarios</button>
                 </div>
               </div>
             </div>
             <div class="col-sm-6">
               <div class="card">
-                <div class="card-body" style="background-color: #ccc;">
+                <div class="card-body" style="background-color: #ddd;">
                   <h5 class="card-title">Registrar Especialista</h5>
                   <p class="card-text">Entra aqui para dar de alta a un nuevo Especialista</p>
                   <button class="btn" (click)="especialista()" style="background-color: #88abc2">Registrar Especialista</button>
@@ -32,16 +35,16 @@
           <div class="row mt-5">
             <div class="col-sm-6">
               <div class="card">
-                <div class="card-body" style="background-color: #ccc;">
+                <div class="card-body" style="background-color: #ddd;">
                   <h5 class="card-title">Registrar Paciente</h5>
                   <p class="card-text">Entra aqui para dar de alta a un nuevo Paciente</p>
-                  <button [@openClose]="isOpen ? 'open' : 'closed'" type="button" class="btn" (click)="paciente()" style="background-color:#88abc2">Registrar Paciente</button>
+                  <button  type="button" class="btn" (click)="paciente()" style="background-color:#88abc2">Registrar Paciente</button>
                 </div>
               </div>
             </div>
             <div class="col-sm-6">
               <div class="card">
-                <div class="card-body" style="background-color: #ccc;">
+                <div class="card-body" style="background-color: #ddd;">
                   <h5 class="card-title">Registrar Administrador</h5>
                   <p class="card-text">Entra aqui para dar de alta a un nuevo Administador</p>
                   <button class="btn" (click)="administrador()" style="background-color:#88abc2">Registrar Administador</button>
@@ -52,7 +55,7 @@
             <div class="row mt-5">
             <div class="col-sm-6">
               <div class="card">
-                <div class="card-body" style="background-color: #ccc;">
+                <div class="card-body" style="background-color: #ddd;">
                   <h5 class="card-title">Turnos</h5>
                   <p class="card-text">Entra aqui para administrar Turnos</p>
                   <button class="btn" (click)="turnos()" style="background-color:#88abc2">Administrar Turnos</button>
@@ -62,16 +65,18 @@
 
             <div class="col-sm-6">
               <div class="card">
-                <div class="card-body" style="background-color: #ccc;">
+                <div class="card-body" style="background-color: #ddd;">
                   <h5 class="card-title">Historias Clinicas</h5>
                   <p class="card-text">Entra aqui para ver Historias Clinicas</p>
                   <button class="btn" (click)="historias()" style="background-color: #88abc2">Historias Clinicas</button>
                 </div>
               </div>
             </div>
+
             </div>
-            
+
           </div>
+          <br><br><br>
 
 
         </div>

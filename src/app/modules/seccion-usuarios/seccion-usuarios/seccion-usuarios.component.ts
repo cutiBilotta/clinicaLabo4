@@ -42,10 +42,18 @@ export class SeccionUsuariosComponent {
   mostrarUsuarios:boolean=false;
   mostrarCuerpo:boolean=true;
  
+  volver(){
+    this.registrarPaciente = false;
+    this.registrarEspecialista = false;
+    this.registrarAdministrador = false;
+    this.mostrarUsuarios = false;
+    this.mostrarTurnos = false;
+    this.mostrarHistorias = false;
+    this.mostrarCuerpo=true;
+
+  }
   paciente() {
-    this.isOpen = !this.isOpen;
-  
-    setTimeout(() => {
+    
       this.registrarPaciente = true;
       this.registrarEspecialista = false;
       this.registrarAdministrador = false;
@@ -53,7 +61,6 @@ export class SeccionUsuariosComponent {
       this.mostrarCuerpo = false;
       this.mostrarTurnos = false;
       this.mostrarHistorias = false;
-    }, 1500); // Establece el tiempo de retraso en milisegundos (0.5 segundos en este ejemplo)
   }
 
   especialista(){

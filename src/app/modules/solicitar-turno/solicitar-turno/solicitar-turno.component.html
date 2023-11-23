@@ -78,8 +78,8 @@
 
                   <div *ngFor="let fecha of fechasGeneradas">
                     <ng-container *ngIf="calcularHorariosDisponibles(fecha).length > 0">
-                        <button class="btn mx-2 my-2" style="background-color: #cff07b;" (click)="seleccionarFechaHora(fecha, hora)" *ngFor="let hora of calcularHorariosDisponibles(fecha)">
-                          {{fecha.anio}}-{{ fecha.mes }}-{{ fecha.dia }} <span class="text-primary">{{ hora }}</span> 
+                        <button class="btn mx-2 my-2" style="background-color: #cff07b; width: 120px;height: 120px;" (click)="seleccionarFechaHora(fecha, hora)" *ngFor="let hora of calcularHorariosDisponibles(fecha)">
+                          {{fecha.anio}}-{{ fecha.mes }}-{{ fecha.dia }} <p class="text-primary">{{ hora }}</p> 
                         </button>
                     </ng-container>
                     <p *ngIf="calcularHorariosDisponibles(fecha).length === 0" class="text-danger">

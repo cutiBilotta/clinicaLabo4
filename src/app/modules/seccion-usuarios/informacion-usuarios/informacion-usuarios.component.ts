@@ -49,11 +49,11 @@ export class InformacionUsuariosComponent {
       const perfil = usuario.perfil.toLowerCase(); 
       
       if (this.keysPacientes.length==0 && perfil == "paciente") {
-        this.keysPacientes = Object.keys(usuario);
+        this.keysPacientes.push("nombre", "apellido", "edad", "obra_social" , "dni", "email");
       } else if ( this.keysEspecialistas.length==0 &&  perfil == "especialista") {
-        this.keysEspecialistas = Object.keys(usuario);
+        this.keysEspecialistas.push("nombre", "apellido", "edad", "especialidad" , "habilitacion", "dni", "email");
       }else if( this.keysAdministradores.length==0 &&  perfil == "administrador") {
-        this.keysAdministradores = Object.keys(usuario);
+        this.keysAdministradores.push("nombre", "apellido", "edad", "dni", "email");
 
       }
       if(this.keysPacientes.length>0 && this.keysEspecialistas.length>0 && this.keysAdministradores.length>0){
