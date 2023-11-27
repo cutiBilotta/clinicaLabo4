@@ -5,6 +5,7 @@ import { StorageService } from 'src/app/services/storage.service';
 import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import Swal from'sweetalert2';
 import { Router } from '@angular/router';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-mi-perfil',
@@ -25,8 +26,15 @@ export class MiPerfilComponent implements OnInit{
   usuarios:any[]=[];
   form!: FormGroup;
   especialidadesSelect:any;
-mostrarHistoriaClinica:boolean=false;
-historiaClinica:any;
+  esPaciente:boolean=false;
+  historiaClinica:any;
+  turnos:any[]=[];
+  turnosUsuarioActual:any[]=[];
+  especialistasFiltrados:any[]=[];
+  especialistas:any[]=[];
+
+  especialistaSeleccionado:any;
+  informacion:any[]=[];
   ngOnInit(): void {
 
 
@@ -44,9 +52,20 @@ historiaClinica:any;
             return usuario;
           });
           console.log(this.usuarios);
+
+          this.especialistas = this.usuarios.filter(user => user.perfil.toLowerCase() === "especialista");
+console.log(this.especialistas);
+          this.database.obtenerTodos("turnos").subscribe((turnosRef) => {
+            this.turnos = turnosRef.map(turnoRef => {
+              let turno: any = turnoRef.payload.doc.data();
+              turno['id'] = turnoRef.payload.doc.id;
+              return turno;
+            });
+          
   
           this.usuarioBD = this.usuarios.find((usuario) => usuario.email == email);
   
+          console.log(this.usuarioBD);
           if (this.usuarioBD) {
             // El usuario loggeado coincide con un usuario en el array de usuarios
             console.log('Usuario encontrado en el array de usuarios:', this.usuarioBD);
@@ -60,9 +79,10 @@ historiaClinica:any;
                 console.log(this.imagenUrl);
               });
 
-              this.mostrarHistoriaClinica=true;
+              this.esPaciente=true;
               this.historiaClinica = this.usuarioBD.historiaClinica;
               console.log(this.historiaClinica);
+              this.obtenerTurnosUsuarioActual();
 
             } else if (this.usuarioBD.perfil.toLowerCase() == "administrador") {
               const nombreImagen = this.usuarioBD.imgPerfil;
@@ -104,8 +124,9 @@ historiaClinica:any;
           }
 
 
-            
+        
           }
+        })
         });
       }
     });
@@ -182,8 +203,63 @@ historiaClinica:any;
         this.router.navigateByUrl('/home');
       });
     }
-    }
+  
+  }
+
+
+  obtenerTurnosUsuarioActual() {
+    this.turnosUsuarioActual = this.turnos.filter(turno => turno.pacienteId === this.usuarioBD.id);
+  
+    this.especialistasFiltrados = [];
+  
+    this.especialistas.forEach((especialista) => {
+      const turnosFiltrados = this.turnosUsuarioActual.filter(turno => turno.especialistaId === especialista.id);
+  
+      if (turnosFiltrados.length > 0) {
+        this.especialistasFiltrados.push(especialista);
+      }
+    });
+  
+    console.log(this.especialistasFiltrados);
+    console.log(this.turnosUsuarioActual);
+  
+    this.turnosUsuarioActual.forEach((turno) => {
+      const especialista = this.especialistasFiltrados.find(esp => esp.id === turno.especialistaId && turno.pacienteId == this.usuarioBD.id);
+    
+      const informacion: any = {
+        especialidad: turno.especialidad,
+        dia: turno.dia,
+        horario: turno.horario,
+        especialista: especialista.nombre + " " + especialista.apellido 
+      };
+    
+      this.informacion.push(informacion);
+    });
+
+    console.log(this.informacion);
+  }
+
+
+  descargarTurnos() {
+    // Verificar si se ha seleccionado un especialista
+    const contenidoTexto = this.convertirTurnosAFormatoTexto();
+    console.log(contenidoTexto);
+    /*const blob = new Blob([contenidoTexto], { type: 'text/plain;charset=utf-8' });
+    saveAs(blob, this.usuarioBD.nombre + this.usuarioBD.apellido + "Turnos.txt");*/
+  }
+  
+  private convertirTurnosAFormatoTexto(): string {
+    // Aquí puedes personalizar cómo deseas que se forme el contenido del archivo de texto
+    return this.informacion.map(turno => `${this.especialistaSeleccionado.nombre}, ${this.especialistaSeleccionado.apellido} ${turno.especialidad}, ${turno.dia}, ${turno.horario}`).join('\n');
+  }
+
 }
+
+
+
+
+
+
 
 
 

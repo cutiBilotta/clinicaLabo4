@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { DataBaseService } from 'src/app/services/database.service';
 import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+
 
 interface Usuario {
   perfil: string;
@@ -21,12 +23,18 @@ export class InformacionUsuariosComponent {
   pacientes:any[]=[];
   especialistas:any[]=[];
   administradores:any[] = [];
-
+  turnos:any[]=[];
   especialistaSeleccionado: any | null = null;
 
   keysAdministradores:any[] = [];
   keysPacientes:any[]= [];
   keysEspecialistas:any[]= [];
+
+
+  pacienteSeleccionado:any;
+  usuariosEspecialistas:any[] = [];
+
+  turnosDescarga:any[] = [];
 
   ngOnInit() {
     this.database.obtenerTodos("usuarios").subscribe((usuariosRef) => {
@@ -36,10 +44,21 @@ export class InformacionUsuariosComponent {
         usuario['id'] = userRef.payload.doc.id;
         return usuario;
       });
+
+      this.usuariosEspecialistas = this.usuarios.filter(user => user.perfil.toLowerCase() === "especialista");
+
+      this.database.obtenerTodos("turnos").subscribe((turnosRef) => {
+        this.turnos = turnosRef.map(turnoRef => {
+          let turno: any = turnoRef.payload.doc.data();
+          turno['id'] = turnoRef.payload.doc.id;
+          return turno;
+        });
+
       this.obtenerKeys();
       this.cargarTablas();
 
       console.log(this.usuarios)
+      })
     })
   }
 
@@ -156,6 +175,40 @@ export class InformacionUsuariosComponent {
       return newItem;
     });
   }
+
+  descargarInformacion(paciente: any) {
+    this.pacienteSeleccionado = paciente;
+  
+    const turnosUsuarioSeleccionado = this.turnos.filter(turno => turno.pacienteId === this.pacienteSeleccionado.id);
+  
+    this.turnosDescarga = [];
+  
+    turnosUsuarioSeleccionado.forEach((turno) => {
+      const medico = this.usuariosEspecialistas.find(medico => medico.id == turno.especialistaId);
+  
+      this.turnosDescarga.push({
+        especialista: medico.nombre + " " + medico.apellido,
+        especialidad: turno.especialidad,
+        dia: turno.dia,
+        horario: turno.horario,
+      });
+    });
+  
+    console.log(this.turnosDescarga);
+  
+    // Lógica para descargar como archivo de texto
+    const contenidoTexto = this.convertirTurnosAFormatoTexto();
+    const blob = new Blob([contenidoTexto], { type: 'text/plain;charset=utf-8' });
+    saveAs(blob, this.pacienteSeleccionado.nombre + this.pacienteSeleccionado.apellido + "Turnos.txt");
+  }
+  
+  private convertirTurnosAFormatoTexto(): string {
+    // Aquí puedes personalizar cómo deseas que se forme el contenido del archivo de texto
+    return this.turnosDescarga.map(turno => `${turno.especialista}, ${turno.especialidad}, ${turno.dia}, ${turno.horario}`).join('\n');
+  }
+
+
+ 
   
 }
 

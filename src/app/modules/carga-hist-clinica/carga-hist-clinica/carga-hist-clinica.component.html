@@ -3,39 +3,52 @@
       <app-navbar></app-navbar>
 
       <h3 class="text-center text-dark my-3">Carga de Historia Clinica</h3>
-      <table class="table table-bordered table-light table-striped">
-        <thead>
-          <tr>
-            <th style="background-color: #49708a;" scope="col">#</th>
-            <th class="text-center" style="background-color: #49708a;" *ngFor="let key of turnosKeys" scope="col">{{ key }}</th>
-          </tr>
-        </thead>
-        <tbody *ngIf="turnosFiltrados !== undefined && turnosFiltrados.length > 0">
-          <tr *ngFor="let turno of turnosFiltrados; let i = index" (click)="seleccionarTurno(turno)">
-            <th scope="row">{{ i + 1 }}</th>
-            <td *ngFor="let key of turnosKeys">
-              <ng-container *ngIf="key == 'estado'">
-                <b>{{ turno[key] }}</b>
-              </ng-container>
-              <ng-container *ngIf="key === 'nombre'">
-                {{ obtenerNombrePaciente(turno.pacienteId) }}
-              </ng-container>
-              <ng-container *ngIf="key === 'apellido'">
-                {{ obtenerApellidoPaciente(turno.pacienteId) }}
-              </ng-container>
-              <ng-container *ngIf="key !== 'estado' && key !== 'nombre' && key !== 'apellido'">
-                {{ turno[key] }}
-              </ng-container>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      
-      <div  class=" mx-3 my-3 "*ngIf="pacienteSeleccionado != undefined" >
+     
+      <div class="my-5" style="text-align: center;">
+        <div class="col-3" *ngFor="let paciente of pacientesConImg" style="display: inline-block; ">
+          <div class="row">
+            <label   for=""><b> {{paciente.nombre}} {{paciente.apellido}} </b></label>
+          </div>
+          <div clas="row">
+            <button style=" border-radius: 50%; height: 100px; width: 100px;" (click)="seleccionarPaciente(paciente)"> 
+              <img src="{{paciente.imagenURL}}" alt="" style=" border-radius: 50%; height: 80px; width: 80px;" >
+           </button>
+          </div>
 
-        <h3 class="text-primary text-center"><b> Paciente Seleccionado: {{pacienteSeleccionado.nombre}} {{pacienteSeleccionado.apellido}} - Se atendió por {{turnoSeleccionado.especialidad}}</b></h3>
+        </div>
+        
 
       </div>
+      
+      <div style="background-color: #eee;" class="my-3">
+        
+        <div  class="my-3 mx-3 "*ngIf="pacienteSeleccionado != undefined" >
+          <br/>
+          <h3 class="text-primary text-center"><b> Paciente Seleccionado: {{pacienteSeleccionado.nombre}} {{pacienteSeleccionado.apellido}}</b></h3>
+
+          <h3 class="text-primary"><b>Turnos finalizados</b></h3>
+          <h4 *ngFor="let turno of turnosDelPaciente">
+            {{turno.especialidad}} - {{turno.dia}} {{turno.horario}} - DX: {{turno.diagnostico}}
+
+          </h4>
+          <br/>
+
+        </div>
+
+        <div  *ngIf="calificacionesFiltradas != undefined && calificacionesFiltradas.length>0" class="my-3 mx-3">
+          <h3 class="text-primary"><b>Calificaciones</b></h3>
+
+          <h4  *ngFor="let calif of calificacionesFiltradas">
+
+          {{calif.comentario}} - <img *ngFor="let i of [].constructor(calif.calificacion); let j = index" style="height: 30px; width: 30px;"  src="../../../../assets/img/full-star.png"> 
+
+          </h4>
+          <br/>
+        </div>
+
+      </div>
+
+      <hr>
 
       <div  style="background-color: #ddd;" class="px-3 py-3">
         <h3 class="text-center">Datos Personales</h3>
@@ -69,7 +82,7 @@
             <input type="text" class="form-control" [(ngModel)]="presion"  placeholder="presion" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
           </div>
           
-        </div>
+        </div> 
 
           <hr>
 

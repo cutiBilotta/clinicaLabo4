@@ -7,33 +7,22 @@
         <hr class="my-4">
         <h3 class="text-center">Pacientes</h3>
         <br/>
-        <!-- Tabla de Pacientes -->
-        <div class="table-responsive">
-          <table class="table table-bordered table-light">
-            <thead>
-              <tr>
-                <th style="background-color: #49708a;" scope="col">#</th>
-                <ng-container *ngFor="let key of keysPacientes">
-                  <!-- Verificar si la key no está en la lista de keys a ocultar -->
-                  <ng-container *ngIf="!['imgPerfil', 'id', 'password', 'perfil'].includes(key)">
-                    <th style="background-color: #397c9e;" scope="col" class="text-light">{{ key }}</th>
-                  </ng-container>
-                </ng-container>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let paciente of pacientes; let i = index">
-                <th scope="row">{{ i + 1 }}</th>
-                <ng-container *ngFor="let key of keysPacientes">
-                  <!-- Verificar si la key no está en la lista de keys a ocultar -->
-                  <ng-container *ngIf="!['imgPerfil', 'id', 'password', 'perfil'].includes(key)">
-                    <td>{{ paciente[key] }}</td>
-                  </ng-container>
-                </ng-container>
-              </tr>
-            </tbody>
-          </table>
-    </div>
+        
+        
+        <div class="row">
+
+        <div class="col-4"  *ngFor="let paciente of pacientes">
+          <div class="card mx-2 my-2" (click)="descargarInformacion(paciente)" >
+            <div class="card-body" style="background-color: #eee;">
+              <h5 class="card-title"><b>{{paciente.nombre}} {{paciente.apellido}}</b></h5>
+              <p><b>DNI:</b> {{paciente.dni}}</p>
+              <p><b>Email:</b> {{paciente.email}}</p>
+              <p><b>Edad:</b> {{paciente.edad}}</p>
+              <p><b>Obra Social:</b> {{paciente.obra_social}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
         
         <hr class="my-4">
         

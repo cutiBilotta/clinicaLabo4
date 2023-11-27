@@ -4,6 +4,7 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from'sweetalert2';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-carga-hist-clinica',
@@ -12,7 +13,7 @@ import Swal from'sweetalert2';
 })
 export class CargaHistClinicaComponent implements OnInit {
 
-  constructor(private database: DataBaseService, private afauth: AuthService, private router: Router){}
+  constructor(private database: DataBaseService, private afauth: AuthService, private router: Router, private storageService: StorageService){}
   usuarios: any[]=[];
   especialistas: any[]=[];
   pacientes: any[]=[];
@@ -22,7 +23,9 @@ export class CargaHistClinicaComponent implements OnInit {
   turnosKeys:any[] =[];
   turnoSeleccionado:any;
   pacienteSeleccionado:any;
-  
+  calificaciones:any[]=[];
+  calificacionesFiltradas:any[]=[];
+
   altura: any;
   peso: any;
   temperatura: any;
@@ -39,7 +42,9 @@ export class CargaHistClinicaComponent implements OnInit {
 
   mensajeError:string = "";
   mensajeErrorHist:string = "";
-
+  pacientesConImg:any[]=[];
+  turnosDelPaciente:any[]=[];
+  puntuacion:any[]=[];
 
   ngOnInit() {
     this.afauth.getAuthState().subscribe(user => {
@@ -48,18 +53,17 @@ export class CargaHistClinicaComponent implements OnInit {
         const usuarioActualEmail = user.email?.toString();
         console.log(usuarioActualEmail);
   
-        this.database.obtenerTodos("usuarios").subscribe((usuariosRef) => {
+        this.database.obtenerTodos("usuarios").subscribe( async (usuariosRef) => {
           this.usuarios = usuariosRef.map(userRef => {
             let usuario: any = userRef.payload.doc.data();
             usuario['id'] = userRef.payload.doc.id;
             return usuario;
           });
-          this.especialistas = this.usuarios.filter(usuario => usuario.perfil == "Especialista" );    
-          this.pacientes = this.usuarios.filter(usuario => usuario.perfil == "Paciente" );    
+          this.especialistas = this.usuarios.filter(usuario => usuario.perfil.toLocaleLowerCase() == "especialista" );    
+          this.pacientes = this.usuarios.filter(usuario => usuario.perfil.toLocaleLowerCase() == "paciente" );    
 
           this.usuarioActualBd = this.usuarios.find(usuario => usuario.email == usuarioActualEmail);
-          console.log(this.usuarioActualBd.id);
-        
+          
         })
 
       }
@@ -94,32 +98,72 @@ export class CargaHistClinicaComponent implements OnInit {
           }
         });
         console.log(this.pacientesFiltrados);
+        console.log(this.turnosFiltrados);
+        this.obtenerPacientesFiltradosConImagen();
+
 
       });
+      this.database.obtenerTodos("calificaciones").subscribe((calificacionesRef) => {
+        this.calificaciones = calificacionesRef.map(calificacionRef => {
+          let calificacion: any =calificacionRef.payload.doc.data();
+          calificacion['id'] = calificacionRef.payload.doc.id;
+          return calificacion;
+        });
+      })
+
   });
 
+
+
+
   }
 
-  obtenerNombrePaciente(pacienteId: string): string {
-    const paciente = this.pacientesFiltrados.find((p) => p.id === pacienteId);
-    return paciente ? paciente.nombre : '';
-  }
-  
-  obtenerApellidoPaciente(pacienteId: string): string {
-    const paciente = this.pacientesFiltrados.find((p) => p.id === pacienteId);
-    return paciente ? paciente.apellido : '';
+  async obtenerPacientesFiltradosConImagen(){
+
+    for (const usuario of this.pacientesFiltrados) {
+      if (usuario.imgPerfil && usuario.imgPerfil.length > 0) {
+        const nombreImagen = usuario.imgPerfil[0];
+        const url = await this.storageService.obtenerImagen("users",nombreImagen);
+        usuario.imagenURL = url;
+      }
+    }
+
+    this.pacientesConImg = this.pacientesFiltrados.map(usuario => {
+         
+          return {
+            nombre: usuario.nombre,
+            apellido: usuario.apellido,
+            email:usuario.email,
+            edad:usuario.edad,
+            obra_social: usuario.obra_social,
+            perfil: usuario.perfil,
+            password: usuario.password,
+            imagenURL: usuario.imagenURL,
+            id: usuario.id
+
+          };
+        
+      
+      return null;
+    }).filter(usuario => usuario !== null);
   }
 
-  obtenerPaciente(pacienteId: string){
-    const paciente = this.pacientesFiltrados.find((p) => p.id === pacienteId);
-    this.pacienteSeleccionado = paciente;
-    console.log(this.pacienteSeleccionado);
-  }
 
-  seleccionarTurno(turnoSeleccionado:any){
-    this.turnoSeleccionado=turnoSeleccionado;
-    console.log(this.turnoSeleccionado);
-    this.obtenerPaciente(turnoSeleccionado.pacienteId)
+
+  seleccionarPaciente(pacienteSeleccionado:any){
+    this.turnosDelPaciente=[];
+    this.pacienteSeleccionado=pacienteSeleccionado;
+    this.calificacionesFiltradas=[];
+
+    this.turnosDelPaciente = this.turnosFiltrados.filter(turno => turno.pacienteId == this.pacienteSeleccionado.id);
+
+    this.calificacionesFiltradas = this.calificaciones.filter(calif =>calif.pacienteId == this.pacienteSeleccionado.id)
+    
+    this.calificacionesFiltradas.forEach(calif => {
+      calif.calificacion = parseInt(calif.calificacion, 10);
+    });
+    console.log(this.calificacionesFiltradas);
+
   }
 
   enviarHistoriaClinica() {
@@ -258,5 +302,6 @@ export class CargaHistClinicaComponent implements OnInit {
     }
   }
 
+ 
 }
 
