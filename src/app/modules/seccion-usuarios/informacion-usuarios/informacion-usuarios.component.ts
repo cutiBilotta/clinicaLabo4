@@ -62,6 +62,9 @@ export class InformacionUsuariosComponent {
     })
   }
 
+  
+
+
   obtenerKeys(){
 
     this.usuarios.forEach((usuario) => {
@@ -191,20 +194,24 @@ export class InformacionUsuariosComponent {
         especialidad: turno.especialidad,
         dia: turno.dia,
         horario: turno.horario,
+        estado: turno.estado
       });
     });
   
     console.log(this.turnosDescarga);
   
     // Lógica para descargar como archivo de texto
-    const contenidoTexto = this.convertirTurnosAFormatoTexto();
+    let contenidoTexto = this.convertirTurnosAFormatoTexto();
+    if(!contenidoTexto){
+      contenidoTexto = "Aún no hay turnos solicitados";
+    }
     const blob = new Blob([contenidoTexto], { type: 'text/plain;charset=utf-8' });
     saveAs(blob, this.pacienteSeleccionado.nombre + this.pacienteSeleccionado.apellido + "Turnos.txt");
   }
   
   private convertirTurnosAFormatoTexto(): string {
     // Aquí puedes personalizar cómo deseas que se forme el contenido del archivo de texto
-    return this.turnosDescarga.map(turno => `${turno.especialista}, ${turno.especialidad}, ${turno.dia}, ${turno.horario}`).join('\n');
+    return this.turnosDescarga.map(turno => `${turno.especialista}, ${turno.especialidad}, ${turno.dia} ${turno.horario}. Estado del turno: ${turno.estado}`).join('\n');
   }
 
 

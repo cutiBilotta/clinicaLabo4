@@ -136,56 +136,66 @@
 
           <div *ngIf="esPaciente">
 
-            <div class="row">
-              <div class="col-4"  *ngFor="let historia of historiaClinica">
-              
-                <div class="card mt-2">
-                  <h5 class="card-header" style="background-color: #397c9e;">Historia Clínica</h5>
-                  <div class="card-body" style="background-color: #ddd;">
-                    <ul class="card-text">
-                      <li>Altura: {{ historia.altura }}</li>
-                      <li>Peso: {{ historia.peso }}</li>
-                      <li>Presión: {{ historia.presion }}</li>
-                      <li>Temperatura: {{ historia.temperatura }}</li>
-                      <li *ngFor="let detalle of historia.detalles">
-                        {{ detalle.dato }} - {{ detalle.descripcion }}
-                      </li>
-                    </ul>
+            <div style="background-color: #90b9d5; text-align: center;" class="">
+              <br/>
+            
+              <h3 class="text-center text-primary"><b>Mis Historias Clínicas</b></h3>
+              <br/>
+            
+              <div class="row justify-content-center"> <!-- Utiliza justify-content-center para centrar las columnas -->
+                <div class="col-4" *ngFor="let historia of historiaClinica">
+                  <div class="card my-2 mx-2">
+                    <h5 class="card-header" style="background-color: #397c9e;">Historia Clínica</h5>
+                    <div class="card-body" style="background-color: #eee;">
+                      <ul class="card-text text-start">
+                        <li>Altura: {{ historia.altura }}</li>
+                        <li>Peso: {{ historia.peso }}</li>
+                        <li>Presión: {{ historia.presion }}</li>
+                        <li>Temperatura: {{ historia.temperatura }}</li>
+                        <li *ngFor="let detalle of historia.detalles">
+                          {{ detalle.dato }} - {{ detalle.descripcion }}
+                        </li>
+                      </ul>
+                    </div>
                   </div>
+                  <br/>
                 </div>
               </div>
             </div>
 
 
+          <div style="background-color: #64a5d0 ;">
             <div class="row my-4">
-              <div class="col-3"></div>
-              <div class="col-6 text-center">
+              <div class="col-2"></div>
+              <div class="col-8 text-center">
                 
-                <div class="card">
-                  <h5 class="card-header" style="background-color: #397c9e;">Descargar atenciones</h5>
+                <div class="card mx-3 my-3"> 
+                  <h5 class="card-header" style="background-color: #397c9e;">Seleccione una opción y descargue las atenciones realizadas por el especialista elegido</h5>
 
-                  <div class="card-body" style="background-color: #fff;">
+                  <div class="card-body" style="background-color: #eee;">
+                  <p class="text-muted">Usted tiene turnos con los Especialistas:</p>
+
                     
                     <div class="radio-buttons-container mb-1" *ngFor="let especialista of especialistasFiltrados">
-                        <input type="radio" ngDefaultControl name="especialistaRadio" [value]="especialista.id" [(ngModel)]="especialistaSeleccionado" (change)="obtenerTurnosUsuarioActual()">
+                        <input type="radio" ngDefaultControl name="especialistaRadio" [value]="especialista" [(ngModel)]="especialistaSeleccionado" (change)="obtenerInformacion(especialistaSeleccionado)">
                         {{ especialista.nombre }} {{ especialista.apellido }} 
                     </div>
 
                     
                     
                     <button class="btn btn-md btn-primary my-3" (click)="descargarTurnos()" [disabled]="especialistaSeleccionado === undefined">
-                      Descargar </button>
+                      Descargar Atenciones </button>
                   </div>
                 </div>
 
               </div>
-              <div class="col-3"></div>
+              <div class="col-2"></div>
 
             </div>
            
-          
           </div>
 
+          </div>
 
 
 

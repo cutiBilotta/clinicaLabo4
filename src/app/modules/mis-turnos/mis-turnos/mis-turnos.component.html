@@ -8,76 +8,31 @@
 
 
       <div class="row mb-4">
-        <div class="col-12" style="text-align: center;">
-          <div class="card">
-            <h5 class="card-header text-center" style="background-color: #397c9e;">Filtrar Tabla</h5>
-            <div class="card-body" style="background-color: #eee;">
+        <div class="col-3"></div>
+        
+        <div class="col-6">
 
-              <div class="row">
-              <div class="col-4">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Estado</h5>
-                    
-                      <div class="radio-buttons-container mb-1" *ngFor="let estado of estadosFiltro">
-                      <input class="mx-2" name="filtro" type="radio" [value]="estado" [(ngModel)]="opcionFiltro" (change)="filtrarTabla('estado')"> {{    estado }} <br />
-                      </div>
+              <div class="row"> 
+                  <div class="card ">
+                    <div class="card-body">
+                      <h5 class="card-title">Filtrar tabla</h5>
+                      <input class="form-control mt-2" name="detalleFiltro" type="text" [(ngModel)]="detalleFiltro" (keyup.enter)="filtrarTabla()">
+                    </div>
                   </div>
                 </div>
-              </div>
-              
-
-              <div class="col-4">
-
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Especialidad</h5>
-                      <div *ngIf="especialidades != undefined && especialidades.length > 0" id="especialidad">
-                        <ng-container *ngFor="let especialidad of especialidades">
-                          <ng-container *ngFor="let item of especialidad.especialidades">
-                            <div class="radio-buttons-container mb-1" >
-                            
-                             <input class="mx-2" name="filtro" type="radio" [value]="item" [(ngModel)]="opcionFiltro" (change)="filtrarTabla('especialidad')"> {{ item }} <br />
-                            
-                            </div>
-                            </ng-container>
-                        </ng-container>
-                      </div>
-                  </div>
-                </div>
-              </div>  
-
-              <div class="col-4">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Dia - Horario - Hist. Clinica</h5>
-                    <ng-container *ngFor="let filtro of ['presion', 'altura', 'temperatura', 'detalle', 'dia', 'horario']">
-                      <div class="radio-buttons-container mb-1">
-                        <input class="mx-2" name="filtro" type="radio" [value]="filtro" [(ngModel)]="opcionFiltro"> {{ filtro }}
-                      </div>
-                    </ng-container>
-                    <input class="form-control mt-2" name="detalleFiltro" type="text" [(ngModel)]="detalleFiltro" (keyup.enter)="filtrarTabla(opcionFiltro)">
-                  </div>
-                </div>
-              </div>
-
-
-           
-
-
-            </div>
-              <button class="btn btn-sm btn-danger mt-3 mb-2" (click)="eliminarFiltro()">Eliminar Filtros</button>
-
-            </div>
-
+            <div style="text-align: center;">
+            <button class="btn btn-sm btn-danger mt-3 mb-2" (click)="eliminarFiltro()">Eliminar Filtros</button>
           </div>
-        </div>
+          </div>
+
+ 
+        <div class="col-3"></div>
 
 
       </div>
 
-
-      <table class="table table-bordered table-light table-striped table-responsive">
+      <div style="max-height: 500px; overflow-y: auto;">
+        <table class="table table-bordered table-light table-striped table-responsive">
         <thead>
           <tr>
             <th style="background-color: #49708a;" scope="col">#</th>
@@ -121,7 +76,9 @@
           </tr>
         </tbody>
       </table>
+      </div> 
 
+      <br/><br/>
       <div *ngIf="esPaciente && !mostrarCalificacion && turnoSeleccionado?.estado == 'solicitado'" style="text-align: center;">
          
           <div class="input-group input-group-sm mb-3">

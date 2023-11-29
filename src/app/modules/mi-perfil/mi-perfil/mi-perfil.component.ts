@@ -223,20 +223,34 @@ console.log(this.especialistas);
     console.log(this.especialistasFiltrados);
     console.log(this.turnosUsuarioActual);
   
+   
+  }
+
+  obtenerInformacion(especialistaSeleccionado:any){
+    this.informacion= [];
+    this.especialistaSeleccionado = especialistaSeleccionado;
+    console.log(this.especialistaSeleccionado)
+
     this.turnosUsuarioActual.forEach((turno) => {
-      const especialista = this.especialistasFiltrados.find(esp => esp.id === turno.especialistaId && turno.pacienteId == this.usuarioBD.id);
+      const especialista = this.especialistasFiltrados.find(esp => esp.id === turno.especialistaId);
+
+        if(especialista.id == this.especialistaSeleccionado.id){
+        const informacion: any = {
+          especialidad: turno.especialidad,
+          dia: turno.dia,
+          horario: turno.horario,
+          especialista: especialista.nombre + " " + especialista.apellido ,
+          estado: turno.estado
+        };
+      
+      
+        this.informacion.push(informacion);
+      }
+      });
     
-      const informacion: any = {
-        especialidad: turno.especialidad,
-        dia: turno.dia,
-        horario: turno.horario,
-        especialista: especialista.nombre + " " + especialista.apellido 
-      };
-    
-      this.informacion.push(informacion);
-    });
 
     console.log(this.informacion);
+
   }
 
 
@@ -244,13 +258,13 @@ console.log(this.especialistas);
     // Verificar si se ha seleccionado un especialista
     const contenidoTexto = this.convertirTurnosAFormatoTexto();
     console.log(contenidoTexto);
-    /*const blob = new Blob([contenidoTexto], { type: 'text/plain;charset=utf-8' });
-    saveAs(blob, this.usuarioBD.nombre + this.usuarioBD.apellido + "Turnos.txt");*/
+    const blob = new Blob([contenidoTexto], { type: 'text/plain;charset=utf-8' });
+    saveAs(blob, this.usuarioBD.nombre + this.usuarioBD.apellido + "Turnos" + this.especialistaSeleccionado.nombre + this.especialistaSeleccionado.apellido + '.txt');
   }
   
   private convertirTurnosAFormatoTexto(): string {
     // Aquí puedes personalizar cómo deseas que se forme el contenido del archivo de texto
-    return this.informacion.map(turno => `${this.especialistaSeleccionado.nombre}, ${this.especialistaSeleccionado.apellido} ${turno.especialidad}, ${turno.dia}, ${turno.horario}`).join('\n');
+    return this.informacion.map(turno => `${this.especialistaSeleccionado.nombre} ${this.especialistaSeleccionado.apellido}, ${turno.especialidad}, ${turno.dia}, ${turno.horario} - ${turno.estado}`).join('\n');
   }
 
 }

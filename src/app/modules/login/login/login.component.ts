@@ -4,35 +4,18 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { Router } from '@angular/router';
 import { Usuario } from 'src/app/classes/usuario';
 import { StorageService } from 'src/app/services/storage.service';
+import { RouterOutlet } from '@angular/router';
 import { keyframes, state, style, trigger, transition, animate } from '@angular/animations';
+import { openCloseAnimation, slideInAnimation } from 'src/app/app.module';
 
 
 @Component({
+  
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  animations: [
-    trigger('openClose', [
-      state('open', style({
-        opacity: 1,
-      })),
-      state('closed', style({
-        opacity: 0.8,
-      })),
-      transition('open => closed', [
-        animate('1s', keyframes([
-          style({ transform: 'scale(1) rotateX(0)', offset: 0 }), // Estado inicial
-          style({ transform: 'scale(2.5) rotateX(-90deg)', offset: 1 }) // Final de la animación
-        ]))
-      ]),
-      transition('closed => open', [
-        animate('0.5s', keyframes([
-          style({ transform: 'scale(1) rotateX(0)', offset: 0 }), // Estado inicial
-          style({ transform: 'scale(2.5) rotateX(-90deg)', offset: 1 }) // Final de la animación
-        ]))
-      ]),
-    ]),
-  ],
+  animations: [openCloseAnimation, slideInAnimation]
+
 })
 export class LoginComponent implements OnInit {
   
@@ -92,6 +75,9 @@ export class LoginComponent implements OnInit {
   }
 
 
+  getRouterOutletState(outlet: RouterOutlet): any {
+    return outlet.isActivated ? outlet.activatedRoute : '';
+  }
 
   ingresar() {
 

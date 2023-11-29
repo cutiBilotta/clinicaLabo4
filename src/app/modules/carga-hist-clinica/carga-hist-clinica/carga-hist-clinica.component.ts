@@ -118,6 +118,8 @@ export class CargaHistClinicaComponent implements OnInit {
 
   }
 
+  
+
   async obtenerPacientesFiltradosConImagen(){
 
     for (const usuario of this.pacientesFiltrados) {
@@ -147,7 +149,6 @@ export class CargaHistClinicaComponent implements OnInit {
       return null;
     }).filter(usuario => usuario !== null);
   }
-
 
 
   seleccionarPaciente(pacienteSeleccionado:any){
