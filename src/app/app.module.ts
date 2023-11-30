@@ -23,20 +23,24 @@ export const slideInAnimation = trigger('slideInAnimation', [
 export const openCloseAnimation = trigger('openClose', [
   state('open', style({
     opacity: 1,
+    transform: 'scale(1) rotateX(0)',
   })),
   state('closed', style({
     opacity: 0.8,
+    transform: 'scale(0.5) rotateX(90deg)',
   })),
   transition('open => closed', [
     animate('1s', keyframes([
       style({ transform: 'scale(1) rotateX(0)', offset: 0 }), // Estado inicial
-      style({ transform: 'scale(2.5) rotateX(-90deg)', offset: 1 }) // Final de la animación
+      style({ transform: 'scale(1.5) rotateX(-45deg)', offset: 0.5 }), // Punto intermedio
+      style({ transform: 'scale(0.5) rotateX(-90deg)', offset: 1 }) // Final de la animación
     ]))
   ]),
   transition('closed => open', [
     animate('0.5s', keyframes([
-      style({ transform: 'scale(1) rotateX(0)', offset: 0 }), // Estado inicial
-      style({ transform: 'scale(2.5) rotateX(-90deg)', offset: 1 }) // Final de la animación
+      style({ transform: 'scale(0.5) rotateX(90deg)', offset: 0 }), // Estado inicial
+      style({ transform: 'scale(1.5) rotateX(-45deg)', offset: 0.5 }), // Punto intermedio
+      style({ transform: 'scale(1) rotateX(0)', offset: 1 }) // Final de la animación
     ]))
   ]),
 ]);

@@ -13,7 +13,7 @@
         <div class="col-6">
 
               <div class="row"> 
-                  <div class="card ">
+                  <div class="card " style="background-color: #eee;">
                     <div class="card-body">
                       <h5 class="card-title">Filtrar tabla</h5>
                       <input class="form-control mt-2" name="detalleFiltro" type="text" [(ngModel)]="detalleFiltro" (keyup.enter)="filtrarTabla()">
@@ -32,51 +32,52 @@
       </div>
 
       <div style="max-height: 500px; overflow-y: auto;">
-        <table class="table table-bordered table-light table-striped table-responsive">
-        <thead>
-          <tr>
-            <th style="background-color: #49708a;" scope="col">#</th>
-            <th class="text-center" style="background-color: #49708a;" *ngFor="let key of turnosKeys" scope="col">{{ key }}</th>
-            <th class="text-center" style="background-color: #49708a;" scope="col">Historia Clínica</th>
-          </tr>
-        </thead>
-        <tbody *ngIf="tablaFiltrada != undefined && tablaFiltrada.length > 0">
-          <tr *ngFor="let turno of tablaFiltrada; let i = index">
-            <th scope="row">{{ i + 1 }}</th>
-            <td *ngFor="let key of turnosKeys" (click)="seleccionarTurno(turno)">
-              <ng-container *ngIf="key == 'reseñaCancelacion'; else otherContent">
-                <p class="text-danger">{{ turno[key] }}</p>
-              </ng-container>
-              <ng-template #otherContent>
-                <ng-container *ngIf="key == 'estado'">
-                  <b>{{ turno[key] }}</b>
-                </ng-container>
-                <ng-container *ngIf="key !== 'estado' && key !== 'reseniasCancelacion'">
-                  {{ turno[key] }}
-                </ng-container>
-              </ng-template>
-            </td>
-            <td>
-              <ng-container *ngIf="mostrarHistoriaClinica(turno)">
-                <div class="historia-clinica-container">
-                  <ul *ngFor="let historia of encontrarUsuario(turno.pacienteId).historiaClinica">
-                    <!-- Detalles de la historia clínica -->
-                    <li>Altura: {{ historia.altura }}</li>
-                    <li>Peso: {{ historia.peso }}</li>
-                    <li>Presión: {{ historia.presion }}</li>
-                    <li>Temperatura: {{ historia.temperatura }}</li>
-                    <li *ngFor="let detalle of historia.detalles">
-                      {{ detalle.dato }} - {{ detalle.descripcion }}
-                    </li>
-                    <p class="text-center text-muted">________________________</p>
-                  </ul>
-                </div>
-              </ng-container>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      </div> 
+        <table class="table table-bordered table-light table-responsive">
+          <thead>
+            <tr>
+              <th style="background-color: #49708a;" scope="col">#</th>
+              <th class="text-center" style="background-color: #49708a;" *ngFor="let key of turnosKeys" scope="col">{{ key }}</th>
+              <th class="text-center" style="background-color: #49708a;" scope="col">Historia Clínica</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="tablaFiltrada != undefined && tablaFiltrada.length > 0">
+            <ng-container *ngFor="let turno of tablaFiltrada; let i = index">
+              <tr>
+                <th scope="row">{{ i + 1 }}</th>
+                <td *ngFor="let key of turnosKeys" (click)="seleccionarTurno(turno)">
+                  <ng-container *ngIf="key == 'reseñaCancelacion'; else otherContent">
+                    <p class="text-danger">{{ turno[key] }}</p>
+                  </ng-container>
+                  <ng-template #otherContent>
+                    <ng-container *ngIf="key == 'estado'">
+                      <b>{{ turno[key] }}</b>
+                    </ng-container>
+                    <ng-container *ngIf="key !== 'estado' && key !== 'reseniasCancelacion'">
+                      {{ turno[key] }}
+                    </ng-container>
+                  </ng-template>
+                </td>
+                <td *ngIf="i === 0 || turno.pacienteId !== tablaFiltrada[i - 1].pacienteId" [attr.rowspan]="contarFilasConMismoPaciente(i, turno.pacienteId)">
+                  <!-- Solo mostrar la historia clínica cuando cambia el pacienteId -->
+                  <div class="historia-clinica-container">
+                    <ul *ngFor="let historia of encontrarUsuario(turno.pacienteId).historiaClinica">
+                      <!-- Detalles de la historia clínica -->
+                      <li>Altura: {{ historia.altura }}</li>
+                      <li>Peso: {{ historia.peso }}</li>
+                      <li>Presión: {{ historia.presion }}</li>
+                      <li>Temperatura: {{ historia.temperatura }}</li>
+                      <li *ngFor="let detalle of historia.detalles">
+                        {{ detalle.dato }} - {{ detalle.descripcion }}
+                      </li>
+                      <p class="text-center text-muted">________________________</p>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
 
       <br/><br/>
       <div *ngIf="esPaciente && !mostrarCalificacion && turnoSeleccionado?.estado == 'solicitado'" style="text-align: center;">

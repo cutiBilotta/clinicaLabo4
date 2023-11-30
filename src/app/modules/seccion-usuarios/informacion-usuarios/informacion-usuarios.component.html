@@ -14,7 +14,7 @@
           <div class="col-4" *ngFor="let paciente of pacientes">
             <div class="card mx-2 my-2  custom-card" >
               <div class="card-body "  (click)="descargarInformacion(paciente)"   data-toggle="tooltip" data-placement="top" title="Descargar" style="background-color: #eee;">
-                <h5 class="card-title"><b>{{paciente.nombre}} {{paciente.apellido}}</b></h5>
+                <h5 class="card-title" style="color: #397c9e;;"><b>{{paciente.nombre}} {{paciente.apellido}}</b></h5>
                 <p><b>DNI:</b> {{paciente.dni}}</p>
                 <p><b>Email:</b> {{paciente.email}}</p>
                 <p><b>Edad:</b> {{paciente.edad}}</p>

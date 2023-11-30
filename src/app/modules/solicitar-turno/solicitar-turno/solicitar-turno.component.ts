@@ -414,7 +414,7 @@ seleccionarFechaHora(fecha: any, hora: any) {
   this.horarioFinal=hora;
   console.log(this.horarioFinal);
 
-  this.mensajeConfirmacion= "Turno seleccionado: " + this.especialidadSeleccionada + "  |  " +this.fechaFinal + "  |  " + this.especialistaSeleccionado.nombre + this.especialistaSeleccionado.apellido;
+  this.mensajeConfirmacion= "Turno seleccionado: " + this.especialidadSeleccionada + "  |  " +this.fechaFinal + " " + hora + "  |  " + this.especialistaSeleccionado.nombre + " " + this.especialistaSeleccionado.apellido;
 
 }
 

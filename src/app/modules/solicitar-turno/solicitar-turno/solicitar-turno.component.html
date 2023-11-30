@@ -16,26 +16,39 @@
 
             <br/>
               
-              <label for="especialidad"><h5>Especialistas</h5></label><br/><br/>
+              <label for="especialista"><h5>Especialistas</h5></label><br/><br/>
               
-              <div>
-               <div *ngIf="!spinner">
-  
-                  <div >
-                    <button *ngFor="let usuario of especialistas" type="button" class="btn my-2 mx-4 btn-lg" style="background-color: #88abc2;" (click)="seleccionarEspecialista(usuario)">
-                      <img [src]="usuario.imagenURL" style="width: 100px; height: 100px;"> <br/>
-                      {{ usuario.nombre }} {{usuario.apellido}}
-                    </button>
-                  </div>     
-                </div>
-  
-  
+              <div class="row">
+                <ng-container *ngFor="let usuario of especialistas">
+
+                  <div class="col">
+                    <div class="row">
+                      <label for="especialista"><b>{{ usuario.nombre }} {{usuario.apellido}}</b></label>
+                    </div>
+                    <div class="row" style="text-align: center;align-items: center; justify-content: center;">
+
+                      <button id="especialista" type="button" class="btn my-2 btn-lg" style="background-color: #88abc2; height: 130px; width:130px"  (click)="seleccionarEspecialista(usuario)">
+
+                        <img [src]="usuario.imagenURL" style="width: 100px; height: 100px;"> <br/>
+                      </button>
+                  </div>
+
+                  </div>
+
+                </ng-container >
+
                 <div *ngIf="spinner" class="spinner-container text-center mb-4">
                   <img src="../../../../assets/img/spinner.png"alt="spinner">
                 </div>
     
   
             </div>
+
+
+
+
+
+
 
             <div *ngIf="especialidadesDelEspecialista!=undefined && especialidadesDelEspecialista.length > 0">
               <hr>
@@ -63,9 +76,8 @@
 
               <br/>
             </div>
-              <br/>
 
-              <br/>
+
               <hr>
               <br/>
 
@@ -108,8 +120,8 @@
                 <br/>
 
               <div style="text-align: center;">
-                <p class="text-center text-primary"><b>{{mensajeConfirmacion}}</b></p>
-              <button *ngIf="mensajeConfirmacion!=''" class="btn btn-lg btn-success"  (click)="aceptar(); turnoForm.resetForm()">Aceptar</button>
+                <h5 class="text-center text-primary mb-2"><b>{{mensajeConfirmacion}}</b></h5>
+              <button *ngIf="mensajeConfirmacion!=''" class="btn btn-lg btn-success mt-2"  (click)="aceptar(); turnoForm.resetForm()">Aceptar</button>
               </div>
               <br/><br/>
 

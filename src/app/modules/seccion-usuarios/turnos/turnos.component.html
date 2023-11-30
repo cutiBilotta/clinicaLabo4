@@ -2,85 +2,40 @@
     <div class="container">
 
         <br/><br/>
-        <h3 class="text-center text-dark">Tus Turnos</h3>
-        <br/>
   
   
-        <div class="row mb-4">
-          <div class="col-12" style="text-align: center;">
-            <div class="card">
-              <h5 class="card-header text-center" style="background-color: #397c9e;">Filtrar Tabla</h5>
-              <div class="card-body" style="background-color: #eee;">
-  
-                <div class="row">
-                <div class="col-4">
-                  <div class="card">
-                    <div class="card-body">
-                      <h5 class="card-title">Estado</h5>
-                      
-                        <div class="radio-buttons-container mb-1" *ngFor="let estado of estadosFiltro">
-                        <input class="mx-2" name="filtro" type="radio" [value]="estado" [(ngModel)]="opcionFiltro" (change)="filtrarTabla('estado')"> {{    estado }} <br />
-                        </div>
-                    </div>
-                  </div>
-                </div>
-                
-  
-                <div class="col-4">
-  
-                  <div class="card">
-                    <div class="card-body">
-                      <h5 class="card-title">Especialidad</h5>
-                        <div *ngIf="especialidades != undefined && especialidades.length > 0" id="especialidad">
-                          <ng-container *ngFor="let especialidad of especialidades">
-                            <ng-container *ngFor="let item of especialidad.especialidades">
-                              <div class="radio-buttons-container mb-1" >
-                              
-                               <input class="mx-2" name="filtro" type="radio" [value]="item" [(ngModel)]="opcionFiltro" (change)="filtrarTabla('especialidad')"> {{ item }} <br />
-                              
-                              </div>
-                              </ng-container>
-                          </ng-container>
-                        </div>
-                    </div>
-                  </div>
-                </div>  
-  
-                <div class="col-4">
-                  <div class="card">
-                    <div class="card-body">
-                      <h5 class="card-title">Dia - Horario - Hist. Clinica</h5>
-                      <ng-container *ngFor="let filtro of ['presion', 'altura', 'temperatura', 'detalle', 'dia', 'horario']">
-                        <div class="radio-buttons-container mb-1">
-                          <input class="mx-2" name="filtro" type="radio" [value]="filtro" [(ngModel)]="opcionFiltro"> {{ filtro }}
-                        </div>
-                      </ng-container>
-                      <input class="form-control mt-2" name="detalleFiltro" type="text" [(ngModel)]="detalleFiltro" (keyup.enter)="filtrarTabla(opcionFiltro)">
-                    </div>
-                  </div>
-                </div>
-  
-  
-             
-  
-  
-              </div>
-                <button class="btn btn-sm btn-danger mt-3 mb-2" (click)="eliminarFiltro()">Eliminar Filtros</button>
-  
-              </div>
-  
-            </div>
-          </div>
-  
-  
-        </div>
-
         
-        <br/><br/>
+      <div class="row mb-4">
+        <div class="col-3"></div>
+        
+        <div class="col-6">
+
+              <div class="row"> 
+                  <div class="card " style="background-color: #eee;">
+                    <div class="card-body">
+                      <h5 class="card-title">Filtrar tabla</h5>
+                      <input class="form-control mt-2" name="detalleFiltro" type="text" [(ngModel)]="detalleFiltro" (keyup.enter)="filtrarTabla()">
+                    </div>
+                  </div>
+                </div>
+            <div style="text-align: center;">
+            <button class="btn btn-sm btn-danger mt-3 mb-2" (click)="eliminarFiltro()">Eliminar Filtros</button>
+          </div>
+          </div>
+
+ 
+        <div class="col-3"></div>
+
+
+      </div>
+
+        <hr>
+        <br/>
         <h3 class="text-center text-dark">Turnos</h3>
         <br/>
 
-        <table class="table table-bordered table-light table-striped">
+        <div style="max-height: 500px; overflow-y: auto;">
+          <table class="table table-bordered table-light table-responsive">
             <thead>
               <tr>
                 <th style="background-color: #49708a;" scope="col">#</th>
@@ -89,36 +44,43 @@
               </tr>
             </thead>
             <tbody *ngIf="tablaFiltrada != undefined && tablaFiltrada.length > 0">
-              <tr *ngFor="let turno of tablaFiltrada; let i = index">
-                <th scope="row">{{ i + 1 }}</th>
-                <td *ngFor="let key of turnosKeys" (click)="seleccionarTurno(turno)">
-                  <ng-container *ngIf="key == 'estado'">
-                    <b>{{ turno[key] }}</b>
-                  </ng-container>
-                  <ng-container *ngIf="key !== 'estado'">
-                    {{ turno[key] }}
-                  </ng-container>
-                </td>
-                <td>
-                  <ng-container *ngIf="mostrarHistoriaClinica(turno)">
+              <ng-container *ngFor="let turno of tablaFiltrada; let i = index">
+                <tr>
+                  <th scope="row">{{ i + 1 }}</th>
+                  <td *ngFor="let key of turnosKeys" (click)="seleccionarTurno(turno)">
+                    <ng-container *ngIf="key == 'reseñaCancelacion'; else otherContent">
+                      <p class="text-danger">{{ turno[key] }}</p>
+                    </ng-container>
+                    <ng-template #otherContent>
+                      <ng-container *ngIf="key == 'estado'">
+                        <b>{{ turno[key] }}</b>
+                      </ng-container>
+                      <ng-container *ngIf="key !== 'estado' && key !== 'reseniasCancelacion'">
+                        {{ turno[key] }}
+                      </ng-container>
+                    </ng-template>
+                  </td>
+                  <td *ngIf="i === 0 || turno.pacienteId !== tablaFiltrada[i - 1].pacienteId" [attr.rowspan]="contarFilasConMismoPaciente(i, turno.pacienteId)">
+                    <!-- Solo mostrar la historia clínica cuando cambia el pacienteId -->
                     <div class="historia-clinica-container">
                       <ul *ngFor="let historia of encontrarUsuario(turno.pacienteId).historiaClinica">
+                        <!-- Detalles de la historia clínica -->
                         <li>Altura: {{ historia.altura }}</li>
                         <li>Peso: {{ historia.peso }}</li>
                         <li>Presión: {{ historia.presion }}</li>
                         <li>Temperatura: {{ historia.temperatura }}</li>
-                        <!-- Agregar más campos según sea necesario -->
                         <li *ngFor="let detalle of historia.detalles">
                           {{ detalle.dato }} - {{ detalle.descripcion }}
                         </li>
                         <p class="text-center text-muted">________________________</p>
                       </ul>
                     </div>
-                  </ng-container>
-                </td>
-              </tr>
+                  </td>
+                </tr>
+              </ng-container>
             </tbody>
           </table>
+        </div>
 
 
         

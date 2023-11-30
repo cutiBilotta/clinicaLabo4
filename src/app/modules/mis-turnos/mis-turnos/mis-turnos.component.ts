@@ -113,7 +113,13 @@ campoSeleccionado: string = '';
       console.log('Puntuación seleccionada:', this.puntuacion);
 }
 
-
+contarFilasConMismoPaciente(index: number, pacienteId: string): number {
+  let contador = 1;
+  while (index + contador < this.tablaFiltrada.length && this.tablaFiltrada[index + contador].pacienteId === pacienteId) {
+    contador++;
+  }
+  return contador;
+}
 filtrarTurnos() {
   if (this.esPaciente) {
     console.log(this.usuarioActualId);
@@ -124,6 +130,10 @@ filtrarTurnos() {
     // Si no es paciente, filtra los turnos por especialistaId
     this.tablaFiltrada = this.turnos.filter(turno => turno.especialistaId == this.usuarioActualId);
     this.tablaCompleta = this.tablaFiltrada
+    this.tablaFiltrada.sort((a, b) => a.pacienteId.localeCompare(b.pacienteId));
+
+    console.log(this.tablaFiltrada);
+    
 
   }
 }
@@ -299,28 +309,7 @@ filtrarTabla() {
     });
   }
 }
- /*
-          // Filtrar por campos de la Historia Clínica
-          this.tablaFiltrada = this.tablaFiltrada.filter(turno => {
-            const historia = this.encontrarUsuario(turno.pacienteId)?.historiaClinica;
-            console.log(historia);
-            if (historia) {
-              return historia.some((detalle: any) => {
-                if (this.opcionFiltro === 'detalle') {
-                  // Filtrar por detalles
-                  return detalle.detalles.some((subdetalle: any) =>
-                    subdetalle.dato.includes(this.detalleFiltro)
-                  );
-                } else {
-                  // Filtrar por otros campos de la historia clínica
-                  return detalle[this.opcionFiltro] && detalle[this.opcionFiltro].toString().includes(this.detalleFiltro);
-                }
-              });
-            }
-            return false;
-          });
-        }*/
-      
+ 
     
     
 
